@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<web-app 
 xmlns="http://java.sun.com/xml/ns/javaee"
-xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
-http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
-
-	<!-- START Spring Mappings -->
+xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+version="2.5" >
 
 	<servlet>
 		<servlet-name>LoginController</servlet-name>
@@ -15,7 +15,6 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-name>LoginController</servlet-name>
 		<url-pattern>/login</url-pattern>
 	</servlet-mapping>
-	
 	<servlet>
 		<servlet-name>LogoutController</servlet-name>
 		<servlet-class>ar.kennedy.is2011.controllers.LogoutController</servlet-class>
@@ -25,6 +24,13 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<url-pattern>/logout</url-pattern>
 	</servlet-mapping>
 	
+
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+	
+	<!-- START Spring Mappings -->
+	<!-- /image -->
 	<servlet>
 		<servlet-name>ImageProxyController</servlet-name>
 		<servlet-class>ar.kennedy.is2011.controllers.ImageProxyController</servlet-class>
@@ -34,6 +40,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<url-pattern>/image</url-pattern>
 	</servlet-mapping>
 	
+	<!-- /upload -->
 	<servlet>
 		<servlet-name>ImageUploaderController</servlet-name>
 		<servlet-class>ar.kennedy.is2011.controllers.ImageUploaderController</servlet-class>
@@ -42,7 +49,60 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-name>ImageUploaderController</servlet-name>
 		<url-pattern>/upload</url-pattern>
 	</servlet-mapping>
+	<!-- END Spring Mappings -->
 
+	<!-- START REST Mappings -->
+	<!-- /foward -->
+	<servlet>
+		<servlet-name>Forward</servlet-name>
+		<servlet-class>ar.kennedy.is2011.controllers.ForwardServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Forward</servlet-name>
+		<url-pattern>/forward</url-pattern>
+	</servlet-mapping>
+
+	<!-- /logout_beta -->
+	<servlet>
+		<servlet-name>Logout</servlet-name>
+		<servlet-class>ar.kennedy.is2011.controllers.LogoutUsuarioServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Logout</servlet-name>
+		<url-pattern>/logout_beta</url-pattern>
+	</servlet-mapping>
+
+	<!-- /login_beta -->
+	<servlet>
+		<servlet-name>Login</servlet-name>
+		<servlet-class>ar.kennedy.is2011.controllers.LoginUsuarioServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Login</servlet-name>
+		<url-pattern>/login_beta</url-pattern>
+	</servlet-mapping>
+
+	<!-- /Registracion -->
+	<servlet>
+		<servlet-name>Registracion</servlet-name>
+		<servlet-class>ar.kennedy.is2011.controllers.RegistracionUsuarioServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Registracion</servlet-name>
+		<url-pattern>/Registracion</url-pattern>
+	</servlet-mapping>
+
+	<!-- /editarCuenta -->
+	<servlet>
+		<servlet-name>EditarCuenta</servlet-name>
+		<servlet-class>ar.kennedy.is2011.controllers.EditarCuentaUsuarioServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>EditarCuenta</servlet-name>
+		<url-pattern>/editarCuenta</url-pattern>
+	</servlet-mapping>
+	
+	<!-- /test -->
 	<servlet>
 		<servlet-name>TestController</servlet-name>
 		<servlet-class>ar.kennedy.is2011.controllers.TestController</servlet-class>
@@ -51,53 +111,10 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-name>TestController</servlet-name>
 		<url-pattern>/test</url-pattern>
 	</servlet-mapping>
-
-	<!-- END Spring Mappings -->
-
-	<!-- START REST Mappings -->
-
-	<servlet>
-		<servlet-name>Forward</servlet-name>
-		<servlet-class>ar.kennedy.is2011.controllers.ForwardServlet</servlet-class>
-	</servlet>
-	<servlet>
-		<servlet-name>Logout</servlet-name>
-		<servlet-class>ar.kennedy.is2011.controllers.LogoutUsuarioServlet</servlet-class>
-	</servlet>
-	<servlet>
-		<servlet-name>Login</servlet-name>
-		<servlet-class>ar.kennedy.is2011.controllers.LoginUsuarioServlet</servlet-class>
-	</servlet>
-	<servlet>
-		<servlet-name>Registracion</servlet-name>
-		<servlet-class>ar.kennedy.is2011.controllers.RegistracionUsuarioServlet</servlet-class>
-	</servlet>
-	<servlet>
-		<servlet-name>EditarCuenta</servlet-name>
-		<servlet-class>ar.kennedy.is2011.controllers.EditarCuentaUsuarioServlet</servlet-class>
-	</servlet>
+	<!-- END REST Mappings -->
 	
-	<servlet-mapping>
-		<servlet-name>Logout</servlet-name>
-		<url-pattern>/logout_beta</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>Login</servlet-name>
-		<url-pattern>/login_beta</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>Registracion</servlet-name>
-		<url-pattern>/Registracion</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>Forward</servlet-name>
-		<url-pattern>/forward</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>EditarCuenta</servlet-name>
-		<url-pattern>/editarCuenta</url-pattern>
-	</servlet-mapping>
 	
+	<!-- FILTROS -->
 	<filter>
         <filter-name>SecureFilter</filter-name>
         <filter-class>ar.kennedy.is2011.controller.filter.SecureFilter</filter-class>
@@ -107,10 +124,5 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
         <url-pattern>/secure/*</url-pattern>  		  		  		
     </filter-mapping>
 
-	<!-- END REST Mappings -->
 
-	<welcome-file-list>
-		<welcome-file>index.jsp</welcome-file>
-	</welcome-file-list>
-	
 </web-app>

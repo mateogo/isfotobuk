@@ -85,8 +85,8 @@
 				</div>
 			</div>
 		</div>
-    <div class="container">
-		<div class="hero-unit">
+        <div class="container">
+		  <div class="hero-unit">
 			<h1>FotobUK</h1> <!-- nombre feo si los hay... -->
 			<p>
 				Aplicaci&oacute;n creada en Google AppEngine utilizando varias tecnolog&iacute;as 
@@ -94,7 +94,7 @@
 			<p>
 				<a class="btn primary large" href="about.html">Acerca de &raquo;</a>
 			</p>
-		</div>
+		  </div>
 		</div>
 	</body>
 </html>
