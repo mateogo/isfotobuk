@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
+
 import ar.kennedy.is2011.db.dao.AdministrarRegistracionUsuarioDAO;
 import ar.kennedy.is2011.db.dao.AdministrarRegistracionUsuarioDAOImpl;
 import ar.kennedy.is2011.db.entities.Usuario;
@@ -15,6 +17,7 @@ import ar.kennedy.is2011.utils.WebUtils;
 
 public class RegistracionUsuarioServlet extends HttpServlet{
 	private static final long serialVersionUID = 1L;
+	protected final Logger log = Logger.getLogger(getClass());
 	
 	
 	public RegistracionUsuarioServlet() {
@@ -33,7 +36,7 @@ public class RegistracionUsuarioServlet extends HttpServlet{
 		AdministrarRegistracionUsuarioDAO servicio = new AdministrarRegistracionUsuarioDAOImpl();
 		
 		if(servicio.validarExistenciaUsuario(usuario.getNombreUsr())){
-     		System.out.println("El nombre de usuario existe!!");
+     		log.info("El nombre de usuario existe!!");
      		request.setAttribute("errors", "El nombre de usuario ya existe");
      		request.setAttribute("usuarioNoRegistrado", usuario);
 			request.getRequestDispatcher("registracionRapida.jsp").forward(request, response);
@@ -45,7 +48,7 @@ public class RegistracionUsuarioServlet extends HttpServlet{
 				request.getRequestDispatcher("index.jsp").forward(request, response);
 			
 			}else{	  
-				System.out.println(" error en en alta ususario");
+				log.error("error servicio:AdministrarRegistracionUsuarioDAO no pudo concretar el alta ususario");
 				request.getRequestDispatcher("registracionRapida.jsp").forward(request, response);
 			}
 		}

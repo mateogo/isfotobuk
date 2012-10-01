@@ -52,6 +52,7 @@ version="2.5" >
 	<!-- END Spring Mappings -->
 
 	<!-- START REST Mappings -->
+	
 	<!-- /foward -->
 	<servlet>
 		<servlet-name>Forward</servlet-name>
@@ -60,6 +61,16 @@ version="2.5" >
 	<servlet-mapping>
 		<servlet-name>Forward</servlet-name>
 		<url-pattern>/forward</url-pattern>
+	</servlet-mapping>
+	
+	<!-- /user -->
+	<servlet>
+		<servlet-name>UserHomePage</servlet-name>
+		<servlet-class>ar.kennedy.is2011.controllers.UserHomePageController</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>UserHomePage</servlet-name>
+		<url-pattern>/user/*</url-pattern>
 	</servlet-mapping>
 
 	<!-- /logout_beta -->

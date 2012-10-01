@@ -3,16 +3,15 @@
 <html>
 	<head>
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-		<title>Login</title> 
+		<title>Fotobuk - bienvenido</title> 
 		<meta name="GUI para aplicación is2011" content="">
-		<meta name="Grupo 4 - ¿nombre?" content="">
+		<meta name="Investigacion de sistemas" content="">
 		<!--[if lt IE 9]>
 		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
-		<script
-		src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
-		<script src="assets/js/google-code-prettify/prettify.js"></script>
-		<script src="js/bootstrap-modal.js"></script>
+<!--		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>   -->
+<!--		<script src="/js/prettify.js"></script>                                                    -->
+<!--		<script src="js/bootstrap-modal.js"></script>                                              -->
 		<link href="css/bootstrap.css" rel="stylesheet">
 		<style type="text/css">
 			/* Override some defaults */
@@ -92,7 +91,7 @@
 				Aplicaci&oacute;n creada en Google AppEngine utilizando varias tecnolog&iacute;as 
 			</p>
 			<p>
-				<a class="btn primary large" href="about.html">Acerca de &raquo;</a>
+				<a class="btn primary large" href="about.html">AAcerca de &raquo;</a>
 			</p>
 		  </div>
 		</div>
