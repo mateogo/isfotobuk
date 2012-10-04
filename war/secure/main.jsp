@@ -29,6 +29,7 @@
 		<script src="/js/bootstrap-modal.js"></script>
 		<link href="/css/bootstrap.css" rel="stylesheet">
 		<link href="/css/docs.css" rel="stylesheet">
+		<link rel="icon" href="/favicon.gif" type="image/gif"> 
 		<style type="text/css">
 			body {
 				padding-top: 60px;
@@ -76,7 +77,7 @@
 									
 									if(lastImageUpload != null) {
 								%>
-									<a href="/secure/pictureView.jsp?id=<%= lastImageUpload.getPictureId() %>"><img class="thumbnail" src="/image?id=<%= lastImageUpload.getPictureId() %>&version=I" width="150" height="150" alt=""></a>
+									<a href="/secure/pictureView.jsp?pictureid=<%= lastImageUpload.getPictureId() %>"><img class="thumbnail" src="/image?pictureid=<%= lastImageUpload.getPictureId() %>&version=I" width="150" height="150" alt=""></a>
 								<%
 									} else {
 								%>
@@ -114,19 +115,19 @@
 						<li>
 							<div class="row">
 								<div class="span3">
-									<a href="/secure/pictureView.jsp?id=<%= pictures.get(i).getPictureId() %>"><img class="thumbnail" src="/image?id=<%= pictures.get(i).getPictureId() %>&version=H" alt="" width="90" height="90"> </a>
+									<a href="/secure/pictureView.jsp?pictureid=<%= pictures.get(i).getPictureId() %>"><img class="thumbnail" src="/image?pictureid=<%= pictures.get(i).getPictureId() %>&version=H" alt="" width="90" height="90"> </a>
 								</div>
 								<p>
 									Acciones
 								</p>
 								<div class="span12">
-									<a href="/secure/pictureView.jsp?id=<%= pictures.get(i).getPictureId() %>"><button class="btn info">
+									<a href="/secure/pictureView.jsp?pictureid=<%= pictures.get(i).getPictureId() %>"><button class="btn info">
 										Ver
 									</button></a>
-									<a href="/secure/imageUpload.jsp?id=<%= pictures.get(i).getPictureId() %>"><button class="btn primary">
+									<a href="/secure/imageUpload.jsp?pictureid=<%= pictures.get(i).getPictureId() %>"><button class="btn primary">
 										Editar
 									</button></a>
-									<a href="/upload?action=delete&id=<%= pictures.get(i).getPictureId() %>"><button class="btn danger">
+									<a href="/upload?action=delete&pictureid=<%= pictures.get(i).getPictureId() %>"><button class="btn danger">
 										Eliminar
 									</button></a>
 								</div>

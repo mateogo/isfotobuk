@@ -43,12 +43,10 @@ public class LoginModel extends AbstractModel {
 	public Boolean validateLogin(HttpServletRequest request, HttpServletResponse response, String userId, String password) throws Exception {
 		Session userSession = null;
 		
-		log.debug("Validating login for user: " + userId);
-		
+		log.debug("Validating login for user: " + userId);		
 		try {
 			Usuario userEy = userDao.findById(Usuario.class, userId);
-			userDao.select(Usuario.class);
-			
+			//userDao.select(Usuario.class);
 			if(validate(userEy, password)) {
 				userSession = createLoginSession(request, response);
 				userSession.setElement("user", userEy);

@@ -34,90 +34,54 @@ public class ImageUploaderModel extends AbstractModel {
 	private AbstractDao<PictureEy> pictureDao;
 	private AbstractDao<AlbumEy> albumDao;
 	private String action;
-	
+	private Map<String, Object> formErrors;
+	private PictureEy picture;
+	private MultiPartRequest multiPartRequest;
 	
 	
 	public ImageUploaderModel(HttpServletRequest request, Session userSession, String action) {
 		super();
-		
 		this.request = request;
 		this.userSession =  userSession;
 		this.pictureDao = new AbstractDao<PictureEy>();
 		this.albumDao = new AbstractDao<AlbumEy>();
 		this.action = action;
+		this.formErrors = new HashMap<String, Object>();
 	}
-	
+	/**
+	 * Puede ser una imagen nueva o una pre-existente.
+	 * 	si ya existe, viene como request.id o como usersession.picture
+	 * @return
+	 * @throws Exception
+	 */
 	public Boolean validate() throws Exception {
-		PictureEy picture = "add".equals(action) ? new PictureEy() : pictureDao.findById(PictureEy.class, WebUtils.getParameter(request, "id"));
-		Map<String, Object> formErrors = new HashMap<String, Object>();
-		MultiPartRequest multiPartRequest = new MultiPartRequest(request, (Constants.FILE_UPLOAD_MAX_SIZE * 1024 * 1024));
+		this.picture = "add".equals(action) ? new PictureEy() : 
+			pictureDao.findById(PictureEy.class, WebUtils.getParameter(request, "pictureid"));
+		this.multiPartRequest = new MultiPartRequest(request, (Constants.FILE_UPLOAD_MAX_SIZE * 1024 * 1024));
+		log.debug("validate ImageUploader");
 		
 		try {
+			//(i): Contamos con los parametros picture_name y album_id
 			WebUtils.validateMandatoryParameters(multiPartRequest, new String[] {"picture_name", "album_id"});
+			validatePictureValidName();
 			
-			String pictureName = WebUtils.getParameter(multiPartRequest, "picture_name");
-			if(!StringUtils.isAlphanumericSpace(pictureName)) {
-				formErrors.put("picture_name", "El campo debe ser alfanumerico");
-			
-			} else {
-				picture.setPictureName(pictureName);
-			}
-			
+			//(iii): valido el album
 			String albumId = WebUtils.getParameter(multiPartRequest, "album_id");
-			if("Elegir".equals(albumId)) {
-				formErrors.put("album_id", "Debe asociar seleccionar un album");
-			
-			} else {
-				try {
-					if(isNewAlbum(albumId)) {
-						AlbumEy album = albumDao.findById(AlbumEy.class, albumId.substring(0, albumId.indexOf(";")));
-						
-						if("public".equals(album.getAlbumId())) {
-							picture.setAlbumId(album.getAlbumId());
-						
-						} else {
-							formErrors.put("album_id", "El album ya existe");
-						}
-					
-					} else {
-						picture.setAlbumId(albumId);
-					}
-						
-				} catch (EntityNotFoundException e) {
-					AlbumEy nuevoAlbum = new AlbumEy();
-					nuevoAlbum.setAlbumId(albumId.substring(0, albumId.indexOf(";")));
-					nuevoAlbum.setVisibility(albumId.substring(albumId.indexOf(";") + 1, albumId.length()));
-					nuevoAlbum.setOwner(((Usuario) userSession.getElement("user")).getNombreUsr());
-					albumDao.persist(nuevoAlbum);
-					
-					picture.setAlbumId(albumId.substring(0, albumId.indexOf(";")));					
-				}
-			}
-			
+			log.debug("validate ImageUploader: album:["+albumId+"]");
+			updateAlbum(albumId);
+
+			//(iv): valido URL
 			String url = WebUtils.getParameter(multiPartRequest, "url");
-			if(StringUtils.isNotBlank(url) && !WebUtils.validateUrl(url)) {
-				formErrors.put("url", "Url invalida");
+			validatePictureValidURL(url);
+
+			//(iv): Upload de la imagen, si viene de cuerpo presente
+			uploadContentPicture();
+
+			//(v): incorporo los tags que se pudieran haber cargado en el form
+			this.picture.setTags(WebUtils.getParameter(multiPartRequest, "tags"));
 			
-			} else {
-				picture.setUrl(url);
-			}
-			
-			if(multiPartRequest.getFiles().hasMoreElements()) {
-				UploadedFile uploadPicture = (UploadedFile) multiPartRequest.getFiles().nextElement();
-				
-				if(uploadPicture.getContent().size() < Constants.ENTITY_WEIGHT) {
-					picture.setContentType(uploadPicture.getContentType());
-					picture.setContent(new Blob(((UploadedFile) multiPartRequest.getFiles().nextElement()).getContent().toByteArray()));
-					
-				} else {
-					picture.setContentType(uploadPicture.getContentType());
-					picture.setContent(new Blob(WebUtils.resize(((UploadedFile) multiPartRequest.getFiles().nextElement()).getContent().toByteArray(), 800, 600)));
-				}
-			}
-			
-			picture.setTags(WebUtils.getParameter(multiPartRequest, "tags"));
-			
-			if(picture.getContent() == null && StringUtils.isBlank(picture.getUrl())) {
+			//(vi): Picture content o URL
+			if(this.picture.getContent() == null && StringUtils.isBlank(this.picture.getUrl())) {
 				formErrors.put("add_url_or_file", "Debes cargar una imagen o asociar una URL que contenga una");
 			}
 			
@@ -126,22 +90,89 @@ public class ImageUploaderModel extends AbstractModel {
 		}
 		
 		if(!formErrors.isEmpty()) {
-			errors.put("form_errors", formErrors);
-			
+			errors.put("form_errors", formErrors);			
 			if(!formErrors.containsKey("mandatory_parameters")) {
-				userSession.setElement("picture", picture);
+				userSession.setElement("picture", this.picture);
 			}
-			
 			userSession.setElement("errors", errors);
 			SessionManager.save(request, userSession);
-			
 			return false;
+		}else{
+			userSession.setElement("picture", picture);
+			SessionManager.save(request, userSession);			
+			return true;
 		}
-		
-		userSession.setElement("picture", picture);
-		SessionManager.save(request, userSession);
-		
-		return true;
+	}
+	private void validatePictureValidName(){
+		//(ii): picture name is alfanumeric
+		String pictureName = WebUtils.getParameter(this.multiPartRequest, "picture_name");
+		log.debug("validate ImageUploader: imagen:["+pictureName+"]");
+		if(!StringUtils.isAlphanumericSpace(pictureName)) {
+			this.formErrors.put("picture_name", "El campo debe ser alfanumerico");
+		} else {
+			this.picture.setPictureName(pictureName);
+		}		
+	}
+	private void validatePictureValidURL(String url){
+		if(StringUtils.isNotBlank(url) && !WebUtils.validateUrl(url)) {
+			this.formErrors.put("url", "Url invalida");
+		} else {
+			this.picture.setUrl(url);
+		}
+	}
+	private void uploadContentPicture(){
+		if(this.multiPartRequest.getFiles().hasMoreElements()) {
+			UploadedFile uploadPicture = (UploadedFile) multiPartRequest.getFiles().nextElement();
+			if(uploadPicture.getContent().size() < Constants.ENTITY_WEIGHT) {
+				this.picture.setContentType(uploadPicture.getContentType());
+				this.picture.setContent(new Blob(((UploadedFile) multiPartRequest.getFiles().nextElement()).getContent().toByteArray()));
+			} else {
+				this.picture.setContentType(uploadPicture.getContentType());
+				this.picture.setContent(new Blob(WebUtils.resize(((UploadedFile) multiPartRequest.getFiles().nextElement()).getContent().toByteArray(), 800, 600)));
+			}
+		}
+	}
+	
+
+	
+	
+	private void updateAlbum(String albumId) throws Exception{
+		boolean isNewAlbum=false;
+		String albumName=albumId;
+		String albumScope="";
+		if("Elegir".equals(albumId)) {
+			this.formErrors.put("album_id", "Debe asociar seleccionar un album");
+		} else {
+			if(albumId.indexOf(";") > 0) {
+				isNewAlbum=true;
+				albumName=albumId.substring(0, albumId.indexOf(";"));
+				albumScope=albumId.substring(albumId.indexOf(";") + 1, albumId.length());
+			}		
+		}
+		if (isNewAlbum){
+			try {
+				//(iii.b): Es un album nuevo? En dicho caso, no existe ya en la base?
+				AlbumEy album = albumDao.findById(AlbumEy.class, albumName);
+				if("public".equals(album.getAlbumId())) {
+					this.picture.setAlbumId(album.getAlbumId());
+				} else {
+					this.formErrors.put("album_id", "El album ya existe");
+				}
+			} catch (EntityNotFoundException e) {
+				createAlbum(albumName, albumScope);
+			}
+		}else{
+			this.picture.setAlbumId(albumName);
+		}
+	}
+	
+	private void createAlbum(String albumId, String albumScope) throws Exception {
+		AlbumEy nuevoAlbum = new AlbumEy();
+		nuevoAlbum.setAlbumId(albumId);
+		nuevoAlbum.setVisibility(albumScope);
+		nuevoAlbum.setOwner(((Usuario) userSession.getElement("user")).getNombreUsr());
+		this.albumDao.persist(nuevoAlbum);
+		this.picture.setAlbumId(albumId);
 	}
 	
 	public void save() throws Exception {
@@ -162,13 +193,9 @@ public class ImageUploaderModel extends AbstractModel {
 	}
 	
 	public void delete() throws Exception {
-		WebUtils.validateMandatoryParameters(request, new String[] {"id"});
+		WebUtils.validateMandatoryParameters(request, new String[] {"pictureid"});
 		
-		pictureDao.remove(PictureEy.class, WebUtils.getParameter(request, "id"));
-	}
-	
-	private Boolean isNewAlbum(String value) {
-		return value.indexOf(";") > 0;
+		pictureDao.remove(PictureEy.class, WebUtils.getParameter(request, "pictureid"));
 	}
 	
 	/*

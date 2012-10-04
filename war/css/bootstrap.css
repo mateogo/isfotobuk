@@ -279,10 +279,10 @@ a:hover {
   width: 160px;
 }
 .span4 {
-  width: 220px;
+  width: 420px;
 }
 .span5 {
-  width: 280px;
+  width: 330px;
 }
 .span6 {
   width: 340px;
@@ -669,8 +669,8 @@ input[type=button], input[type=reset], input[type=submit] {
   height: auto;
 }
 select, input[type=file] {
-  height: 27px;
-  line-height: 27px;
+  height: 25px;
+  line-height: 25px;
   *margin-top: 4px;
   /* For IE7, add top margin to align select with labels */
 

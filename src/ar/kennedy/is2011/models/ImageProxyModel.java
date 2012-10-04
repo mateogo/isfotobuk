@@ -36,9 +36,9 @@ public class ImageProxyModel extends AbstractModel {
 	}
 	
 	public void getPicture() throws Exception {
-		WebUtils.validateMandatoryParameters(request, new String[] {"id", "version"});
+		WebUtils.validateMandatoryParameters(request, new String[] {"pictureid", "version"});
 		
-		picture = pictureDao.findById(PictureEy.class, WebUtils.getParameter(request, "id"));
+		picture = pictureDao.findById(PictureEy.class, WebUtils.getParameter(request, "pictureid"));
 		String version = WebUtils.getParameter(request, "version");
 		
 		if(picture != null) {
@@ -62,7 +62,7 @@ public class ImageProxyModel extends AbstractModel {
 			}
 		
 		} else {
-			throw new PictureNotFoundException((new StringBuilder()).append("Picture with id: ").append(request.getParameter("id")).append(" not found").toString());
+			throw new PictureNotFoundException((new StringBuilder()).append("Picture with id: ").append(request.getParameter("pictureid")).append(" not found").toString());
 		}
 	}
 	

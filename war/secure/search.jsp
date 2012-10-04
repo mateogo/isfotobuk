@@ -101,9 +101,9 @@ body {
 					<td>
 						<ul class="media-grid">
 							<li><a
-								href="/secure/pictureView.jsp?id=<%=picture.getPictureId()%>"><img
+								href="/secure/pictureView.jsp?pictureid=<%=picture.getPictureId()%>"><img
 									class="thumbnail"
-									src="/image?id=<%=picture.getPictureId()%>&version=H" alt=""
+									src="/image?pictureid=<%=picture.getPictureId()%>&version=H" alt=""
 									width="90" height="90"> </a></li>
 						</ul>
 

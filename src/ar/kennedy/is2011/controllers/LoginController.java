@@ -15,6 +15,7 @@ public class LoginController extends AbstractController {
 	private static final long serialVersionUID = 7995740723219513508L;
 
 	public void action(HttpServletRequest request, HttpServletResponse response, Session userSession) throws Exception {
+		log.debug("LoginController.action: validate login");
 		ModelItf model = new LoginModel();
 		
 		if(((LoginModel) model).validateLogin(request, response)) {

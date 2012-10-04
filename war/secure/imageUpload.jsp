@@ -1,26 +1,24 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@page import="ar.kennedy.is2011.constants.Constants"%>
 <%@page import="ar.kennedy.is2011.session.Session"%>
 <%@page import="ar.kennedy.is2011.session.SessionManager"%>
 <%@page import="ar.kennedy.is2011.db.dao.AbstractDao"%>
+<%@page import="ar.kennedy.is2011.db.entities.Usuario"%>
 <%@page import="ar.kennedy.is2011.db.entities.PictureEy"%>
+<%@page import="ar.kennedy.is2011.db.entities.AlbumEy"%>
+<%@page import="ar.kennedy.is2011.models.SearchPicturesModel"%>
 <%@page import="ar.kennedy.is2011.utils.WebUtils"%>
 <%@page import="org.apache.commons.lang.StringUtils"%>
-<%@page import="ar.kennedy.is2011.db.entities.AlbumEy"%>
 <%@page import="java.util.List"%>
-<%@page import="ar.kennedy.is2011.constants.Constants"%>
-<%@page import="ar.kennedy.is2011.db.entities.Usuario"%>
 <%@page import="java.util.Map"%>
 <%@page import="java.util.HashMap"%>
-<%@page import="ar.kennedy.is2011.models.SearchPicturesModel"%>
 <%@page import="java.util.Set"%>
 <%!
 	private String getValue(Object object) {
 		return object != null ? object.toString() : "";
 	}
-
 	private String getAllAlbumsList(List<AlbumEy> albums) {
 		StringBuilder list = new StringBuilder();
-		
 		for(int i = 0; i < albums.size(); i++) {	
 			if(i == (albums.size() - 1)) {
 				list.append("'").append(albums.get(i).getAlbumId()).append("'");
@@ -29,13 +27,11 @@
 				list.append("'").append(albums.get(i).getAlbumId()).append("', ");
 			}
 		}
-		
 		return list.toString();
 	}
 	
 	private String getAllAlbumsToBeDisplayedByUser(Set<AlbumEy> albums) {
 		StringBuilder splitAlbums = new StringBuilder();
-		
 		int i = 0;
 		for(AlbumEy album : albums) {
 			if(i == (albums.size() - 1)) {
@@ -44,22 +40,23 @@
 			} else {
 				splitAlbums.append("'").append(album.getAlbumId()).append("'").append(", ");
 			}
-			
 			i++;
 		}
-		
 		return splitAlbums.toString();
 	}
 %>
 <%
 	Session userSession = SessionManager.get(request, WebUtils.getSessionIdentificator(request));
-	Map<String, Object> errors = userSession.contains("errors") ? ((Map<String, Object>) userSession.getElement("errors")).containsKey("form_errors") ? (Map<String, Object>) ((Map<String, Object>) userSession.getElement("errors")).get("form_errors") : new HashMap<String, Object>() : new HashMap<String, Object>();
+	Map<String, Object> errors = userSession.contains("errors") ? 
+			((Map<String, Object>) userSession.getElement("errors")).containsKey("form_errors") ? 
+					(Map<String, Object>) ((Map<String, Object>) userSession.getElement("errors")).get("form_errors") : 
+					new HashMap<String, Object>() : 
+			new HashMap<String, Object>();
 	SearchPicturesModel searchPicturesModel = new SearchPicturesModel();
 	Usuario user = (Usuario) userSession.getElement("user");
 	PictureEy picture = null;
 
-	String pictureId = WebUtils.getParameter(request, "id");
-
+	String pictureId = WebUtils.getParameter(request, "pictureid");
 	if (pictureId != null) {
 		AbstractDao<PictureEy> pictureDao = new AbstractDao<PictureEy>();
 
@@ -124,7 +121,7 @@ body {
 	<div class="container">
 		<div class="content">
 			<form method="post"
-				action="/upload?action=<%=pictureId == null ? "add" : "update&id=" + pictureId%>"
+				action="/upload?action=<%=pictureId == null ? "add" : "update&pictureid=" + pictureId%>"
 				enctype="multipart/form-data">
 				<div class="row">
 					<div class="clearfix">
@@ -137,7 +134,7 @@ body {
 						<div class="span4">
 							<label for="mediumSelect">o Url:</label>
 							<div class="input">
-								<input id="url" name="url" type="text" size="80"
+								<input id="url" name="url" type="text"
 									value="<%=getValue(picture.getUrl())%>" />
 							</div>
 						</div>

@@ -14,7 +14,7 @@
 <%@page import="ar.kennedy.is2011.db.entities.PictureEy"%>
 <%@page import="java.util.Iterator"%>
 <%
-	WebUtils.validateMandatoryParameters(request, new String[] { "id" });
+	WebUtils.validateMandatoryParameters(request, new String[] { "pictureid" });
 	Session userSession = SessionManager.get(request,
 			WebUtils.getSessionIdentificator(request));
 	Usuario user = (Usuario) userSession.getElement("user");
@@ -66,9 +66,9 @@ body {
 		<div class="row">
 			<ul class="media-grid">
 				<li>
-					<img class="span16" src="/image?id=<%=WebUtils.getParameter(request, "id")%>&version=O">
+					<img class="span16" src="/image?pictureid=<%=WebUtils.getParameter(request, "pictureid")%>&version=O">
 				</li>
-				<li><%=Social.addLinks(WebUtils.getCompleteUrlForPicture(request,WebUtils.getParameter(request, "id")), "Picture")%></li>
+				<li><%=Social.addLinks(WebUtils.getCompleteUrlForPicture(request,WebUtils.getParameter(request, "pictureid")), "Picture")%></li>
 			</ul>
 		</div>
 	</div>

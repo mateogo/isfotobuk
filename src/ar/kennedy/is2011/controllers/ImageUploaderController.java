@@ -17,6 +17,8 @@ public class ImageUploaderController extends AbstractController {
 	private static final long serialVersionUID = 8956304553458377284L;
 	
 	public void action(HttpServletRequest request, HttpServletResponse response, Session userSession) throws Exception {
+		log.debug("ImageUploaderController Action: start");
+
 		WebUtils.validateMandatoryParameters(request, new String[] {"action"});
 		
 		ModelItf model = new ImageUploaderModel(request, userSession, WebUtils.getParameter(request, "action"));
@@ -53,7 +55,6 @@ public class ImageUploaderController extends AbstractController {
 		
 		} else if("delete".equals(action)) {
 			model.delete();
-			
 			response.sendRedirect("secure/main.jsp");
 			
 		} else {

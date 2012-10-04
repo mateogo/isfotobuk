@@ -67,16 +67,13 @@ public class SessionManager {
 		SessionEy sessionEy = null;
 		Session session = null;
 		
-		log.debug("Get session for id: " + sessionId);
+		log.debug("Get session for id: "+sessionId+" mode:["+Constants.SESSION_MODE+"]");
 		
 		try {
 			if(Constants.SESSION_MODE.equals("db")) {
-				sessionEy = sessionDao.findById(SessionEy.class, sessionId);
-				
-				if(sessionEy != null) {
-					session = (Session) FileUtils.byteArrayToObject(sessionEy.getContent().getBytes());
-				}
-			
+				sessionEy = sessionDao.findById(SessionEy.class, sessionId);				
+				if(sessionEy != null) session = (Session) FileUtils.byteArrayToObject(sessionEy.getContent().getBytes());
+
 			} else {
 				session = (Session) request.getSession().getAttribute(sessionId);
 			}

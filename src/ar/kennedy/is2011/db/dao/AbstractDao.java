@@ -82,15 +82,15 @@ public class AbstractDao<T> implements InterfaceDao<T> {
 	public List<T> select(Class<T> clazz) throws EntityNotFoundException {
 		List<T> result = null;
 		
-		log.debug("Get all object over entity: " + clazz.getClass().getSimpleName());
+		//log.debug("Get all object over entity: " + clazz.getClass().getSimpleName());
+		log.debug("Get all object over entity: " + clazz.getClass().getName());
 		
 		result = em.createQuery((new StringBuilder()).append("SELECT e FROM ").append(clazz.getName()).append(" e").toString()).getResultList();
 		
 		if(result == null || result.size() == 0) {
 			throw new EntityNotFoundException("The entities not exist");
 		}
-		
-		log.debug("Entities recovered");
+		log.debug("Entities recovered, list.size:["+result.size()+"]");
 		
 		return result;
 	}

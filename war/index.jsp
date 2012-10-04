@@ -13,6 +13,7 @@
 <!--		<script src="/js/prettify.js"></script>                                                    -->
 <!--		<script src="js/bootstrap-modal.js"></script>                                              -->
 		<link href="css/bootstrap.css" rel="stylesheet">
+		<link rel="icon" href="/favicon.gif" type="image/gif"> 
 		<style type="text/css">
 			/* Override some defaults */
 			html, body {
