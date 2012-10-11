@@ -14,13 +14,18 @@ import java.util.List;
 public class UserHomeView {
 
 	//private static final Integer DEFAULT_FECTH = 2;
-	private static final Integer PICS_PER_PAGE = 3;
+	private static final Integer PICS_PER_PAGE = 4;
+	private static final Integer BUTTONS_PER_SECTION = 4;
 	private HttpServletRequest request;
 	private Usuario user;
 	private PictureEy lastImageUpload;
 	private SearchPicturesModel searchPicturesModel = new SearchPicturesModel();
 	protected final Logger log = Logger.getLogger(getClass());
 	private List<PictureEy> pictures;
+	private int pages=0;
+	private int actualPage=1;
+	private int fromButton=1;
+	private int toButton=3;
 	
 	public UserHomeView(){
 		
@@ -30,10 +35,7 @@ public class UserHomeView {
 		setUser( (Usuario) SessionManager.get(request, WebUtils.getSessionIdentificator(request)).getElement("user"));
 		setLastImageUpload(searchPicturesModel.getLastPictureUploadByUser(user.getNombreUsr()));
 		log.debug("UserHomeView Instanciated");
-	}
-
-	
-	
+	}	
 	public HttpServletRequest getRequest() {
 		return request;
 	}
@@ -64,7 +66,6 @@ public class UserHomeView {
 	public String getLastImageId() {
 		return getLastImageUpload().getPictureId();
 	}
-	
 	public Iterator<PictureEy> getPicByUserIterator(){
 		Iterator<PictureEy> it = getPictures().iterator();
 		//testIterator(it);
@@ -76,7 +77,9 @@ public class UserHomeView {
 	public String[] getPicBbyPage(){
 		List<PictureEy> picList = getPictures();
 		Integer picSize = picList.size();
+		setPages(picSize);
 		Integer page = WebUtils.getParameter(getRequest(), "page") != null ? new Integer(WebUtils.getParameter(request, "page")) : 1;
+		setActualPage(page);
 		Integer from = firstPicByPage(page,picSize);
 		Integer to = lastPicByPage(page,picSize);
 		log.debug("Generando pic-Array from:["+from+"]"+" to:["+to+"]");
@@ -114,13 +117,6 @@ public class UserHomeView {
 		else last=listSize;
 		return last;
 	}
-	public void testIterator(Iterator<PictureEy> it){
-		while (it.hasNext()){
-			PictureEy pic= it.next();
-			log.debug("listando: ["+pic.getPictureId()+"]");
-		}
-	}
-
 	public List<PictureEy> getPictures() {
 		if(pictures==null) pictures = searchPicturesModel.getPicturesToBeDisplayedByUser(user.getNombreUsr());
 		return pictures;
@@ -128,6 +124,45 @@ public class UserHomeView {
 	public void setPictures(List<PictureEy> pictures) {
 		this.pictures = pictures;
 	}
-	
-	
+	public int getPages() {
+		return pages;
+	}
+	public void setPages(int listSize) {
+		int p = listSize/PICS_PER_PAGE + ((listSize % PICS_PER_PAGE) == 0? 0 : 1);
+		log.debug("-------------------------");
+		log.debug("Pages: p:["+p+"] listSize:["+listSize+"]");
+		this.pages = p;
+	}
+	public int getActualPage() {
+		return actualPage;
+	}
+	public void setActualPage(int actualPage) {
+		this.actualPage = actualPage;
+	}
+	public void testIterator(Iterator<PictureEy> it){
+		while (it.hasNext()){
+			PictureEy pic= it.next();
+			log.debug("listando: ["+pic.getPictureId()+"]");
+		}
+	}
+	public void setNavButtons(){
+		int navSection=(this.getActualPage()-1)/BUTTONS_PER_SECTION;
+		this.fromButton=navSection*BUTTONS_PER_SECTION+1;
+		this.toButton=(fromButton+BUTTONS_PER_SECTION-1)>this.getPages()?this.getPages():fromButton+BUTTONS_PER_SECTION-1;
+		log.debug("-------------------------");
+		log.debug("getPages:["+getPages()+"]  navSection:["+navSection+"]  fromButton:["+fromButton+"]  toButton:["+toButton+"] ");
+	}
+	public int getFromButton() {
+		return fromButton;
+	}
+	public void setFromButton(int fromButton) {
+		this.fromButton = fromButton;
+	}
+	public int getToButton() {
+		return toButton;
+	}
+	public void setToButton(int toButton) {
+		this.toButton = toButton;
+	}	
+
 }

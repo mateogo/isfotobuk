@@ -132,29 +132,57 @@
 				%>
 				<div class="pagination">
 					<ul>
+					<!-- =========== Boton Previous ===============================  -->
 						<%
-							if(true) {
+							if(userView.getActualPage()==1 || userView.getPages()==0){
 						%>
 							<li class="prev disabled">
 								<a href="main.jsp?page=<%= 1%>">&larr; Previous</a>
 							</li>
 						<%
-							}
+							}else{
+						%>
+							<li class="prev active">
+								<a href="main.jsp?page=<%= userView.getActualPage()-1%>">&larr; Previous</a>
+							</li>
+						<%
+							}//end-if
+						%>
+					<!-- =========== Botones 1,2,3 ===============================  -->
+						<%
+						userView.setNavButtons();
+						for(int but=userView.getFromButton();but<=userView.getToButton();but++) {
 						%>
 						<%
-							for(int i = 2; i < 4; i++) {
+							if(but==userView.getActualPage() ) {
+						%>
+						<li class="disabled">
+							<a href="main.jsp?page=<%= but  %>"><%= but %></a>
+						</li>
+						<%
+							}else{
 						%>
 						<li class="active">
-							<a href="main.jsp?page=<%= i  %>"><%= i %></a>
+							<a href="main.jsp?page=<%= but  %>"><%= but %></a>
 						</li>
 						<%
 							}
 						%>
 						<%
-							if(true ) {
+						}//endfor
+						%>
+					<!-- =========== Boton next ===============================  -->
+						<%
+							if(userView.getActualPage() == userView.getPages()){
+						%>
+						<li class="next disabled">
+							<a href="main.jsp?page=<%=userView.getPages()  %>">Next &raquo;</a>
+						</li>
+						<%
+							}else{
 						%>
 						<li class="next">
-							<a href="main.jsp?page=<%=1  %>">Next &raquo;</a>
+							<a href="main.jsp?page=<%=userView.getActualPage()+1  %>">Next &raquo;</a>
 						</li>
 						<%
 							}
@@ -162,7 +190,7 @@
 					</ul>
 				</div>
 				<%
-					}
+					}//end-if bloque pagination
 				%>
 				<footer>
 					<div id="modal-from-dom" class="modal hide fade">
