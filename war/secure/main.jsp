@@ -4,12 +4,15 @@
 <%@page import="ar.kennedy.is2011.utils.WebUtils"%>
 <%@page import="ar.kennedy.is2011.models.SearchPicturesModel"%>
 <%@page import="ar.kennedy.is2011.db.entities.PictureEy"%>
+<%@page import="ar.kennedy.is2011.views.UserHomeView"%>
 <%@page import="org.apache.commons.lang.StringUtils"%>
 <%@page import="java.util.List"%>
+<%@page import="java.util.Iterator"%>
 <%!
 	private static final Integer DEFAULT_FECTH = 2;
 %>
 <%
+	UserHomeView userView = new UserHomeView(request);
 	SearchPicturesModel searchPicturesModel = new SearchPicturesModel();
 	Usuario user = (Usuario) SessionManager.get(request, WebUtils.getSessionIdentificator(request)).getElement("user");
 %>
@@ -17,27 +20,26 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<title>Principal</title>
-		<meta name="GUI para aplicación is2011" content="">
-		<meta name="Grupo 4 - ¿nombre?" content="">
+		<title>Fotobuk ::Inicio::</title>
+		<meta name="Home del usuario una vez logueado" content="">
+		<meta name="fotobuk uk" content="">
+		
 		<!--[if lt IE 9]>
 		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
-		<script
-		src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
 		<!--script src="/js/prettify.js"></script  -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
 		<script src="/js/bootstrap-modal.js"></script>
+		
 		<link href="/css/bootstrap.css" rel="stylesheet">
-		<link href="/css/docs.css" rel="stylesheet">
-		<link rel="icon" href="/favicon.gif" type="image/gif"> 
+		<link href="/css/docs.css"      rel="stylesheet">
+		<link href="/favicon.gif"       rel="icon" type="image/gif"> 
+
 		<style type="text/css">
-			body {
-				padding-top: 60px;
-			}
-			.show-grid [class*="span"] {
-				text-align: left;
-			}
+			body { padding-top: 60px; }
+			.show-grid [class*="span"] { text-align: left;}
 		</style>
+
 	</head>
 	<body>
 		<div class="topbar">
@@ -60,7 +62,7 @@
 						</li>
 					</ul>
 					<p class="pull-right">
-						Logueado como <a href="/secure/editarCuentaUsuario.jsp"><%= user.getNombreUsr() %></a><a href="/logout"> Cerrar sesion</a>
+						Logueado como <a href="/secure/editarCuentaUsuario.jsp"><%= userView.getUserName() %></a><a href="/logout"> Cerrar sesion</a>
 					</p>
 				</div>
 			</div>
@@ -73,11 +75,9 @@
 						<li>
 							<div class="span4">
 								<%
-									PictureEy lastImageUpload = searchPicturesModel.getLastPictureUploadByUser(user.getNombreUsr());
-									
-									if(lastImageUpload != null) {
+									if(userView.userHaveImages()) {
 								%>
-									<a href="/secure/pictureView.jsp?pictureid=<%= lastImageUpload.getPictureId() %>"><img class="thumbnail" src="/image?pictureid=<%= lastImageUpload.getPictureId() %>&version=I" width="150" height="150" alt=""></a>
+									<a href="/secure/pictureView.jsp?pictureid=<%= userView.getLastImageId() %>"><img class="thumbnail" src="/image?pictureid=<%= userView.getLastImageId() %>&version=I" width="150" height="150" alt=""></a>
 								<%
 									} else {
 								%>
@@ -88,92 +88,75 @@
 							</div>
 							<div class="span10">
 								<h1>
-									<% 
-										if(StringUtils.isNotBlank(user.getNombre()) && StringUtils.isNotBlank(user.getApellido())) {
-											out.print((new StringBuilder()).append(user.getNombre()).append(" ").append(user.getApellido()).toString());
-										
-										} else {
-											out.print(user.getNombreUsr());
-										}
+									<%
+										out.print(userView.getUserDisplayName());
 									%>
 								</h1>
 							</div>
 						</li>
 					</ul>
 				</div>
+		<!-- REVISION MGO  -->
 				<h2>&Uacute;ltimas fotos</h2>
 				<%
-					List<PictureEy> pictures = searchPicturesModel.getPicturesToBeDisplayedByUser(user.getNombreUsr());
-					Integer totalPictures = pictures.size();
-					Integer startFetch = WebUtils.getParameter(request, "sf") != null ? new Integer(WebUtils.getParameter(request, "sf")) : 0;
-					Integer endFetch = WebUtils.getParameter(request, "ef") != null ? pictures.size() < new Integer(WebUtils.getParameter(request, "ef")) ? pictures.size() : new Integer(WebUtils.getParameter(request, "ef")) : pictures.size() < DEFAULT_FECTH ? pictures.size() : DEFAULT_FECTH;
-					
-					for(int i = startFetch; i < endFetch; i++) {
+					String[] pics = userView.getPicBbyPage();
+					if(pics !=null){
+					for(String picId: pics){
 				%>
 				<div class="well">
 					<ul class="media-grid">
 						<li>
 							<div class="row">
 								<div class="span3">
-									<a href="/secure/pictureView.jsp?pictureid=<%= pictures.get(i).getPictureId() %>"><img class="thumbnail" src="/image?pictureid=<%= pictures.get(i).getPictureId() %>&version=H" alt="" width="90" height="90"> </a>
+									<a href="/secure/pictureView.jsp?pictureid=<%= picId %>"><img class="thumbnail" src="/image?pictureid=<%= picId %>&version=H" alt="" width="90" height="90"> </a>
 								</div>
-								<p>
-									Acciones
-								</p>
+								<p>Acciones </p>
 								<div class="span12">
-									<a href="/secure/pictureView.jsp?pictureid=<%= pictures.get(i).getPictureId() %>"><button class="btn info">
-										Ver
-									</button></a>
-									<a href="/secure/imageUpload.jsp?pictureid=<%= pictures.get(i).getPictureId() %>"><button class="btn primary">
-										Editar
-									</button></a>
-									<a href="/upload?action=delete&pictureid=<%= pictures.get(i).getPictureId() %>"><button class="btn danger">
-										Eliminar
-									</button></a>
+									<a href="/secure/imageUpload.jsp?pictureid=<%= picId %>">
+										<button class="btn primary">Editar </button>
+									</a>
+									<a href="/upload?action=delete&pictureid=<%= picId %>">
+										<button class="btn danger">Eliminar</button>
+									</a>
 								</div>
 							</div>
 						</li>
 					</ul>
 				</div>
 				<%
-					}
+					}//end-for
+					}//end-if
 				%>
 				<%
-					if(pictures.size() > 0) {
+					if(true) {
 				%>
 				<div class="pagination">
 					<ul>
 						<%
-							if(StringUtils.isNotBlank(WebUtils.getParameter(request, "sf")) && (new Integer(WebUtils.getParameter(request, "sf"))) > 0) {
+							if(true) {
 						%>
 							<li class="prev disabled">
-								<a href="main.jsp?sf=<%= StringUtils.isNotBlank(WebUtils.getParameter(request, "sf")) ? (new Integer(WebUtils.getParameter(request, "sf")) - DEFAULT_FECTH) >= 0 ? (new Integer(WebUtils.getParameter(request, "sf")) - DEFAULT_FECTH) : 0 : 0 %>&ef=<%= StringUtils.isNotBlank(WebUtils.getParameter(request, "sf")) ? (new Integer(WebUtils.getParameter(request, "ef")) - DEFAULT_FECTH) > 0 ? (new Integer(WebUtils.getParameter(request, "ef")) - DEFAULT_FECTH) : DEFAULT_FECTH : DEFAULT_FECTH %>">&larr; Previous</a>
+								<a href="main.jsp?page=<%= 1%>">&larr; Previous</a>
 							</li>
 						<%
 							}
 						%>
 						<%
-							for(int i = 0; i < Math.ceil((float) pictures.size() / DEFAULT_FECTH); i++) {
+							for(int i = 2; i < 4; i++) {
 						%>
 						<li class="active">
-							<a href="main.jsp?sf=<%= i * DEFAULT_FECTH %>&ef=<%= (i * DEFAULT_FECTH) + DEFAULT_FECTH %>"><%= i %></a>
+							<a href="main.jsp?page=<%= i  %>"><%= i %></a>
 						</li>
 						<%
 							}
 						%>
 						<%
-							if(StringUtils.isNotBlank(WebUtils.getParameter(request, "ef")) && (new Integer(WebUtils.getParameter(request, "ef"))) < pictures.size() ) {
+							if(true ) {
 						%>
 						<li class="next">
-							<a href="main.jsp?sf=<%= StringUtils.isNotBlank(WebUtils.getParameter(request, "ef")) ? new Integer(WebUtils.getParameter(request, "ef")) : 0 %>&ef=<%= StringUtils.isNotBlank(WebUtils.getParameter(request, "ef")) ? (new Integer(WebUtils.getParameter(request, "ef")) + DEFAULT_FECTH) : DEFAULT_FECTH %>">Next &raquo;</a>
+							<a href="main.jsp?page=<%=1  %>">Next &raquo;</a>
 						</li>
 						<%
-							} else if(StringUtils.isBlank(WebUtils.getParameter(request, "ef")) && (DEFAULT_FECTH * 2) <= pictures.size()) {
-						%>
-						<li class="next">
-							<a href="main.jsp?sf=<%= DEFAULT_FECTH %>&ef=<%=DEFAULT_FECTH * 2 %>">Next &raquo;</a>
-						</li>
-						<% 
 							}
 						%>
 					</ul>

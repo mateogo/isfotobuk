@@ -128,7 +128,7 @@ body {
 						<div class="span5">
 							<label for="mediumSelect">Archivo de imagen:</label>
 							<div class="input">
-								<input id="picture_file" name="picture_file" type="file" />
+								<input id="picture_file" name="picture_file" type="file" color=/>
 							</div>
 						</div>
 						<div class="span4">

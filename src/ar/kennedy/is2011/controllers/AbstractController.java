@@ -70,7 +70,8 @@ public abstract class AbstractController extends HttpServlet implements Controll
 		}
 	}
 	
-	public void action(HttpServletRequest request, HttpServletResponse response, Session userSession) throws Exception { }
+	public void action(HttpServletRequest request, HttpServletResponse response, Session userSession) throws Exception {
+	}
 	
 	public abstract boolean validateLogin(HttpServletRequest request);
 	

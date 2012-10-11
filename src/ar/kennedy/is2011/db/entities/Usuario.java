@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.apache.commons.lang.StringUtils;
 
 @Entity
 @Table(name = "USUARIO")
@@ -97,6 +98,14 @@ public class Usuario implements Serializable {
 	}
 	public void setMail(String mail) {
 		this.mail = mail;
+	}
+
+	public String getDisplayName() {
+		if(StringUtils.isNotBlank(this.getNombre()) && StringUtils.isNotBlank(this.getApellido())) {
+			return new StringBuilder().append(this.getNombre()).append(" ").append(this.getApellido()).toString();
+		} else {
+			return this.getNombreUsr();
+		}		
 	}
 	
 	public String getNombre() {
