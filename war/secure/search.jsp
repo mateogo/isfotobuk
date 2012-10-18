@@ -13,6 +13,7 @@
 <%@page import="java.util.List"%>
 <%@page import="ar.kennedy.is2011.db.entities.PictureEy"%>
 <%@page import="java.util.Iterator"%>
+
 <%!public PictureEy getPicture(Iterator<PictureEy> iterator) {
 		if (iterator.hasNext()) {
 			return iterator.next();
@@ -54,35 +55,27 @@ body {
 	padding-top: 60px;
 }
 
-.show-grid [class *="span"] {
+.show-grid [class*="span"] {
 	text-align: left;
 }
 </style>
 </head>
 <body>
-	<div class="topbar">
-		<div class="topbar-inner">
-			<div class="container">
-				<a class="brand" href="/secure/search.jsp">Buscar</a>
-				<ul class="nav">
-					<li class="active"><a href="/secure/main.jsp">Inicio</a></li>
-					<!-- <li><a href="/secure/search.jsp">Buscar</a></li> -->
-				</ul>
-				<p class="pull-right">
-					Logueado como <a href="/secure/editarCuentaUsuario.jsp"><%=user.getNombreUsr()%></a><a
-						href="/logout"> Cerrar sesion</a>
-				</p>
-			</div>
-		</div>
-	</div>
+
+	<!-- jpd / 15-10-2012 / llamada al jsp que resuelve la barra de navegacion -->
+	<jsp:include page="topbar.jsp?bar=search" flush="true" />
+
+
 	<div class="container">
 		<div class="content">
 			<div class="row">
-				<form id="search_form" name="search_form" method="post" action="/secure/search.jsp">
+				<form id="search_form" name="search_form" method="post"
+					action="/secure/search.jsp">
 					<div class="clearfix">
 						<div class="span16">
 							<div class="input">
-								<input id="search_value" name="search_value" type="text" />  	   <input class="btn primary" type="submit" name="search" value="Buscar">
+								<input id="search_value" name="search_value" type="text" /> <input
+									class="btn primary" type="submit" name="search" value="Buscar">
 							</div>
 						</div>
 					</div>
@@ -103,8 +96,8 @@ body {
 							<li><a
 								href="/secure/pictureView.jsp?pictureid=<%=picture.getPictureId()%>"><img
 									class="thumbnail"
-									src="/image?pictureid=<%=picture.getPictureId()%>&version=H" alt=""
-									width="90" height="90"> </a></li>
+									src="/image?pictureid=<%=picture.getPictureId()%>&version=H"
+									alt="" width="90" height="90"> </a></li>
 						</ul>
 
 					</td>

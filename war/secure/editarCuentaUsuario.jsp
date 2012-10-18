@@ -15,6 +15,7 @@
 <script src="/js/prettify.js"></script>
 <script src="/js/bootstrap-modal.js"></script>
 <script src="/js/menu.js" type="text/javascript"></script>
+<script src="/js/editarCuentaUsuario.js" type="text/javascript"></script>
 
 <link href="/css/bootstrap.css" rel="stylesheet">
 <link href="/css/docs.css" rel="stylesheet">
@@ -23,7 +24,7 @@ body {
 	padding-top: 60px;
 }
 
-.show-grid [class *="span"] {
+.show-grid [class*="span"] {
 	text-align: left;
 }
 
@@ -41,20 +42,8 @@ form .input {
 	<form name="form" action="/editarCuenta" method="post">
 		<input type="hidden" name="misFotos" value="misFotos">
 
-		<div class="topbar">
-			<div class="topbar-inner">
-				<div class="container">
-					<a class="brand" href="#">Editar cuenta de Usuario</a>
-					<ul class="nav">
-						<li class="active"><a href="/secure/main.jsp">Inicio</a></li>
-					</ul>
-					<p class="pull-right">
-						Logueado como <a href="/secure/editarCuentaUsuario.jsp">${usuarioLogeado.nombreUsr}</a>
-						<a href="/logout"> Cerrar sesion </a>
-					</p>
-				</div>
-			</div>
-		</div>
+		<!-- jpd / 15-10-2012 / llamada al jsp que resuelve la barra de navegacion -->
+		<jsp:include page="topbar.jsp?bar=editarCuentaUsuario" flush="true" />
 
 		<div class="container">
 			<div class="content">
@@ -207,105 +196,6 @@ form .input {
 			</div>
 		</div>
 	</form>
-	
-	<script type="text/javascript">
-		var form = document.getElementsByName("form")[0];
-		var mail = document.getElementById("mail");
-		var mail2 = document.getElementById("mail2");
-		var nombre = document.getElementById("nomUsr");
-		var apellido = document.getElementById("apeUsr");
-		var fechaNac = document.getElementById("fechaNac");
-		var masculino = document.getElementById("masculino");
-		var femenino = document.getElementById("femenino");
-		var pais = document.getElementById("idPais");
-		var prov = document.getElementById("prov");
-		var pregunta = document.getElementById("pSecreta");
-		var resp = document.getElementById("respuesta");
 
-		cargarCombos();
-
-		function limpiarCampos() {
-			mail.value = "";
-			mail2.value = "";
-			nombre.value = "";
-			apellido.value = "";
-			fechaNac.value = "";
-			//maculino.checked = "false";
-			//femenino.checked = "false";
-			pais.value = "";
-			prov.value = "";
-			pregunta.value = "";
-			resp.value = "";
-		}
-
-		function guardar() {
-			if (validarCamposMails()) {
-				form.submit();
-			}
-		}
-
-		function validarCamposMails() {
-			if (mail.value == "" && mail2.value == "") {
-				$('.alert-message').alert('close')
-				alert("Debe de ingresar al menos una direccion de email");
-				return false;
-			}
-
-			return true;
-		}
-
-		function cargarCombos() {
-			pais.value = "${usuarioLogeado.pais}";
-			prov.value = "${usuarioLogeado.idProvicia}";
-			pregunta.value = "${usuarioLogeado.idPreguntaSecreta}";
-
-			if ("${usuarioLogeado.sexo}" != "") {
-				if ("${usuarioLogeado.sexo}" == "M") {
-					masculino.checked = true;
-				} else {
-					femenino.checked = true;
-				}
-			}
-		}
-
-		function volverMisFotos() {
-			form.action = "/forward";
-			form.submit();
-		}
-
-		function salir() {
-			form.action = "/logout_beta";
-			form.submit();
-		}
-
-		/*
-		 </servlet-mapping>
-		 <session-config>
-		 <session-timeout>
-		 30
-		 </session-timeout>
-		 </session-config>
-		 */
-
-		//Creo una instancia de la clase Menu
-		var menu1 = new Desplegable();
-		//Creo una propiedad "items", la cual es el array de ítems que tendrá nuestro menu, la creo fuera de la clase ya que nos permite personalizar el menu sin tener que editar la clase.
-		menu1.items = new Array([ "item-0", "javascript:;",
-				"${usuarioLogeado.nombreUsr}" ], [ "item-1", "javascript:;",
-				"Album de Fotos" ]);
-
-		//Creo una propiedad "suitems", la cual es el array de sub ítems que apareceran dentro de cada ítem.
-		menu1.subitems = new Array(
-				[
-						[ "subitem-0", "javascript:editar();", "Editar Cuenta",
-								"_self" ],
-						[ "subitem-1", "javascript:salir();", "Cerrar Sesion",
-								"_self" ] ],
-				[
-						[ "subitem-0", "javascript:;", "Subir Fotos", "_self" ],
-						[ "subitem-1", "javascript:;", "Editar Fotos", "_self" ],
-						[ "subitem-2", "javascript:volverMisFotos();",
-								"Mis Fotos", "_self" ] ]);
-	</script>
 </body>
 </html>
