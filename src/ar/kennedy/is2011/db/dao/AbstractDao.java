@@ -16,7 +16,7 @@ import ar.kennedy.is2011.db.manager.ManagerAccess;
 /**
  * @author mlabarinas
  */
-public class AbstractDao<T> implements InterfaceDao<T> {
+public class AbstractDao<T> implements AbstractDaoInterface<T> {
 	
 	private static final Logger log = Logger.getLogger(AbstractDao.class);
 	
@@ -42,6 +42,27 @@ public class AbstractDao<T> implements InterfaceDao<T> {
 		log.debug("Entity found");
 				
 		return generic;
+	}
+	
+	public void beginTx() throws PersistException {
+		em.getTransaction().begin();
+		log.debug("beginTx:  ok");
+	}
+	public void rollBackTx() {
+		if (em.getTransaction().isActive()) {
+			em.getTransaction().rollback();
+			log.debug("RollbackTx:  ok");
+		}
+	}
+	public void endTx() throws PersistException {
+		log.debug("endTx....");
+		em.flush();
+		log.debug("endTx: Flush ok");
+		em.getTransaction().commit();
+		log.debug("endTx: Commit ok");
+	}
+	public void close() throws PersistException {
+		em.close();
 	}
 	
 	public void persist(T obj) throws PersistException {
@@ -83,10 +104,13 @@ public class AbstractDao<T> implements InterfaceDao<T> {
 		List<T> result = null;
 		
 		//log.debug("Get all object over entity: " + clazz.getClass().getSimpleName());
-		log.debug("Get all object over entity: " + clazz.getClass().getName());
-		
-		result = em.createQuery((new StringBuilder()).append("SELECT e FROM ").append(clazz.getName()).append(" e").toString()).getResultList();
-		
+		log.debug("Get all object over entity: " + clazz.getClass().getSimpleName());
+		String queryString= (new StringBuilder()).append("SELECT e FROM ").append(clazz.getName()).append(" e").toString();
+		log.debug("Get all object over query: [" + queryString+"]");
+		Query q = em.createQuery(queryString);
+		log.debug("Get all object fetching results....");
+		result = q.getResultList();
+		log.debug("Get all object result: ok");
 		if(result == null || result.size() == 0) {
 			throw new EntityNotFoundException("The entities not exist");
 		}

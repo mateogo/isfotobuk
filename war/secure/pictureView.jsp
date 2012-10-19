@@ -31,12 +31,11 @@
 <!--[if lt IE 9]>
 		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
-<script src="/js/prettify.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
 <script src="/js/bootstrap-modal.js"></script>
 <link href="/css/bootstrap.css" rel="stylesheet">
-<link href="/css/docs.css" rel="stylesheet">
+<link href="/images/favicon.gif" rel="icon" type="image/gif">
+
 <style type="text/css">
 body {
 	padding-top: 60px;

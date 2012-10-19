@@ -1,16 +1,28 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<persistence xmlns="http://java.sun.com/xml/ns/persistence"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
-        http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd" version="1.0">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence         http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
 
     <persistence-unit name="transactions-optional">
-        <provider>org.datanucleus.store.appengine.jpa.DatastorePersistenceProvider</provider>
-        <properties>
+		<provider>org.datanucleus.api.jpa.PersistenceProviderImpl</provider>
+
+		<class>ar.kennedy.is2011.db.entities.AlbumEy</class>
+		<class>ar.kennedy.is2011.db.entities.PictureEy</class>
+		<class>ar.kennedy.is2011.db.entities.SessionEy</class>
+		<class>ar.kennedy.is2011.db.entities.Usuario</class>
+		<class>ar.kennedy.is2011.db.entities.User</class>
+		<class>ar.kennedy.is2011.db.entities.Account</class>
+		<class>ar.kennedy.is2011.db.entities.Person</class>
+		<class>ar.kennedy.is2011.db.entities.PersonaFisica</class>
+		<class>ar.kennedy.is2011.db.entities.PersonaIdeal</class>
+		<class>ar.kennedy.is2011.db.entities.Location</class>
+		<class>ar.kennedy.is2011.db.entities.ContactosPerson</class>
+												
+		<exclude-unlisted-classes/>
+
+		<properties>
             <property name="datanucleus.NontransactionalRead" value="true"/>
             <property name="datanucleus.NontransactionalWrite" value="true"/>
             <property name="datanucleus.ConnectionURL" value="appengine"/>
+			<property name="datanucleus.appengine.ignorableMetaDataBehavior" value="NONE" />
         </properties>
     </persistence-unit>
-
 </persistence>

@@ -9,7 +9,7 @@
 <meta name="Investigacion de sistemas" content="">
 
 <link href="css/bootstrap.css" rel="stylesheet">
-<link rel="icon" href="/favicon.gif" type="image/gif">
+<link rel="icon" href="/images/favicon.gif" type="image/gif">
 
 <style type="text/css">
 /* Override some defaults */
@@ -76,7 +76,7 @@ body {
 			<!-- nombre feo si los hay... -->
 			<p>Aplicaci&oacute;n creada en Google AppEngine utilizando varias tecnolog&iacute;as</p>
 			<p>
-				<a class="btn primary large" href="/about.jsp">AAcerca de &raquo;</a>
+				<a class="btn primary large" href="/about.jsp">Acerca de. . . &raquo;</a>
 			</p>
 		</div>
 	</div>

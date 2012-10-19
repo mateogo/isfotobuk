@@ -36,7 +36,7 @@
 
 <link href="/css/bootstrap.css" rel="stylesheet">
 <link href="/css/docs.css" rel="stylesheet">
-<link href="/favicon.gif" rel="icon" type="image/gif">
+<link href="/images/favicon.gif" rel="icon" type="image/gif">
 
 <style type="text/css">
 body {

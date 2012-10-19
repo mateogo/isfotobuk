@@ -124,9 +124,32 @@ version="2.5" >
 		<servlet-name>TestController</servlet-name>
 		<url-pattern>/test</url-pattern>
 	</servlet-mapping>
+	<servlet>
+		<servlet-name>TestAccount</servlet-name>
+		<servlet-class>ar.kennedy.is2011.utils.TestNewAccount</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>TestAccount</servlet-name>
+		<url-pattern>/accounttest</url-pattern>
+	</servlet-mapping>
+	
+	
 	<!-- END REST Mappings -->
-	
-	
+
+	<!-- SERVICE Mappings -->
+  	<servlet>
+    	<servlet-name>SystemServiceServlet</servlet-name>
+    	<servlet-class>com.google.api.server.spi.SystemServiceServlet</servlet-class>
+    	<init-param>
+    	  <param-name>services</param-name>
+    	  <param-value/>
+    	</init-param>
+  	</servlet>
+  	<servlet-mapping>
+  	  <servlet-name>SystemServiceServlet</servlet-name>
+  	  <url-pattern>/_ah/spi/*</url-pattern>
+  	</servlet-mapping>
+
 	<!-- FILTROS -->
 	<filter>
         <filter-name>SecureFilter</filter-name>

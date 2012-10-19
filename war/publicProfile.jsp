@@ -18,7 +18,7 @@
 		<![endif]-->
 		<script
 		src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
-		<link href="/favicon.gif" rel="icon" type="image/gif">
+		<link href="/images/favicon.gif" rel="icon" type="image/gif">
 		<script src="/js/bootstrap-modal.js"></script>
 		<link href="/css/bootstrap.css" rel="stylesheet">
 		<style type="text/css">

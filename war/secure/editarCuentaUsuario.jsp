@@ -18,7 +18,8 @@
 <script src="/js/editarCuentaUsuario.js" type="text/javascript"></script>
 
 <link href="/css/bootstrap.css" rel="stylesheet">
-<link href="/css/docs.css" rel="stylesheet">
+<link href="/images/favicon.gif" rel="icon" type="image/gif">
+
 <style type="text/css">
 body {
 	padding-top: 60px;

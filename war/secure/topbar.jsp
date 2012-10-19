@@ -34,6 +34,8 @@
 	* You can have several <header> elements in one document. 
 -->
 <header class="topbar">
+	<div class="topbar">
+	<div class="topbar-inner">
 <%
 //-------------------------------------------------------------------------------------------------------------
 if(request.getParameter("bar").equals("main") ||
@@ -66,7 +68,6 @@ else
 <!--ANALISIS DE CONTENIDO ( A REVISAR ) 
 	* Existe una barra de navegacion que varia segun donde estamos posicionados
 --> 
-	<div class="topbar-inner">
 		<div class="container">
 			<nav>
 				<ul class="nav">
@@ -151,7 +152,8 @@ else
 <%
 }
 %>
-			</nav>
-		</div>
-	</div>
+			</nav><!--end navigation -->
+		</div><!--end container -->
+	</div><!--end topbar-inner -->
+	</div><!--end topbr -->
 </header>
