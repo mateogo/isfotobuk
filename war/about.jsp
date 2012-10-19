@@ -1,25 +1,13 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@page import="ar.kennedy.is2011.session.Session"%>
-<%@page import="ar.kennedy.is2011.session.SessionManager"%>
-<%@page import="ar.kennedy.is2011.utils.WebUtils"%>
-<%@page import="java.util.Map"%>
-<%@page import="java.util.HashMap"%>
-<%@page import="ar.kennedy.is2011.db.entities.Usuario"%>
-<%@page import="ar.kennedy.is2011.models.SearchPicturesModel"%>
-<%@page import="ar.kennedy.is2011.db.entities.AlbumEy"%>
-<%@page import="java.util.Set"%>
-<%@page import="org.apache.commons.lang.StringUtils"%>
-<%@page import="java.util.List"%>
-<%@page import="ar.kennedy.is2011.db.entities.PictureEy"%>
-<%@page import="java.util.Iterator"%>
+
+
 
 <!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <title>Login</title>
-<meta name="GUI para aplicaciÃ³n is2011" content="">
-<meta name="Grupo 4 - Â¿nombre?" content="">
+<meta name="GUI para aplicación is2011" content="">
+<meta name="Grupo 4 - ¿nombre?" content="">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
 <script src="/js/prettify.js"></script>
 <script src="js/bootstrap-modal.js"></script>
@@ -80,74 +68,62 @@ body {
 </head>
 <body>
 	<!-- Barra principal -->
-	<!-- jpd / 15-10-2012 / llamada al jsp que resuelve la topbar -->
+	<!-- jpd / 15-10-2012 / llamada al jsp que resuelve la topbar HEADER & NAV-->
 	<jsp:include page="/secure/topbar.jsp?bar=about" flush="true" />
-
-	<!-- Contenedor -->
 	<div class="container">
-		<div class="content">
-			<div class="page-header">
-				<h1>
-					Investigaci&oacute;n de Sistemas <small>DiseÃ±o y
-						creaci&oacute;n de aplicaci&oacute;n en Google Apps </small>
-				</h1>
-			</div>
-			<!-- /page-header -->
-			<div class="row">
+		<article class="content">
+			<h1>
+				Investigaci&oacute;n de Sistemas<br> 
+				<small>Diseño y creaci&oacute;n de aplicaci&oacute;n en Google Apps </small>
+			</h1>
+			<section class="row">
 				<div class="span10">
-					<h2>Grupos</h2>
+					<h3>Grupos</h3>
 					<div class="row">
 						<div class="span5">
-							<h3>Grupo 1</h3>
+							<h5>Grupo AppEngine</h5>
 							<ul>
-								<li>Alumno 1</li>
-								<li>Alumno 1</li>
-								<li>Alumno 1</li>
-								<li>Alumno 1</li>
+								<li>Marcelo Rader</li>
+								<li>Noelia Poroyan</li>
+								<li>Rodrigo Arias</li>
 							</ul>
-							<h3>Grupo 3</h3>
+							<h5>Grupo Restful</h5>
+						</div>
+						<div class="span5">
 							<ul>
-								<li>Alumno 1</li>
-								<li>Alumno 1</li>
-								<li>Alumno 1</li>
-								<li>Alumno 1</li>
+								<li>Cristian Rodriguez</li>
+								<li>Alejandro Poggi</li>
+								<li>Martin Sturm</li>
+								<li>Ezequiel Soria</li>
 							</ul>
 						</div>
 						<div class="span5">
-							<h3>Grupo 2</h3>
+							<h5>Grupo HTML5</h5>
 							<ul>
-								<li>Alumno 1</li>
-								<li>Alumno 1</li>
-								<li>Alumno 1</li>
-								<li>Alumno 1</li>
-							</ul>
-							<h3>Grupo 4</h3>
-							<ul>
-								<li>Alumno 1</li>
-								<li>Alumno 1</li>
-								<li>Alumno 1</li>
-								<li>Alumno 1</li>
+								<li>Jessica</li>
+								<li>Daniel Garcia</li>
+								<li>Fabian Catania</li>
+								<li>Claudio Dorrego</li>
+								<li>Juan P. Digiacomo</li>
 							</ul>
 						</div>
 					</div>
 				</div>
-				<div class="span4">
+				<div class="span10">
 					<h3>Tecnolog&iacute;as</h3>
 					<ul>
 						<li>Ajax</li>
 						<li>CSS</li>
 						<li>Javascript</li>
 						<li>Google AppEngine</li>
-						<li>...</li>
+						<li>HTML5</li>
+						<li>Restful</li>
 					</ul>
 				</div>
-			</div>
-			<!-- row -->
-		</div>
-		
+			</section>
+		</article>
 		<!-- jpd / 15-10-2012 / llamada al jsp que resuelve el footer -->
 		<jsp:include page="/secure/footer.jsp" flush="true" />
-
 	</div>
 </body>
 </html>

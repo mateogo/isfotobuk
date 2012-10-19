@@ -67,18 +67,18 @@ else
 	* Existe una barra de navegacion que varia segun donde estamos posicionados
 --> 
 	<div class="topbar-inner">
-		<section class="container">
+		<div class="container">
 			<nav>
-			<ul class="nav">
+				<ul class="nav">
 <%
 //-------------------------------------------------------------------------------------------------------------
 if(request.getParameter("bar").equals("main")) // -------------------------------------------------------------
 {
 %>
-				<li class="active"><a href="/secure/main.jsp">Inicio</a></li>
-				<li><a href="/secure/albums.jsp">Albums</a></li>
-				<li><a href="/secure/search.jsp">Buscar</a></li>
-				<li><a href="/secure/imageUpload.jsp">Cargar imagen</a></li>
+					<li class="active"><a href="/secure/main.jsp">Inicio</a></li>
+					<li><a href="/secure/albums.jsp">Albums</a></li>
+					<li><a href="/secure/search.jsp">Buscar</a></li>
+					<li><a href="/secure/imageUpload.jsp">Cargar imagen</a></li>
 <%
 }
 else
@@ -88,7 +88,7 @@ else
 		request.getParameter("bar").equals("editarCuentaUsuario")) // ------------------------------------------------------
 	{
 %>
-				<li class="active"><a href="/secure/main.jsp">Inicio</a></li>
+					<li class="active"><a href="/secure/main.jsp">Inicio</a></li>
 <%
 	}
 	else
@@ -98,8 +98,8 @@ else
 			request.getParameter("bar").equals("index")) // --------------------------
 		{
 %>
-				<li class="active"><a href="/registracionRapida.jsp">Registrarse</a></li>
-				<li><a href="/restablecerClave.jsp">Olvid&eacute; mi contrase&ntilde;a</a></li>
+					<li class="active"><a href="/registracionRapida.jsp">Registrarse</a></li>
+					<li><a href="/restablecerClave.jsp">Olvid&eacute; mi contrase&ntilde;a</a></li>
 <%		
 		} // endif "about"
 %>
@@ -109,8 +109,7 @@ else
 <%
 }
 %>
-			</ul>
-		</nav>
+				</ul>
 		
 <!--ANALISIS DE CONTENIDO ( A REVISAR ) 
 	* Se detectan 2 Situaciones : Se puede esta logueado o No se esta logueado 
@@ -123,10 +122,14 @@ if(request.getParameter("bar").equals("main") ||
 		request.getParameter("bar").equals("editarCuentaUsuario")
 	) // -------------------------------------------------------------
 {
-%>			
-		<p class="pull-right">
-			Logueado como <a href="/secure/editarCuentaUsuario.jsp">${usuarioLogeado.nombreUsr}</a><a href="/logout"> Cerrar sesion </a>
-		</p>
+%>
+				<div class="pull-right">
+					<ul class="nav">
+						<li class="active"><a href="/secure/editarCuentaUsuario.jsp">Sesion ${usuarioLogeado.nombreUsr} </a></li>
+						<li><a href="/logout"> Cerrar sesion </a></li>
+						</p>
+					</ul>
+				</div> 	
 <%
 }
 else
@@ -136,18 +139,19 @@ else
 		request.getParameter("bar").equals("index"))  // --------------------------
 	{
 %>			
-		<form method="post" action="login" class="pull-right">
-			<input class="input-small" type="text" name="username"
+			<form method="post" action="login" class="pull-right">
+				<input class="input-small" type="text" name="username"
 						placeholder="Usuario"> <input class="input-small"
 						type="password" name="password" placeholder="Contrase&ntilde;a">
-			<button class="btn" type="submit">Entrar</button>
-		</form>
+				<button class="btn" type="submit">Entrar</button>
+			</form>
 <%		
 	} 
 %>
 <%
 }
 %>
-		</section>
+			</nav>
+		</div>
 	</div>
 </header>

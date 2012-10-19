@@ -42,7 +42,8 @@ public class UserHomePageController extends HttpServlet {
 			log.debug("UserHomePage - usuario-sesion: ok");
 			if (urlGetRESTParameters(request,response)){
 				log.debug("UserHomePage - url procesada: ok");
-				request.getRequestDispatcher("/secure/main.jsp").forward(request, response);
+				request.getRequestDispatcher("/publicProfile.jsp").forward(request, response);				
+				//request.getRequestDispatcher("/secure/main.jsp").forward(request, response);
 				//vease, como alternativa, usar reponse.sendRedirect
 				//response.sendRedirect("/secure/main.jsp");
 			}else{

@@ -1,5 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="ar.kennedy.is2011.views.PublicProfileView"%>
+<%
+	PublicProfileView miVista = new PublicProfileView();
+	miVista.setRequest(request);
+%>					
+
 
 <!DOCTYPE html>
 <html>
@@ -94,8 +99,6 @@
 			<div class="content">
 				<div class="page-header">
 					<h1><%
-							PublicProfileView miVista = new PublicProfileView();
-							miVista.setRequest(request);
 							out.print(miVista.getHTMLContent_Encabezado());									
 						%>					
 					</h1>
@@ -114,9 +117,11 @@
 					</div>
 				</div>
 				<div class="row">
+					<div class="span5">		
 						<%
 							out.print(miVista.getHTMLContent_Datos());	
 						%>
+					</div>
 				</div>
 				<div class="row">
 					<div class="span4">		

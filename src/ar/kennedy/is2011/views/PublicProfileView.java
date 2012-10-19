@@ -65,12 +65,12 @@ public class PublicProfileView {
 	
 	public String getHTMLContent_Datos()
 	{		
+		log.debug("*********************************************");
 		StringBuilder sb = new StringBuilder();
 		
 		if (request.getAttribute("album") != null){
 			log.debug("Request has ALBUM...");
-			PublicProfileView profile = new PublicProfileView();									 	
-		 	List<PictureEy> pictures = profile.getAllPicturesListByAlbumId(request.getAttribute("album").toString());
+		 	List<PictureEy> pictures = this.getAllPicturesListByAlbumId(request.getAttribute("album").toString());
 		 	
 		 	for (PictureEy picture : pictures) {	
 		 		sb.append("<div class='well'>");
@@ -79,10 +79,6 @@ public class PublicProfileView {
 		 		sb.append("<div class='row'>");
 		 		sb.append("<div class='span3'>");
 	
-		 		sb.append("<img class='thumbnail' src='/image?pictureid=");
-				sb.append(picture.getPictureId());
-				sb.append("&version=I' width='150' height='150' alt='' />");
-
 				log.debug("            Found! pictureid:["+picture.getPictureId()+"]");
 				
 				sb.append("<a href='/secure/pictureView.jsp?pictureid=");
