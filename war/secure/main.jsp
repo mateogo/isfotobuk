@@ -4,14 +4,7 @@
 <%@page import="ar.kennedy.is2011.session.SessionManager"%>
 <%@page import="ar.kennedy.is2011.utils.WebUtils"%>
 <%@page import="ar.kennedy.is2011.models.SearchPicturesModel"%>
-<%@page import="ar.kennedy.is2011.db.entities.PictureEy"%>
 <%@page import="ar.kennedy.is2011.views.UserHomeView"%>
-<%@page import="org.apache.commons.lang.StringUtils"%>
-<%@page import="java.util.List"%>
-<%@page import="java.util.Iterator"%>
-<%!
-	private static final Integer DEFAULT_FECTH = 2;
-%>
 
 <%
 	UserHomeView userView = new UserHomeView(request);
@@ -22,108 +15,129 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<title>Fotobuk ::Inicio::</title>
-<meta name="Home del usuario una vez logueado" content="">
-<meta name="fotobuk uk" content="">
+	<meta charset="utf-8">
+	<title>Fotobuk ::Inicio::</title>
+	<meta name="Home del usuario una vez logueado" content="">
+	<meta name="fotobuk uk" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="">
+	<meta name="author" content="">
 
-<!--[if lt IE 9]>
+	<!--[if lt IE 9]>
 		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
-<!--script src="/js/prettify.js"></script  -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
-<script src="/js/bootstrap-modal.js"></script>
 
-<link href="/css/bootstrap.css" rel="stylesheet">
-<link href="/css/docs.css" rel="stylesheet">
-<link href="/images/favicon.gif" rel="icon" type="image/gif">
+	<link href="/css/bootstrap-2.1.1.css" rel="stylesheet">
+	<link href="/images/favicon.gif" rel="icon" type="image/gif">
 
-<style type="text/css">
-body {
-	padding-top: 60px;
-}
-
-.show-grid [class*="span"] {
-	text-align: left;
-}
-</style>
-
+	<style type="text/css">
+		body {
+			padding-top: 60px;
+			padding-bottom: 40px;
+		}
+	</style>
+	
 </head>
 <body>
 
-	<!-- jpd / 15-10-2012 / llamada al jsp que resuelve la barra de navegacion -->
-	<jsp:include page="topbar.jsp?bar=main" flush="true" />
+
+<!--Header es un TAG NUEVO de HTML5
+	* The <header> tag specifies a header for a document or section.
+	* The <header> element should be used as a container for introductory content or set of navigational links.
+	* You can have several <header> elements in one document. 
+-->
+  <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">	
+        <a class="brand" href="#">Fotobuk</a>
+          <ul class="nav">
+            <li class="active"><a href="#">Inicio</a></li>
+            
+            <li class="dropdown" >
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Acciones<b class="caret"></b></a>
+              <ul class="dropdown-menu" >
+                <li><a href="/secure/imageUpload.jsp">Subir imagen</a></li>
+                <li class="divider"></li>
+                <li class="nav-header">Visualizar por...</li>
+                <li><a href="/secure/albums.jsp">Album</a></li>
+                <li><a href="/secure/search.jsp">Buscar</a></li>
+              </ul>
+            </li>
+          </ul>
+          <div class="pull-right">
+            <ul class="nav">
+               <li class="dropdown" >
+                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">${usuarioLogeado.nombreUsr}<b class="caret"></b></a>
+                 <ul class="dropdown-menu" >
+                   <li><a href="/secure/editarCuentaUsuario.jsp">Editar perfil</a></li>
+                   <li class="divider"></li>
+                   <li><a href="/logout">Cerrar sesion</a></li>
+                 </ul>
+               </li>
+            </ul>
+          </div> 	
+      </div>   <!-- end container -->
+    </div>	 <!--end topbar-inner -->
+  </div> <!--end topbr -->
 
 	<div class="container">
-		<div class="content">
-			<!-- Main hero unit for a primary marketing message or call to action -->
-			<div class="hero-unit">
-				<ul class="media-grid">
-					<li>
-						<div class="span4">
-							<%
-									if(userView.userHaveImages()) {
-								%>
-							<a
-								href="/secure/pictureView.jsp?pictureid=<%= userView.getLastImageId() %>"><img
-								class="thumbnail"
-								src="/image?pictureid=<%= userView.getLastImageId() %>&version=I"
-								width="150" height="150" alt=""></a>
-							<%
-									} else {
-								%>
-							<a href="#"> <img class="thumbnail"
-								src="http://placehold.it/150x150" alt="">
-							</a>
-							<%
-									}
-								%>
-						</div>
-						<div class="span10">
-							<h1>
-								<%
-										out.print(userView.getUserDisplayName());
-									%>
-							</h1>
-						</div>
-					</li>
-				</ul>
-			</div>
-			<!-- REVISION MGO  -->
-			<h2>&Uacute;ltimas fotos</h2>
+		<div class="hero-unit row" >
+   		<div class="span12">
+			<div class="row">
+   			<div class="span2 thumbnail">
 			<%
-					String[] pics = userView.getPicBbyPage();
-					if(pics !=null){
-					for(String picId: pics){
-				%>
-			<div class="well">
-				<ul class="media-grid">
-					<li>
-						<div class="row">
-							<div class="span3">
-								<a href="/secure/pictureView.jsp?pictureid=<%= picId %>"><img
-									class="thumbnail" src="/image?pictureid=<%= picId %>&version=H"
-									alt="" width="90" height="90"> </a>
-							</div>
-							<p>Acciones</p>
-							<div class="span12">
-								<a href="/secure/imageUpload.jsp?pictureid=<%= picId %>">
-									<button class="btn primary">Editar</button>
-								</a> <a href="/upload?action=delete&pictureid=<%= picId %>">
-									<button class="btn danger">Eliminar</button>
-								</a>
-							</div>
-						</div>
-					</li>
-				</ul>
-			</div>
+				if(userView.userHaveImages()) {
+			%>
+				<a href="/secure/pictureView.jsp?pictureid=<%= userView.getLastImageId() %>">
+				<img
+					src="/image?pictureid=<%= userView.getLastImageId() %> &version=I"
+					height="280" alt="Ultima foto"></a>
 			<%
-					}//end-for
-					}//end-if
-				%>
+				} else {
+			%>
+				<a href="#"> <img class="thumbnail"
+					src="http://placehold.it/150x150" alt="no image available">
+				</a>
+			<%
+				}
+			%>
+			</div>
+			<div class="span9">
+				<h1>
+			<%
+					out.print(userView.getUserDisplayName());
+			%>
+				</h1>
+			</div>
+			</div>
+		</div>
+		</div>
+		
+	<ul class="thumbnails">
+		<%
+			String[] pics = userView.getPicBbyPage();
+			if(pics !=null){
+			for(String picId: pics){
+		%>
+   		<li class="span11 thumbnail">
+   				<div class="span3 offset2">
+					<img src="/image?pictureid=<%= picId %>&version=H"
+						alt="" height=120 width=160 onclick="location.href='/secure/pictureView.jsp?pictureid=<%= picId %>'">
+				</div>
+ 					<div class="btn-group-vertical">
+						<button type="button" class="btn btn-link btn-large" onclick="location.href='/secure/pictureView.jsp?pictureid=<%= picId %>'">ver</button>
+						<button type="button" class="btn btn-link btn-large" onclick="location.href='/secure/imageUpload.jsp?pictureid=<%= picId %>'">editar</button>
+						<button type="button" class="btn btn-link btn-large" onclick="location.href='/upload?action=delete&pictureid=<%= picId %>'">eliminar</button>
+					</div>
+		</li>
+		<% 
+			}
+			}
+		%>
+	</ul>
 			<%
 					if(true) {
-				%>
+			%>
 			<div class="pagination">
 				<ul>
 					<!-- =========== Boton Previous ===============================  -->
@@ -183,10 +197,25 @@ body {
 					}//end-if bloque pagination
 				%>
 
+
 			<!-- jpd / 15-10-2012 / llamada al jsp que resuelve el footer -->
 			<jsp:include page="footer.jsp" flush="true" />
 
-		</div>
 	</div>
+
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script src="/js/bootstrap-2.1.1.js"></script>
+    <script src="/js/bootstrap-dropdown.js"></script>
+    <script src="/js/bootstrap-button.js"></script>
+    <script src="/js/bootstrap-tooltip.js"></script>
+    <script>
+ 	   $('.dropdown-toggle').dropdown()
+	</script>
+    
+	
 </body>
 </html>

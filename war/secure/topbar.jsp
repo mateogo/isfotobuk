@@ -96,7 +96,6 @@
 				<ul class="nav">
 					<li class="active"><a href="/secure/editarCuentaUsuario.jsp">Sesion ${usuarioLogeado.nombreUsr} </a></li>
 					<li class="active"><a href="/logout"> Cerrar sesion </a></li>
-					</p>
 				</ul>
 			</div> 	
 <%
@@ -115,4 +114,4 @@
 		</div>   <!-- end container -->
  </div>	 <!--end topbar-inner -->
 </div> <!--end topbr -->
-</header>>
+</header>
