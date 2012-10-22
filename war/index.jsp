@@ -46,10 +46,10 @@ body {
 	-moz-box-shadow: 0 1px 2px rgba(0, 0, 0, .15);
 	box-shadow: 0 1px 2px rgba(0, 0, 0, .15);
 }
-/* Page header tweaks */
+/* Page header tweaks#f5f5f5;  */
 .page-header {
-	background-color: #f5f5f5;
-	padding: 20px 20px 10px;
+	background-color: #ffffff;
+	padding: 10px 10px 10px;
 	margin: -20px -20px 20px;
 }
 /* Give a quick and non-cross-browser friendly divider */
@@ -76,7 +76,7 @@ body {
 			<!-- nombre feo si los hay... -->
 			<p>Aplicaci&oacute;n creada en Google AppEngine utilizando varias tecnolog&iacute;as</p>
 			<p>
-				<a class="btn primary large" href="/about.jsp">Acerca de. . . &raquo;</a>
+				<a class="btn primary large" href="/about.jsp">Acerca de &raquo;&raquo;</a>
 			</p>
 		</div>
 	</div>

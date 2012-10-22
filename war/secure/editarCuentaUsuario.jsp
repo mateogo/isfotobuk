@@ -1,24 +1,25 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Editar Cuenta</title>
-<meta name="GUI para aplicaci�n is2011" content="">
-<meta name="Grupo 4 - �nombre?" content="">
+<meta name="GUI para aplicación isfotobuk" content="">
+<meta name="Grupo 4 - ¿nombre?" content="">
 <!--[if lt IE 9]>
 		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
-<script src="/js/prettify.js"></script>
-<script src="/js/bootstrap-modal.js"></script>
-<script src="/js/menu.js" type="text/javascript"></script>
-<script src="/js/editarCuentaUsuario.js" type="text/javascript"></script>
+<!--   script src="/js/prettify.js"></script   -->
+<!-- script src="/js/bootstrap-modal.js"></script -->
+<!-- script src="/js/menu.js" type="text/javascript"></script     -->
+<!-- script src="/js/editarCuentaUsuario.js" type="text/javascript"></script   -->
 
 <link href="/css/bootstrap.css" rel="stylesheet">
 <link href="/images/favicon.gif" rel="icon" type="image/gif">
+
 
 <style type="text/css">
 body {
@@ -37,14 +38,16 @@ form .input {
 	margin-left: 220px;
 }
 </style>
+
+
 </head>
 
 <body>
-	<form name="form" action="/editarCuenta" method="post">
-		<input type="hidden" name="misFotos" value="misFotos">
-
 		<!-- jpd / 15-10-2012 / llamada al jsp que resuelve la barra de navegacion -->
 		<jsp:include page="topbar.jsp?bar=editarCuentaUsuario" flush="true" />
+
+	<form name="form" action="/editarCuenta" method="post">
+		<input type="hidden" name="misFotos" value="misFotos">
 
 		<div class="container">
 			<div class="content">
@@ -61,8 +64,8 @@ form .input {
 				</div>
 				<div class="row">
 					<div class="clearfix">
-						<div class="span5">
-							<label>Direcci&oacute;n de mail alternativo:</label>
+						<div class="span6">
+							<label for="mediumSelect">Direcci&oacute;n de mail alternativo:</label>
 							<div class="input">
 								<input id="mail2" name="mailSecundaro" type="text"
 									value="${usuarioLogeado.mailSecundario}" />
@@ -197,6 +200,98 @@ form .input {
 			</div>
 		</div>
 	</form>
+	
+	<script type="text/javascript">
+		var form = document.getElementsByName("form")[0];
+		var mail = document.getElementById("mail");
+		var mail2 = document.getElementById("mail2");
+		var nombre = document.getElementById("nomUsr");
+		var apellido = document.getElementById("apeUsr");
+		var fechaNac = document.getElementById("fechaNac");
+		var masculino = document.getElementById("masculino");
+		var femenino = document.getElementById("femenino");
+		var pais = document.getElementById("idPais");
+		var prov = document.getElementById("prov");
+		var pregunta = document.getElementById("pSecreta");
+		var resp = document.getElementById("respuesta");
+
+		cargarCombos();
+
+		function limpiarCampos() {
+			mail.value = "";
+			mail2.value = "";
+			nombre.value = "";
+			apellido.value = "";
+			fechaNac.value = "";
+			//maculino.checked = "false";
+			//femenino.checked = "false";
+			pais.value = "";
+			prov.value = "";
+			pregunta.value = "";
+			resp.value = "";
+		}
+
+		function guardar() {
+			if (validarCamposMails()) {
+				form.submit();
+			}
+		}
+
+		function validarCamposMails() {
+			if (mail.value == "" && mail2.value == "") {
+				$('.alert-message').alert('close')
+				alert("Debe de ingresar al menos una direccion de email");
+				return false;
+			}
+
+			return true;
+		}
+
+		function cargarCombos() {
+			pais.value = "${usuarioLogeado.pais}";
+			prov.value = "${usuarioLogeado.idProvicia}";
+			pregunta.value = "${usuarioLogeado.idPreguntaSecreta}";
+
+			if ("${usuarioLogeado.sexo}" != "") {
+				if ("${usuarioLogeado.sexo}" == "M") {
+					masculino.checked = true;
+				} else {
+					femenino.checked = true;
+				}
+			}
+		}
+
+		function volverMisFotos() {
+			form.action = "/forward";
+			form.submit();
+		}
+
+		function salir() {
+			form.action = "/logout_beta";
+			form.submit();
+		}
+
+		//Creo una instancia de la clase Menu
+		var menu1 = new Desplegable();
+		//Creo una propiedad "items", la cual es el array de ítems que tendrá nuestro menu, la creo fuera de la clase ya que nos permite personalizar el menu sin tener que editar la clase.
+		menu1.items = new Array([ "item-0", "javascript:;",
+				"${usuarioLogeado.nombreUsr}" ], [ "item-1", "javascript:;",
+				"Album de Fotos" ]);
+
+		//Creo una propiedad "suitems", la cual es el array de sub ítems que apareceran dentro de cada ítem.
+		menu1.subitems = new Array(
+				[
+						[ "subitem-0", "javascript:editar();", "Editar Cuenta",
+								"_self" ],
+						[ "subitem-1", "javascript:salir();", "Cerrar Sesion",
+								"_self" ] ],
+				[
+						[ "subitem-0", "javascript:;", "Subir Fotos", "_self" ],
+						[ "subitem-1", "javascript:;", "Editar Fotos", "_self" ],
+						[ "subitem-2", "javascript:volverMisFotos();",
+								"Mis Fotos", "_self" ] ]);
+	</script>
+
 
 </body>
 </html>

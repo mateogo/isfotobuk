@@ -125,17 +125,17 @@ body {
 				enctype="multipart/form-data">
 				<div class="row">
 					<div class="clearfix">
-						<div class="span5">
+						<div class="span6">
 							<label for="mediumSelect">Archivo de imagen:</label>
 							<div class="input">
-								<input id="picture_file" name="picture_file" type="file" color=/>
+								<input id="picture_file" name="picture_file" type="file"/>
 							</div>
 						</div>
 						<div class="span4">
 							<label for="mediumSelect">o Url:</label>
 							<div class="input">
-								<input id="url" name="url" type="text"
-									value="<%=getValue(picture.getUrl())%>" />
+								<input id="url" name="url" type="text" 
+								    value="<%=getValue(picture.getUrl())%>" />
 							</div>
 						</div>
 					</div>
@@ -151,8 +151,9 @@ body {
 						</div>
 						<div class="span6">
 							<span class="validator"
-								style="display: <%=errors.containsKey("picture_name") ? "block" : "none"%>"><p
-									class="required"><%=errors.containsKey("picture_name") ? errors.get("picture_name") : ""%></p></span>
+								style="display: <%=errors.containsKey("picture_name") ? "block" : "none"%>">
+								<p class="required"><%=errors.containsKey("picture_name") ? errors.get("picture_name") : ""%> </p>
+							</span>
 						</div>
 					</div>
 				</div>
