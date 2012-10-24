@@ -121,11 +121,12 @@
 		%>
    		<li class="span11 thumbnail">
    				<div class="span3 offset2">
-					<img src="/image?pictureid=<%= picId %>&version=H"
+					<img src="/image?pictureid=<%= picId %>&version=I"
 						alt="" height=120 width=160 onclick="location.href='/secure/pictureView.jsp?pictureid=<%= picId %>'">
 				</div>
  					<div class="btn-group-vertical">
-						<button type="button" class="btn btn-link btn-large" onclick="location.href='/secure/pictureView.jsp?pictureid=<%= picId %>'">ver</button>
+						<!-- href="/secure/modalPictureView.jsp?pictureid=<%= picId %>" -->
+ 						<button type="button" class="btn btn-link btn-large" onclick='setId("<%= picId %>")' data-toggle="modal" data-target="#picViewer" >ver</a>
 						<button type="button" class="btn btn-link btn-large" onclick="location.href='/secure/imageUpload.jsp?pictureid=<%= picId %>'">editar</button>
 						<button type="button" class="btn btn-link btn-large" onclick="location.href='/upload?action=delete&pictureid=<%= picId %>'">eliminar</button>
 					</div>
@@ -203,18 +204,49 @@
 
 	</div>
 
+<!-- Modal viewer -->
+<div class="modal hide fade in" id="picViewer"  data-keyboard=false data-backdrop=false tabindex="-1" role="dialog" aria-labelledby="picViewerLabel" aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+		<h3>viewer</h3>
+	</div>
+	
+	<div id="callback123" class="modal-body">
+	</div>
+	<div class="modal-footer">
+		<button class="close" data-dismiss="modal" aria-hidden="true">Close</button>
+	</div>
+</div>
 
     <!-- Le javascript
+    document.getElementById('myLink').onclick = doSomething;
+	function doSomething(evt) {
+    	evt = evt || window.event; // The event that was fired
+    	var targ = evt.target || evt.srcElement; // the element that was clicked
+    	var el = this; // the element that fired the event
+	}
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
     <script src="/js/bootstrap-2.1.1.js"></script>
-    <script src="/js/bootstrap-dropdown.js"></script>
-    <script src="/js/bootstrap-button.js"></script>
-    <script src="/js/bootstrap-tooltip.js"></script>
     <script>
- 	   $('.dropdown-toggle').dropdown()
-	</script>
+	$('#picViewer').on('show', function () {
+		//var el = $(this).attr('id');
+		//var newHTML="<p>Alo! el:"+""+el+""+"  id:"+idProperty+"+"</p>";
+		//var newHTML="<p>Alo!!!!"+idProperty+"</p>";
+		
+		var newHTML = "<img src='/image?pictureid="+idProperty+"&version=O'>";		
+		document.getElementById('callback123').innerHTML = newHTML;
+        });
+	
+    </script>
+    <script>
+	function setId(id){
+		idProperty=id
+	}
+	var idProperty="holamundo";
+    </script>
+    
     
 	
 </body>

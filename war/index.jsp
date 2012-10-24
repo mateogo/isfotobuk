@@ -68,7 +68,7 @@ body {
 <body>
 	<!-- Barra principal -->
 	<!-- jpd / 15-10-2012 / llamada al jsp que resuelve la topbar -->
-	<jsp:include page="/secure/topbar.jsp?bar=index" flush="true" />
+	<jsp:include page="/secure/topbar-old.jsp?bar=index" flush="true" />
 	
 	<div class="container">
 		<div class="hero-unit">
