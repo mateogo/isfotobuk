@@ -43,69 +43,85 @@ form .input {
 		<input type="hidden" name="misFotos" value="misFotos">
 
 		<div class="control-group" class="span11">
-			<label class="control-label" for="mediumSelect" >Mail:</label>
+			<label class="control-label" for="mail" >Mail:</label>
 			<div class="controls" >
-				<input id="mail" name="mailPrimario" type="text"
-					value="${usuarioLogeado.mail}" />
+				<div class="input-prepend" >
+					<span class="add-on"><i class="icon-envelope"></i></span>
+					<input type="email" id="mail" class="span3" name="mailPrimario" 
+						value="${usuarioLogeado.mail}" />
+				</div>
 			</div>
 		</div>
 
 		<div class="control-group">
-			<label class="control-label" for="mediumSelect">Mail alternativo:</label>
+			<label class="control-label" for="mail2">Mail alternativo:</label>
 			<div class="controls">
-				<input id="mail2" name="mailSecundaro" type="text"
-					value="${usuarioLogeado.mailSecundario}" />
+				<div class="input-prepend" >
+					<span class="add-on"><i class="icon-envelope"></i></span>
+					<input type="email" id="mail2" class="span3" name="mailSecundario" 
+						value="${usuarioLogeado.mailSecundario}" />
+				</div>
 			</div>
 		</div>
 		
 		<div class="control-group">
-			<label class="control-label" for="mediumSelect">Nombre:</label>
+			<label class="control-label" for="nomUsr">Nombre:</label>
 			<div class="controls">
 				<input id="nomUsr" name="nombreUsr" type="text"
 					value="${usuarioLogeado.nombre}" />
 			</div>
 		</div>
 		<div class="control-group">
-					<label class="control-label" for="mediumSelect">Apellido:</label>
+					<label class="control-label" for="apeUsr">Apellido:</label>
 					<div class="controls">
 						<input id="apeUsr" name="apellidoUsr" type="text"
 							value="${usuarioLogeado.apellido}" />
 					</div>
 		</div>
 		<div class="control-group">
-					<label class="control-label" for="mediumSelect">Fecha de nacimiento:</label>
+					<label class="control-label" for="fechaNac">Fecha de nacimiento:</label>
 					<div class="controls">
-						<input id="fechaNac" name="fechaNacimiento" type="text"
+						<input type="date" id="fechaNac" name="fechaNacimiento" 
 							value="${usuarioLogeado.fechaNacimiento}" />
 					</div>
 		</div>
 		<div class="control-group">
-					<label class="control-label" for="mediumSelect">Sexo:</label>
 					<div class="controls">
-						<input type="radio" name="tipoSexo" id="masculino" value="M">&nbsp;Hombre&nbsp;<br />
-						<input type="radio" name="tipoSexo" id="femenino" value="F">&nbsp;Mujer
+					<span class"help-block">G&eacute;nero: </span>
+					<label class="radio" for="masculino">
+						<input type="radio" name="tipoSexo" id="masculino" value="M">
+						&nbsp;Masculino&nbsp;
+					</label>
+					<label class="radio" for="femenino">
+						<input type="radio" name="tipoSexo" id="femenino" value="F">
+						&nbsp;Femenino
+					</label>
 					</div>
 		</div>
 		<div class="control-group">
-					<label class="control-label" for="mediumSelect">Pa&iacute;s o regi&oacute;n:</label>
+					<label class="control-label" for="pais">Pa&iacute;s o regi&oacute;n:</label>
 					<div class="controls">
 						<select name="pais" id="idPais">
 							<option value="">-- Seleccionar un pa&iacute;s --</option>
 							<option value="1">Argentina</option>
 							<option value="2">Brasil</option>
 							<option value="3">Chile</option>
+							<option value="4">Paraguay</option>
+							<option value="3">Uruguay</option>
+							<option value="3">Bolivia</option>
 						</select>
 					</div>
 		</div>
 		<div class="control-group">
-					<label class="control-label" for="mediumSelect">Provincia:</label>
+					<label class="control-label" for="provincia">Provincia:</label>
 					<div class="controls">
 						<select name="provincia" id="prov">
 							<option value="">-- Seleccionar una provincia --</option>
-							<option value="1">Buenos Aires</option>
-							<option value="2">C&oacute;rdoba</option>
-							<option value="3">Santa F&eacute;</option>
-							<option value="4">Salta</option>
+							<option value="1">CABA</option>
+							<option value="2">Buenos Aires</option>
+							<option value="3">C&oacute;rdoba</option>
+							<option value="4">Santa F&eacute;</option>
+							<option value="5">Salta</option>
 						</select>
 					</div>
 		</div>
@@ -117,7 +133,7 @@ form .input {
 					</div>
 		</div>
 		<div class="control-group">
-					<label class="control-label" for="mediumSelect">Pregunta secreta:</label>
+					<label class="control-label" for="pSecreta">Pregunta secreta:</label>
 					<div class="controls">
 						<select name="preguntaSecreta" id="pSecreta">
 							<option value="">-- Seleccionar una pregunta --</option>
@@ -131,20 +147,16 @@ form .input {
 					</div>
 		</div>
 		<div class="control-group">
-					<label class="control-label" for="mediumSelect">Respuesta:</label>
+					<label class="control-label" for="respuesta">Respuesta:</label>
 					<div class="controls">
 						<input type="text" name="respuestaUsr" size="40" maxlength="42"
 							id="respuesta" value="${usuarioLogeado.respuestaPregunta}" />
 					</div>
 		</div>
 
-		<div class="control-group">
-			<div class="controls">
-				<input type="button" class="btn"        name="limpiar" value="Limpiar"
-					onclick="limpiarCampos();"> 
-				<input type="button" class="btn primary" name="save" value="Guardar" 
-				    onclick="guardar();">
-			</div>
+		<div class="form-actions">
+				<button type="submit" class="btn btn-primary" name="save" onclick="guardar()">guardar</button>
+				<button type="submit" class="btn "            name="limpiar"  onclick="limpiarCampos()">limpiar</button>
 		</div>
 	</form>
 </div>

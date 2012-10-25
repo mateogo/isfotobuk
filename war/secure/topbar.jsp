@@ -11,7 +11,7 @@
       <div class="container">	
         <a class="brand" href="#">Fotobuk</a>
           <ul class="nav">
-            <li class="active"><a href="#">Inicio</a></li>
+            <li class="active"><a href="/secure/main.jsp">Inicio</a></li>
             
             <li class="dropdown" >
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Acciones<b class="caret"></b></a>

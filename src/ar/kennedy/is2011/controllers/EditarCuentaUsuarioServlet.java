@@ -26,7 +26,7 @@ public class EditarCuentaUsuarioServlet extends HttpServlet{
 		String nombre = request.getParameter("nombreUsr");
 		String apellido = request.getParameter("apellidoUsr");
 		String mail = request.getParameter("mailPrimario");
-		String mail2 = request.getParameter("mailSecundaro");
+		String mail2 = request.getParameter("mailSecundario");
 		String fechaNac = request.getParameter("fechaNacimiento");
 		String tipoSexo = request.getParameter("tipoSexo");
 		String idPais = request.getParameter("pais");
