@@ -61,6 +61,17 @@ public class SearchPicturesModel extends AbstractModel {
 			return null;
 		}
 	}
+
+	public PictureEy getPicture(String pictureId) {
+		PictureEy pic = new PictureEy();
+		try {
+			pic = pictureDao.findById(PictureEy.class, pictureId);
+			return pic;
+		} catch(EntityNotFoundException e) {
+			return null;
+		}
+	}
+	
 	
 	public List<PictureEy> getPicturesByTags(String value) {
 		List<PictureEy> pictures = new ArrayList<PictureEy>();

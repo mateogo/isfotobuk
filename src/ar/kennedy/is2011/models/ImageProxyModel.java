@@ -10,6 +10,7 @@ import ar.kennedy.is2011.db.entities.PictureEy;
 import ar.kennedy.is2011.db.entities.Usuario;
 import ar.kennedy.is2011.exception.PermissionDeniedException;
 import ar.kennedy.is2011.exception.PictureNotFoundException;
+import ar.kennedy.is2011.models.AlbumModel;
 import ar.kennedy.is2011.session.Session;
 import ar.kennedy.is2011.utils.WebUtils;
 
@@ -22,7 +23,7 @@ public class ImageProxyModel extends AbstractModel {
 	private HttpServletResponse response;
 	private Session userSession;
 	private AbstractDao<PictureEy> pictureDao;
-	private AbstractDao<AlbumEy> albumDao;
+	private AlbumModel albumModel;
 	private PictureEy picture;
 	
 	public ImageProxyModel(HttpServletRequest request, HttpServletResponse response, Session userSession) {
@@ -32,7 +33,7 @@ public class ImageProxyModel extends AbstractModel {
 		this.response = response;
 		this.userSession = userSession;
 		this.pictureDao = new AbstractDao<PictureEy>();
-		this.albumDao = new AbstractDao<AlbumEy>();
+		this.albumModel = new AlbumModel();
 	}
 	
 	public void getPicture() throws Exception {
@@ -48,10 +49,14 @@ public class ImageProxyModel extends AbstractModel {
 					response.setContentType(picture.getContentType());
 					
 					if("O".equals(version)) {
+						log.debug("0.version begin ["+picture.getPictureName()+"]");
 						response.getOutputStream().write(picture.getContent().getBytes());
-					
+						log.debug("0.version end   ["+picture.getPictureName()+"]");
+										
 					} else {
+						log.debug("else.version begin ["+picture.getPictureName()+"]");
 						response.getOutputStream().write(WebUtils.resize(picture.getContent().getBytes(), getVersionWidth(version), getVersionHeight(version)));
+						log.debug("else.version end   ["+picture.getPictureName()+"]");
 					}
 				
 				} else {
@@ -68,7 +73,7 @@ public class ImageProxyModel extends AbstractModel {
 	}
 	
 	private Boolean validate(PictureEy picture) throws Exception {
-		AlbumEy album = albumDao.findById(AlbumEy.class, picture.getAlbumId());
+		AlbumEy album = albumModel.getAlbumByID(picture.getAlbumId(), picture.getUsername());
 		
 		return Constants.PUBLIC_VISIBILITY.equals(album.getVisibility()) ? true : ((Usuario) userSession.getElement("user")).getNombreUsr().equals(picture.getUsername());
 	}

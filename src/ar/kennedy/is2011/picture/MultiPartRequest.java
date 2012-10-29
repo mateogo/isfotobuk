@@ -11,6 +11,7 @@ import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 
 import com.oreilly.servlet.multipart.FilePart;
@@ -25,7 +26,9 @@ public class MultiPartRequest {
 
 	private Hashtable<String, UploadedFile> files = null;
 	protected Map<String, Object> parameters = null;
+	protected final Logger log = Logger.getLogger(getClass());
 	
+
 	@SuppressWarnings("unchecked")
 	public MultiPartRequest(HttpServletRequest req, int maxSize) throws IOException{
 		MultipartParser mPartParser = new MultipartParser(req, maxSize);
@@ -70,11 +73,15 @@ public class MultiPartRequest {
 	public String getParameter(String s) {
         try {
             Vector<Object> vector = (Vector<Object>) parameters.get(s);
+            log.debug("**********multipart**********************");
+            log.debug("**********multipart vector size ["+vector.size()+"]");
             
             if(vector == null || vector.size() == 0) {
                 return null;
             
             } else {
+                log.debug("**********multipart vector value ["+(String)vector.elementAt(vector.size() - 1)+"]");
+                           	
                 return (String)vector.elementAt(vector.size() - 1);
             }
         

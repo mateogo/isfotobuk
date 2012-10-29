@@ -1,79 +1,23 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" 
     pageEncoding="UTF-8"%>
-<%@page import="ar.kennedy.is2011.constants.Constants"%>
 <%@page import="ar.kennedy.is2011.session.Session"%>
-<%@page import="ar.kennedy.is2011.session.SessionManager"%>
-<%@page import="ar.kennedy.is2011.db.dao.AbstractDao"%>
 <%@page import="ar.kennedy.is2011.db.entities.Usuario"%>
 <%@page import="ar.kennedy.is2011.db.entities.PictureEy"%>
-<%@page import="ar.kennedy.is2011.db.entities.AlbumEy"%>
-<%@page import="ar.kennedy.is2011.models.SearchPicturesModel"%>
 <%@page import="ar.kennedy.is2011.utils.WebUtils"%>
-<%@page import="org.apache.commons.lang.StringUtils"%>
-<%@page import="java.util.List"%>
-<%@page import="java.util.Map"%>
+<%@page import="ar.kennedy.is2011.views.ImageUploadView"%>
 <%@page import="java.util.HashMap"%>
-<%@page import="java.util.Set"%>
-<%!
-	private String getValue(Object object) {
-		return object != null ? object.toString() : "";
-	}
-	private String getAllAlbumsList(List<AlbumEy> albums) {
-		StringBuilder list = new StringBuilder();
-		for(int i = 0; i < albums.size(); i++) {	
-			if(i == (albums.size() - 1)) {
-				list.append("'").append(albums.get(i).getAlbumId()).append("'");
-			
-			} else {
-				list.append("'").append(albums.get(i).getAlbumId()).append("', ");
-			}
-		}
-		return list.toString();
-	}
-	
-	private String getAllAlbumsToBeDisplayedByUser(Set<AlbumEy> albums) {
-		StringBuilder splitAlbums = new StringBuilder();
-		int i = 0;
-		for(AlbumEy album : albums) {
-			if(i == (albums.size() - 1)) {
-				splitAlbums.append("'").append(album.getAlbumId()).append("'");
-				
-			} else {
-				splitAlbums.append("'").append(album.getAlbumId()).append("'").append(", ");
-			}
-			i++;
-		}
-		return splitAlbums.toString();
-	}
-%>
+
 <%
-	Session userSession = SessionManager.get(request, WebUtils.getSessionIdentificator(request));
-	Map<String, Object> errors = userSession.contains("errors") ? 
-			((Map<String, Object>) userSession.getElement("errors")).containsKey("form_errors") ? 
-					(Map<String, Object>) ((Map<String, Object>) userSession.getElement("errors")).get("form_errors") : 
-					new HashMap<String, Object>() : 
-			new HashMap<String, Object>();
-	SearchPicturesModel searchPicturesModel = new SearchPicturesModel();
-	Usuario user = (Usuario) userSession.getElement("user");
-	PictureEy picture = null;
-
+	ImageUploadView imageUpload = new ImageUploadView(request);
+	Usuario user = imageUpload.getUser();
+	Session userSession = imageUpload.getUserSession();
 	String pictureId = WebUtils.getParameter(request, "pictureid");
-	if (pictureId != null) {
-		AbstractDao<PictureEy> pictureDao = new AbstractDao<PictureEy>();
-
-		picture = pictureDao.findById(PictureEy.class, pictureId);
-
-	} else if (userSession.contains("picture")) {
-		picture = (PictureEy) userSession.getElement("picture");
-
-	} else {
-		picture = new PictureEy();
-	}
-
+	PictureEy picture = imageUpload.getPictureToEdit();
 	if (!"t".equals(WebUtils.getParameter(request, "e"))) {
-		errors = new HashMap<String, Object>();
+		imageUpload.setErrors(new HashMap<String, Object>());	
 	}
 %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -97,69 +41,88 @@
 		text-align: left;
 	}
 	</style>
+<script> 
+	function cargarAlbums() {
+		var albumSelect = populateAlbumsComboBox();
+		var actualAlbum = "<%= imageUpload.objectToString(picture.getAlbumId()) %>"
+	
+		var actualIndex = albumIndex(albumSelect,actualAlbum);
+		if(actualIndex!=-1) albumSelect.options[actualIndex].selected =  true;
+		else albumSelect.options[0].selected =  true;
+		
+	}
+	function populateAlbumsComboBox() {
+		var albumsToBeDisplayedByUser = [ <%= imageUpload.getAlbumsByUserCommaSeparated() %>];
+
+		var combo = document.getElementById('album_id');
+		//var selectedOption = combo.options[combo.selectedIndex].value;
+		//reset	
+		combo.options.length = 0;
+		combo.options.add(new Option('Elegir', 'Elegir'));
+		
+		for (i=0; i < albumsToBeDisplayedByUser.length; i++){
+			//Aadir los elementos de la list
+		 	combo.options.add(new Option(albumsToBeDisplayedByUser[i], albumsToBeDisplayedByUser[i]));
+		}
+		return combo;
+	}
+	function albumIndex(combo,name) {
+		//recorro combo en busca de este valor
+		var comboIndex = -1;
+
+		for (i=0;i<combo.length;i++) {
+			if(name == combo.options[i].value) return i;
+		}
+		return comboIndex;
+	}
+</script> 
+	
 </head>
 
-<body onload="cargarAlbums()">
+<body onload=cargarAlbums()>
 
-		<!-- jpd / 15-10-2012 / llamada al jsp que resuelve la barra de navegacion -->
-		<jsp:include page="topbar.jsp?bar=editarCuentaUsuario" flush="true" />
+	<!-- jpd / 15-10-2012 / llamada al jsp que resuelve la barra de navegacion -->
+	<jsp:include page="topbar.jsp" flush="true" />
 
-
-	<div class="container">
-		<form class="form-horizontal" method="post"
+	<div class="container">	
+		<form name="uploadimage" class="form-horizontal" method="post"
 				action="/upload?action=<%=pictureId == null ? "add" : "update&pictureid=" + pictureId%>"
 				enctype="multipart/form-data">
 	
 			<div class="control-group">
 				<label class="control-label" for="picture_file">Seleccionar de archivo:</label>
 				<div class="controls">
-					<input  type="file" id="picture_file" class="input-file" name="picture_file"/>
+					<input type="file" id="picture_file" name="picture_file" class="input-file"/>
 				</div>
 				<label class="control-label" for="url">o indique una Url:</label>
 				<div class="controls">
 					<input type="text" id="url" name="url" class="span5"
-					    value="<%=getValue(picture.getUrl())%>" />
+					    value="<%=imageUpload.objectToString(picture.getUrl())%>" />
+						<span class="help-block">Indique solo una de las opciones precedentes. O busca la imagen de archivo o la referencia a través de una URL</span>
 				</div>
 			</div>
 			
 			<div class="control-group">
 				<label class="control-label" for="picture_name">Nombre de la imagen:</label>
 				<div class="controls">
-					<input id="picture_name" name="picture_name" type="text"
-						value="<%=getValue(picture.getPictureName())%>" />
+					<input type="text" id="picture_name" name="picture_name"
+						value="<%=imageUpload.objectToString(picture.getPictureName())%>" />
 				</div>
 			</div>
 					<div class="control-group">
 						<div class="controls">
-						<span class="validator" style="display: <%=errors.containsKey("picture_name") ? "block" : "none"%>"></span>
-						<span class="required"><%=errors.containsKey("picture_name") ? errors.get("picture_name") : ""%> </span>
+						<span class="validator" style="display: <%=imageUpload.getErrors().containsKey("picture_name") ? "block" : "none"%>"></span>
+						<span class="required"><%=imageUpload.getErrors().containsKey("picture_name") ? imageUpload.getErrors().get("picture_name") : ""%> </span>
 						</div>
 					</div>
 					
 			<div class="control-group">
-				<label class="control-label" for="mediumSelect">Seleccion del album:</label>
+				<label class="control-label" for="album_id">Seleccione un album:</label>
 				<div class="controls">
-					<select id="album_id" name="album_id" onchange="llamarPopUp()">
-					<%
-						if (StringUtils.isNotBlank(getValue(picture.getAlbumId()))) {
-					%>
-							<option value="<%=getValue(picture.getAlbumId())%>"><%=getValue(picture.getAlbumId())%></option>
+					<select id="album_id" name="album_id">
 							<option value="Elegir">Elegir</option>
-					<%
-						} else {
-					%>
-							<option value="Elegir">Elegir</option>
-					<%
-						}
-						Set<AlbumEy> albums = searchPicturesModel.getAlbumsToBeDisplayedByUser(user.getNombreUsr());
-						for (AlbumEy album : albums) {
-					%>
-							<option value="<%=album.getAlbumId()%>"><%=album.getAlbumId()%></option>
-					<%
-						}
-					%>
-						<option value="Nuevo">Crear nuevo album...</option>
 					</select>
+ 					<button type="button" class="btn btn-link btn-large" name="newalbum" data-toggle="modal" data-target="#nuevoAlbum" >nuevo album</button>
 				</div>
 			</div>
 
@@ -167,111 +130,72 @@
 				<label class="control-label" for="tags">Tags:</label>
 				<div class="controls">
 					<input id="tags" name="tags" type="text"
-						value="<%=getValue(picture.getTags())%>" />
+						value="<%=imageUpload.objectToString(picture.getTags())%>" />
 				</div>
 			</div>
 	
+			
+				<div class="control-group">
+				<span class="alert-message error" style="display: <%=imageUpload.getErrors().containsKey("add_url_or_file") ? "block" : "none"%>">
+					<span class="required"><%=imageUpload.getErrors().containsKey("add_url_or_file") ? imageUpload.getErrors().get("add_url_or_file") : ""%></span>
+				</span> 
+				<span class="alert-message error"
+					style="display: <%=imageUpload.getErrors().containsKey("album_id") ? "block" : "none"%>">
+					<span class="required"><%=imageUpload.getErrors().containsKey("album_id") ? imageUpload.getErrors().get("album_id") :""%></span>
+				</span>
+				<span class="alert-message error"
+						style="display: <%=imageUpload.getErrors().containsKey("tags") ? "block" : "none"%>">
+					<span class="required"><%=imageUpload.getErrors().containsKey("tags") ? imageUpload.getErrors().get("tags") : ""%></span>
+				</span>
+				<span class="alert-message error"
+						style="display: <%=imageUpload.getErrors().containsKey("mandatory_parameters") ? "block" : "none"%>">
+					<span class="required"><%=imageUpload.getErrors().containsKey("mandatory_parameters") ? imageUpload.getErrors().get("mandatory_parameters") : ""%></span>
+				</span>
+				</div>
+
+				
+		<!-- Modal viewer -->
+		<div class="modal hide fade in" id="nuevoAlbum"  data-keyboard=false data-backdrop=false tabindex="-1" role="dialog" aria-labelledby="nuevoAlbumLabel" aria-hidden="true">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+				<h3>nuevo album</h3>
+			</div>
+			
+			<div id="callback123" class="modal-body">
+				<div class="control-group">
+					<label class="control-label" for="newalbumid">Identificador:</label>
+					<div class="controls">
+						<input type="text" id="newalbumid" name="newalbumid" />
+						<span class="help-block">Ingrese un identificador (o descripción corta) sin acentos, espacios o enies</span>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="newalbumname">Nombre del album:</label>
+					<div class="controls">
+						<input type="text" id="newalbumname" name="newalbumname" />
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="newalbumscope">Privacidad:</label>
+					<div class="controls">
+						<select id="newalbumscope" name="newalbumscope">
+							<option                    value="publico">Publico</option>
+							<option class="text-error" value="privado">Privado</option>
+						</select>
+						<span class="help-block">Un album <strong>Publico</strong> puede ser visto por otros usuarios.</span>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button class="close" data-dismiss="modal" aria-hidden="true">Cerrar</button>
+			</div>
+		</div>
 			<div class="form-actions">
 					<button type="submit" class="btn btn-primary">Enviar</button>
 			</div>
-			
-				<div class="control-group">
-				<span class="alert-message error" style="display: <%=errors.containsKey("add_url_or_file") ? "block" : "none"%>">
-					<span class="required"><%=errors.containsKey("add_url_or_file") ? errors.get("add_url_or_file") : ""%></span>
-				</span> 
-				<span class="alert-message error"
-					style="display: <%=errors.containsKey("album_id") ? "block" : "none"%>">
-					<span class="required"><%=errors.containsKey("album_id") ? errors.get("album_id") :""%></span>
-				</span>
-				<span class="alert-message error"
-						style="display: <%=errors.containsKey("tags") ? "block" : "none"%>">
-					<span class="required"><%=errors.containsKey("tags") ? errors.get("tags") : ""%></span>
-				</span>
-				<span class="alert-message error"
-						style="display: <%=errors.containsKey("mandatory_parameters") ? "block" : "none"%>">
-					<span class="required"><%=errors.containsKey("mandatory_parameters") ? errors.get("mandatory_parameters") : ""%></span>
-				</span>
-				</div>
-				
 
-<script> 
-	function cargarAlbums() {
-		var albumsToBeDisplayedByUser = [<%= getAllAlbumsToBeDisplayedByUser(searchPicturesModel.getAlbumsToBeDisplayedByUser(user.getNombreUsr())) %>]
-		var selectedOption = document.getElementById('album_id').options[document.getElementById('album_id').selectedIndex].value;
-		
-		var combo = document.getElementById('album_id');
-		combo.options.length = 0;
-
-		//Agrero la opcion seleccionada
-		combo.options.add(new Option(selectedOption, selectedOption));
-
-		//Agrero la elegir si no es la opcion seleccionada
-		if(selectedOption != 'Elegir') {
-			combo.options.add(new Option('Elegir', 'Elegir'));
-		}
-		
-		for (i=0; i < albumsToBeDisplayedByUser.length; i++)
-		{
-			//Añadir los elementos de la lista
-		 	combo.options.add(new Option(albumsToBeDisplayedByUser[i], albumsToBeDisplayedByUser[i]));
-		}
-
-		//Agrero la opcion Crear nuevo album
-    	combo.options.add(new Option('Crear nuevo album...', 'nuevo'));
-	}
-
-	function llamarPopUp() {
-		 var valor = document.getElementById('album_id').options[document.getElementById('album_id').selectedIndex].value;
-
-		 if (valor == 'nuevo') {
-			 var name = prompt("Nombre del album","");
-			 var visibility = prompt("Visibilidad (public/private)","");
-
-			 if((name != null && name != "") && (visibility == 'public' || visibility == 'private')) {
-				 if(!existeAlbum(name)) {
-					//Vuelvo a cargar combo con el contenido de la base de datos
-					cargarAlbums();
-					//agrego al combo mi nuevo nombre de album
-					var option = new Option(name, name + ';' + visibility);
-					var combo = document.getElementById('album_id');
-     		      	combo.options.add(option);
-					combo.options[combo.length - 1].selected =  "1";
-
-				} else {
-					alert('Ya existe el album ' + name);
-					llamarPopUp();
-				 }
-
-			 } else {
-				 alert('Datos incorrectos, verifique sus entradas');
-				 llamarPopUp();
-			 } 
-		 }
-	}
-
-	function existeAlbum(name) {
-		//recorro combo en busca de este valor
-		var combo = document.getElementById('album_id');
-		var allAlbums = [<%= getAllAlbumsList(searchPicturesModel.getAllAlbums()) %>];
-		var exist = false;
-		
-		for (i=0;i<combo.length;i++) {
-			if(name == combo.options[i].value) { 
-				exist = true;
-			}
-		}
-
-		for (i=0;i<allAlbums.length;i++) {
-			if(name == allAlbums[i].value) { 
-				exist = true;
-			}
-		}
-
-		return exist;
-	}
-</script>
-			</form>
-	</div>
+	</form>
+</div>
 
 
     <!-- Le javascript
@@ -279,5 +203,21 @@
     <!-- Placed at the end of the document so the pages load faster -->
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
     <script src="/js/bootstrap-2.1.1.js"></script>
+    <script>
+	$('#nuevoAlbum').on('show', function () {
+		//algo para hcaer...
+        });
+	
+    </script>
+    <script>
+	$('#nuevoAlbum').on('hide', function () {
+	    var albumSelect = populateAlbumsComboBox();
+	    var nuevoAlbum = document.getElementById('newalbumid');
+		//Agrero la opcion Crear nuevo album
+    	albumSelect.options.add(new Option(nuevoAlbum.value, nuevoAlbum.value));
+		albumSelect.options[albumSelect.length - 1].selected =  true;
+	});
+    </script>
+
 </body>
 </html>

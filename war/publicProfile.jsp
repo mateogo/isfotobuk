@@ -19,8 +19,7 @@
 		<script
 		src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
 		<link href="/images/favicon.gif" rel="icon" type="image/gif">
-		<script src="/js/bootstrap-modal.js"></script>
-		<link href="/css/bootstrap.css" rel="stylesheet">
+		<link href="/css/bootstrap-2.1.1.css" rel="stylesheet">
 		<style type="text/css">
 			/* Override some defaults */
 			html, body {
@@ -46,12 +45,6 @@
 				padding: 20px;
 				margin: 0 -20px;
 				/* negative indent the amount of the padding to maintain the grid system */
-				-webkit-border-radius: 0 0 6px 6px;
-				-moz-border-radius: 0 0 6px 6px;
-				border-radius: 0 0 6px 6px;
-				-webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, .15);
-				-moz-box-shadow: 0 1px 2px rgba(0, 0, 0, .15);
-				box-shadow: 0 1px 2px rgba(0, 0, 0, .15);
 			}
 			/* Page header tweaks */
 			.page-header {
@@ -72,37 +65,24 @@
 	</head>
 	<body>
 		<!-- Barra principal -->
-		<div class="topbar">
-			<div class="fill">
-				<div class="container">
-					<a class="brand" href="#">Trabajo Pr&aacute;ctico</a>
-					<ul class="nav">
-						<li class="active">
-							<a href="#Registrarse">Registrarse</a>
-						</li>
-						<li>
-							<a href="#recuperarContrasenia">Olvid&eacute; mi contrase&ntilde;a</a>
-						</li>
-					</ul>
-					<form method="post" action="login" class="pull-right">
-						<input class="input-small" type="text"      name="username" placeholder="Usuario">
-						<input class="input-small" type="password"  name="password" placeholder="Contrase&ntilde;a">
-						<button class="btn"        type="submit">Entrar </button>
-					</form>
-					</form>
-				</div>
-			</div>
-		</div><!-- topbar end -->
+	<div class="navbar navbar-inverse navbar-fixed-top">
+	    <div class="navbar-inner">
+	      <div class="container">	
+	        <a class="brand" href="/index.jsp">Fotobuk</a>
+	            
+	            <%
+	            	out.print(miVista.getHTMLContent_TopBarFormat());
+	            %>
+	      </div>   <!-- end container -->
+	    </div>	 <!--end topbar-inner -->
+  </div> <!--end topbar -->
 		
 		<!-- Contenedor -->
 		<div class="container">
-			<div class="content">
-				<div class="page-header">
-					<h1><%
+			<div class="page-header">
+						<%
 							out.print(miVista.getHTMLContent_Encabezado());									
 						%>					
-					</h1>
-				</div>
 				<!-- /page-header -->
 				<div class="row">
 					<div class="span4">
@@ -124,7 +104,7 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="span4">		
+					<div class="span4">
 						<%
 							out.print(miVista.getHTMLContent_FotoDePerfil());				
 						%>
@@ -168,5 +148,7 @@
 				</p>
 			</footer>
 		</div>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script src="/js/bootstrap-2.1.1.js"></script>
 	</body>
 </html>

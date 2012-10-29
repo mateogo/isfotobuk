@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@page import="ar.kennedy.is2011.db.entities.Usuario"%>
+<%@page import="ar.kennedy.is2011.db.entities.PictureEy"%>
 <%@page import="ar.kennedy.is2011.session.SessionManager"%>
 <%@page import="ar.kennedy.is2011.utils.WebUtils"%>
 <%@page import="ar.kennedy.is2011.models.SearchPicturesModel"%>
@@ -56,11 +57,11 @@
             <li class="dropdown" >
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Acciones<b class="caret"></b></a>
               <ul class="dropdown-menu" >
-                <li><a href="/secure/imageUpload.jsp">Subir imagen</a></li>
+                <li><a href="/secure/imageUpload.jsp"><i class="icon-upload"></i>Subir imagen</a></li>
                 <li class="divider"></li>
                 <li class="nav-header">Visualizar por...</li>
-                <li><a href="/secure/albums.jsp">Album</a></li>
-                <li><a href="/secure/search.jsp">Buscar</a></li>
+                <li><a href="/secure/albums.jsp"><i class="icon-search"></i>Album</a></li>
+                <li><a href="/secure/search.jsp"><i class="icon-search"></i>Buscar</a></li>
               </ul>
             </li>
           </ul>
@@ -69,13 +70,13 @@
                <li class="dropdown" >
                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">${usuarioLogeado.nombreUsr}<b class="caret"></b></a>
                  <ul class="dropdown-menu" >
-                   <li><a href="/secure/editarCuentaUsuario.jsp">Editar perfil</a></li>
+                   <li><a href="/secure/editarCuentaUsuario.jsp"><i class="icon-user"></i>Editar perfil</a></li>
                    <li class="divider"></li>
-                   <li><a href="/logout">Cerrar sesion</a></li>
+                   <li><a href="/logout"><i class="icon-remove"></i>Cerrar sesión</a></li>
                  </ul>
                </li>
             </ul>
-          </div> 	
+          </div>
       </div>   <!-- end container -->
     </div>	 <!--end topbar-inner -->
   </div> <!--end topbr -->
@@ -115,18 +116,27 @@
 		
 	<ul class="thumbnails">
 		<%
-			String[] pics = userView.getPicBbyPage();
+			PictureEy[] pics = userView.getPicBbyPage();
+			String picId;
 			if(pics !=null){
-			for(String picId: pics){
+			for(PictureEy picture: pics){
+				picId=picture.getPictureId();
 		%>
    		<li class="span11 thumbnail">
    				<div class="span3 offset2">
+   					<div class="row">
 					<img src="/image?pictureid=<%= picId %>&version=I"
 						alt="" height=120 width=160 onclick="location.href='/secure/pictureView.jsp?pictureid=<%= picId %>'">
+					</div>
+  					<div class="row">
+					<span class="label label-info"><%= picture.getPictureName() %></span>
+					<a class="label label-info" href="/user/<%= picture.getUsername() %>/<%= picture.getAlbumId() %>"><%= picture.getAlbumId() %></a>
+					<a class="label label-info" href="/user/<%= picture.getUsername() %>"><%= picture.getUsername() %></a>
+					</div>
 				</div>
  					<div class="btn-group-vertical">
 						<!-- href="/secure/modalPictureView.jsp?pictureid=<%= picId %>" -->
- 						<button type="button" class="btn btn-link btn-large" onclick='setId("<%= picId %>")' data-toggle="modal" data-target="#picViewer" >ver</a>
+ 						<button type="button" class="btn btn-link btn-large" onclick='setId("<%= picId %>")' data-toggle="modal" data-target="#picViewer" >ver</button>
 						<button type="button" class="btn btn-link btn-large" onclick="location.href='/secure/imageUpload.jsp?pictureid=<%= picId %>'">editar</button>
 						<button type="button" class="btn btn-link btn-large" onclick="location.href='/upload?action=delete&pictureid=<%= picId %>'">eliminar</button>
 					</div>
@@ -244,7 +254,7 @@
 	function setId(id){
 		idProperty=id
 	}
-	var idProperty="holamundo";
+	var idProperty="id de la foto a renderizar en la ventana modal";
     </script>
     
     

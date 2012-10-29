@@ -37,6 +37,7 @@ public class ImageUploaderModel extends AbstractModel {
 	private Map<String, Object> formErrors;
 	private PictureEy picture;
 	private MultiPartRequest multiPartRequest;
+	private AlbumModel albumModel;
 	
 	
 	public ImageUploaderModel(HttpServletRequest request, Session userSession, String action) {
@@ -47,6 +48,7 @@ public class ImageUploaderModel extends AbstractModel {
 		this.albumDao = new AbstractDao<AlbumEy>();
 		this.action = action;
 		this.formErrors = new HashMap<String, Object>();
+		this.albumModel = new AlbumModel();
 	}
 	/**
 	 * Puede ser una imagen nueva o una pre-existente.
@@ -57,6 +59,7 @@ public class ImageUploaderModel extends AbstractModel {
 	public Boolean validate() throws Exception {
 		this.picture = "add".equals(action) ? new PictureEy() : 
 			pictureDao.findById(PictureEy.class, WebUtils.getParameter(request, "pictureid"));
+
 		this.multiPartRequest = new MultiPartRequest(request, (Constants.FILE_UPLOAD_MAX_SIZE * 1024 * 1024));
 		log.debug("validate ImageUploader");
 		
@@ -137,40 +140,31 @@ public class ImageUploaderModel extends AbstractModel {
 	
 	
 	private void updateAlbum(String albumId) throws Exception{
-		boolean isNewAlbum=false;
-		String albumName=albumId;
-		String albumScope="";
+		log.debug("updateAlbum:begin albumId:["+albumId+"]");
 		if("Elegir".equals(albumId)) {
 			this.formErrors.put("album_id", "Debe asociar seleccionar un album");
-		} else {
-			if(albumId.indexOf(";") > 0) {
-				isNewAlbum=true;
-				albumName=albumId.substring(0, albumId.indexOf(";"));
-				albumScope=albumId.substring(albumId.indexOf(";") + 1, albumId.length());
-			}		
+			return;
 		}
-		if (isNewAlbum){
-			try {
-				//(iii.b): Es un album nuevo? En dicho caso, no existe ya en la base?
-				AlbumEy album = albumDao.findById(AlbumEy.class, albumName);
-				if("public".equals(album.getAlbumId())) {
-					this.picture.setAlbumId(album.getAlbumId());
-				} else {
-					this.formErrors.put("album_id", "El album ya existe");
-				}
-			} catch (EntityNotFoundException e) {
-				createAlbum(albumName, albumScope);
-			}
+		String albumName=albumId;
+		String user =((Usuario) userSession.getElement("user")).getNombreUsr();
+		AlbumEy elAlbum = albumModel.getAlbumByID(albumName,user);
+		if(elAlbum==null){
+			//Album-no-existe
+			log.debug("updateAlbum: album-no-existe, se dar‡ de alta");
+			createAlbum(albumId,user);
 		}else{
-			this.picture.setAlbumId(albumName);
+			log.debug("updateAlbum: album-si-existe: ["+elAlbum.getAlbumId()+"]");
+			this.picture.setAlbumId(elAlbum.getAlbumId());
 		}
 	}
 	
-	private void createAlbum(String albumId, String albumScope) throws Exception {
+	private void createAlbum(String albumId, String user) throws Exception {
 		AlbumEy nuevoAlbum = new AlbumEy();
 		nuevoAlbum.setAlbumId(albumId);
-		nuevoAlbum.setVisibility(albumScope);
-		nuevoAlbum.setOwner(((Usuario) userSession.getElement("user")).getNombreUsr());
+		nuevoAlbum.setOwner(user);
+		nuevoAlbum.setAlbumName(WebUtils.getParameter(this.multiPartRequest, "newalbumname"));
+		log.debug("Create Album: scope:["+ WebUtils.getParameter(this.multiPartRequest, "newalbumscope")+"]");
+		nuevoAlbum.setVisibility(WebUtils.getParameter(this.multiPartRequest, "newalbumscope"));
 		this.albumDao.persist(nuevoAlbum);
 		this.picture.setAlbumId(albumId);
 	}

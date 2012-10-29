@@ -43,9 +43,7 @@
 <!--[if lt IE 9]>
 		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
-<script src="/js/bootstrap-modal.js"></script>
+
 <link href="/css/bootstrap.css" rel="stylesheet">
 <link href="/images/favicon.gif" rel="icon" type="image/gif">
 
@@ -132,5 +130,11 @@ body {
 			%>
 		</div>
 	</div>
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script src="/js/bootstrap-2.1.1.js"></script>
+    <script>
 </body>
 </html>

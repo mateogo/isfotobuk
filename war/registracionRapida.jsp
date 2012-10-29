@@ -11,14 +11,11 @@
 <!--[if lt IE 9]>
 		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
-<script src="/js/prettify.js"></script>
-<script src="/js/bootstrap-modal.js"></script>
-<script src="/js/menu.js" type="text/javascript"></script>
 
 <link href="/css/bootstrap.css" rel="stylesheet">
 <link href="/css/docs.css" rel="stylesheet">
+
+
 <style type="text/css">
 
 /* Override some defaults */
@@ -190,10 +187,17 @@ form .input {
 			</div>
 		</div>
 	</form>
+
+
 </body>
 
-
-<script type="text/javascript">
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script src="/js/bootstrap-2.1.1.js"></script>
+  
+<script>
 	var form = document.getElementsByName("form")[0];
 	var usr = document.getElementById("usr");
 	var mail = document.getElementById("mail");
@@ -201,7 +205,7 @@ form .input {
 	var pass2 = document.getElementById("pass2");
 	var psec = document.getElementById("psec");
 
-	msjError.style.display = 'none';
+	//msjError.style.display = 'none';
 
 	//loginError();
 
@@ -237,5 +241,6 @@ form .input {
 		return false;
 	}
 </script>
+
 
 </html>

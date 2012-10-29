@@ -4,7 +4,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import ar.kennedy.is2011.models.ImageUploaderModel;
-import ar.kennedy.is2011.models.ModelItf;
 import ar.kennedy.is2011.session.Session;
 import ar.kennedy.is2011.session.SessionManager;
 import ar.kennedy.is2011.utils.WebUtils;
@@ -21,9 +20,9 @@ public class ImageUploaderController extends AbstractController {
 
 		WebUtils.validateMandatoryParameters(request, new String[] {"action"});
 		
-		ModelItf model = new ImageUploaderModel(request, userSession, WebUtils.getParameter(request, "action"));
+		ImageUploaderModel model = new ImageUploaderModel(request, userSession, WebUtils.getParameter(request, "action"));
 		
-		resolveAction(request, response, (ImageUploaderModel) model, userSession, WebUtils.getParameter(request, "action"));
+		resolveAction(request, response,  model, userSession, WebUtils.getParameter(request, "action"));
 	}
 	
 	private void resolveAction(HttpServletRequest request, HttpServletResponse response, ImageUploaderModel model, Session userSession, String action) throws Exception {
@@ -33,7 +32,6 @@ public class ImageUploaderController extends AbstractController {
 				
 				userSession.removeElement("picture");
 				SessionManager.save(request, userSession);
-				
 				response.sendRedirect("secure/main.jsp");
 			
 			} else {
@@ -45,8 +43,7 @@ public class ImageUploaderController extends AbstractController {
 				model.update();
 				
 				userSession.removeElement("picture");
-				SessionManager.save(request, userSession);
-				
+				SessionManager.save(request, userSession);				
 				response.sendRedirect("secure/main.jsp");
 			
 			} else {
@@ -56,11 +53,9 @@ public class ImageUploaderController extends AbstractController {
 		} else if("delete".equals(action)) {
 			model.delete();
 			response.sendRedirect("secure/main.jsp");
-			
 		} else {
 			throw new Exception("Undefined action");
 		}
-		
 	}
 	
 	public boolean validateLogin(HttpServletRequest request) {

@@ -37,8 +37,8 @@ form .input {
 <body>
 		<!-- jpd / 15-10-2012 / llamada al jsp que resuelve la barra de navegacion -->
 		<jsp:include page="topbar.jsp?bar=editarCuentaUsuario" flush="true" />
-		<div class="container">
 
+	<div class="container">
 	<form name="form" class="form-horizontal" action="/editarCuenta" method="post">
 		<input type="hidden" name="misFotos" value="misFotos">
 
@@ -159,7 +159,7 @@ form .input {
 				<button type="submit" class="btn "            name="limpiar"  onclick="limpiarCampos()">limpiar</button>
 		</div>
 	</form>
-</div>
+	</div><!-- end container -->
 	
 
     <!-- Le javascript

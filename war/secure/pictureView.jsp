@@ -31,9 +31,8 @@
 <!--[if lt IE 9]>
 		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
-<script src="/js/bootstrap-modal.js"></script>
-<link href="/css/bootstrap.css" rel="stylesheet">
+
+<link href="/css/bootstrap-2.1.1.css" rel="stylesheet">
 <link href="/images/favicon.gif" rel="icon" type="image/gif">
 
 <style type="text/css">
@@ -47,20 +46,39 @@ body {
 </style>
 </head>
 <body>
-	<div class="topbar">
-		<div class="topbar-inner">
-			<div class="container">
-				<a class="brand" href="#">Picture</a>
-				<ul class="nav">
-					<li class="active"><a href="/secure/main.jsp">Inicio</a></li>
-				</ul>
-				<p class="pull-right">
-					Logueado como <a href="/secure/editarCuentaUsuario.jsp"><%=user.getNombreUsr()%></a>
-					<a href="/logout"> Cerrar sesion </a>
-				</p>
-			</div>
-		</div>
-	</div>
+  <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">	
+        <a class="brand" href="#">Fotobuk</a>
+          <ul class="nav">
+            <li class="active"><a href="#">Inicio</a></li>
+            
+            <li class="dropdown" >
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Acciones<b class="caret"></b></a>
+              <ul class="dropdown-menu" >
+                <li><a href="/secure/imageUpload.jsp"><i class="icon-upload"></i>Subir imagen</a></li>
+                <li class="divider"></li>
+                <li class="nav-header">Visualizar por...</li>
+                <li><a href="/secure/albums.jsp"><i class="icon-search"></i>Album</a></li>
+                <li><a href="/secure/search.jsp"><i class="icon-search"></i>Buscar</a></li>
+              </ul>
+            </li>
+          </ul>
+          <div class="pull-right">
+            <ul class="nav">
+               <li class="dropdown" >
+                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">${usuarioLogeado.nombreUsr}<b class="caret"></b></a>
+                 <ul class="dropdown-menu" >
+                   <li><a href="/secure/editarCuentaUsuario.jsp"><i class="icon-user"></i>Editar perfil</a></li>
+                   <li class="divider"></li>
+                   <li><a href="/logout"><i class="icon-remove"></i>Cerrar sesión</a></li>
+                 </ul>
+               </li>
+            </ul>
+          </div>
+      </div>   <!-- end container -->
+    </div>	 <!--end topbar-inner -->
+  </div> <!--end topbr -->
 	<div class="container">
 		<div class="row">
 			<ul class="media-grid">
@@ -71,5 +89,12 @@ body {
 			</ul>
 		</div>
 	</div>
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script src="/js/bootstrap-2.1.1.js"></script>
+
 </body>
 </html>

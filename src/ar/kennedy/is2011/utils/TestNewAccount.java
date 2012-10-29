@@ -21,8 +21,10 @@ import ar.kennedy.is2011.db.entities.Location;
 import ar.kennedy.is2011.db.entities.ContactosPerson;
 import ar.kennedy.is2011.db.entities.Account;
 import ar.kennedy.is2011.db.entities.User;
+import ar.kennedy.is2011.db.entities.AlbumEy;
 import ar.kennedy.is2011.db.exception.EntityNotFoundException;
 import ar.kennedy.is2011.models.AccountModel;
+import ar.kennedy.is2011.models.AlbumModel;
 
 
 /**
@@ -35,11 +37,13 @@ public class TestNewAccount extends HttpServlet {
 	public static final Boolean CREATE_PERSONA_IDEAL    = false;
 	public static final Boolean CREATE_PERSONA_FISICA   = false;
 	public static final Boolean CHANGE_DEFAULT_ACCOUNT  = false;
+	public static final Boolean CREATE_ALBUM            = false;
 
 	public static final Boolean QUERYING_USERS          = false;
 	public static final Boolean QUERYING_ACCOUNTS       = false;
 	public static final Boolean QUERYING_ENTITIES       = false;
 	public static final Boolean DUMP_USER_SESSION       = false;
+	public static final Boolean REPARING_ALBUMES        = true;
 	public static final String USER_ID = "1";
 
 	private static final long serialVersionUID = 7320911254853012236L;
@@ -61,11 +65,14 @@ public class TestNewAccount extends HttpServlet {
 		if (CREATE_PERSONA_IDEAL) createPersonaIdeal(request, response);
 		if (CREATE_USER_ACCOUNT) creatAccount(request, response);
 		if (CHANGE_DEFAULT_ACCOUNT) changeDefaultAccount(request,response);
+		if (CREATE_ALBUM) creatAlbum(request, response);
 		
 		if (QUERYING_USERS) queriyngUsers(request, response);
 		if (QUERYING_ACCOUNTS) queriyngAccounts(request, response);
 		if (QUERYING_ENTITIES) queriyngEntities(request,response);
+		if (REPARING_ALBUMES) repairAlbum(request,response);
 		if (DUMP_USER_SESSION) dumpUserData(request,response);
+		
 		
 	}
 
@@ -213,6 +220,57 @@ public class TestNewAccount extends HttpServlet {
 		//response.sendRedirect("index.jsp");
 	}
 
+		
+
+	public void creatAlbum(HttpServletRequest request, HttpServletResponse response) {
+		log.debug("Create USER-ALBUM to start");
+		
+		AbstractDao<AlbumEy> albumDAO = new AbstractDao<AlbumEy>();
+		
+		AlbumEy familia = new AlbumEy();
+		familia.setAlbumName("vacaciones");
+		familia.setAlbumId("vacaciones");
+		familia.setOwner("mateogo");
+		familia.setVisibility("public");
+		
+		try{
+			log.debug("=== trying persistence album:familia");
+			albumDAO.persist(familia);
+			log.debug("***** Persisting entities, Done:["+familia.toString()+"]");
+
+		} catch (Exception e) {
+			albumDAO.rollBackTx();
+			log.error(e.getMessage());
+			//throw new PersistException("Fail to delete entity in database");
+
+		}finally{
+		}
+	}
+
+	public void repairAlbum(HttpServletRequest request, HttpServletResponse response) {
+		log.debug("******* Create QUERIyng ALBUM to start *******");
+		AlbumModel model = new AlbumModel();
+		List<AlbumEy> albumes = model.getAllAlbumes();
+		
+		log.debug("query for ALBUM size:["+albumes.size()+"]");
+		if(albumes.size()>0){
+			for(AlbumEy album:albumes){
+				//oJo:**********************
+				model.repairAlbum(album);
+				//*************************
+				log.debug("Iterating==>Album: ["+album.toString()+"]");
+				log.debug("                          Key: ["+album.getKey()+"]");
+				log.debug("                           Id: ["+album.getKey().getId()+"]");
+				log.debug("                         Kind: ["+album.getKey().getKind()+"]");
+				log.debug("                         Name: ["+album.getKey().getName()+"]");
+				log.debug("                    NameSpace: ["+album.getKey().getNamespace()+"]");
+				log.debug("                     hashCode: ["+album.getKey().hashCode()+"]");
+			}
+			log.debug("===>ALBUM querying:[end]");
+		}
+	}
+
+	
 	public void creatAccount(HttpServletRequest request, HttpServletResponse response) {
 		log.debug("Create USER-ACCOUNT to start");
 		
