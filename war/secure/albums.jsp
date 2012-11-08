@@ -5,7 +5,7 @@
 <%@page import="ar.kennedy.is2011.utils.WebUtils"%>
 <%@page import="java.util.Map"%>
 <%@page import="java.util.HashMap"%>
-<%@page import="ar.kennedy.is2011.db.entities.Usuario"%>
+<%@page import="ar.kennedy.is2011.db.entities.User"%>
 <%@page import="ar.kennedy.is2011.models.SearchPicturesModel"%>
 <%@page import="ar.kennedy.is2011.db.entities.AlbumEy"%>
 <%@page import="java.util.Set"%>
@@ -30,7 +30,7 @@
 			: new HashMap<String, Object>()
 			: new HashMap<String, Object>();
 	SearchPicturesModel searchPicturesModel = new SearchPicturesModel();
-	Usuario user = (Usuario) userSession.getElement("user");
+	User user = (User) SessionManager.getCurrentUser(request);
 %>
 
 <!DOCTYPE html>
@@ -67,8 +67,8 @@ body {
 					<li><a href="/secure/search.jsp">Buscar</a></li>
 				</ul>
 				<p class="pull-right">
-					Logueado como <a href="/secure/editarCuentaUsuario.jsp"><%=user.getNombreUsr()%></a><a
-						href="/logout"> Cerrar sesion</a>
+					Logueado como <a href="/userprofile"><%=user.getUserName()%></a>
+					<q href="/logout"> Cerrar sesion</a>
 				</p>
 			</div>
 		</div>
@@ -85,7 +85,7 @@ body {
 							<option value="Elegir">Elegir</option>
 							<%
 								Set<AlbumEy> albums = searchPicturesModel
-										.getAlbumsToBeDisplayedByUser(user.getNombreUsr());
+										.getAlbumsToBeDisplayedByUser(user.getUserName());
 
 								for (AlbumEy album : albums) {
 							%>
@@ -135,6 +135,5 @@ body {
     <!-- Placed at the end of the document so the pages load faster -->
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
     <script src="/js/bootstrap-2.1.1.js"></script>
-    <script>
 </body>
 </html>

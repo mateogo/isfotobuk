@@ -9,8 +9,10 @@ import org.apache.log4j.Logger;
 import ar.kennedy.is2011.constants.Constants;
 import ar.kennedy.is2011.db.dao.AbstractDao;
 import ar.kennedy.is2011.db.entities.SessionEy;
+import ar.kennedy.is2011.db.entities.User;
 import ar.kennedy.is2011.exception.SessionOperationException;
 import ar.kennedy.is2011.utils.FileUtils;
+import ar.kennedy.is2011.utils.WebUtils;
 
 import com.google.appengine.api.datastore.Blob;
 
@@ -18,7 +20,7 @@ import com.google.appengine.api.datastore.Blob;
  * @author: mlabarinas
  */
 public class SessionManager {
-	
+	private static final String USER = "user";
 	private static final Logger log = Logger.getLogger(SessionManager.class);
 	private static final AbstractDao<SessionEy> sessionDao = new AbstractDao<SessionEy>();
 
@@ -85,6 +87,11 @@ public class SessionManager {
 		
 		return session;
 	}
+
+	public static User getCurrentUser(HttpServletRequest request) {
+		return (User) SessionManager.get(request, WebUtils.getSessionIdentificator(request)).getElement(USER);
+	}
+
 	
 	public static void save(HttpServletRequest request, Session session) {
 		log.debug("Session save for id: " + session.getId());

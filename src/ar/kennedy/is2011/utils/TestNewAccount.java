@@ -39,11 +39,11 @@ public class TestNewAccount extends HttpServlet {
 	public static final Boolean CHANGE_DEFAULT_ACCOUNT  = false;
 	public static final Boolean CREATE_ALBUM            = false;
 
-	public static final Boolean QUERYING_USERS          = false;
-	public static final Boolean QUERYING_ACCOUNTS       = false;
+	public static final Boolean QUERYING_USERS          = true;
+	public static final Boolean QUERYING_ACCOUNTS       = true;
 	public static final Boolean QUERYING_ENTITIES       = false;
 	public static final Boolean DUMP_USER_SESSION       = false;
-	public static final Boolean REPARING_ALBUMES        = true;
+	public static final Boolean REPARING_ALBUMES        = false;
 	public static final String USER_ID = "1";
 
 	private static final long serialVersionUID = 7320911254853012236L;
@@ -386,7 +386,7 @@ public class TestNewAccount extends HttpServlet {
 	public void queriyngUsers(HttpServletRequest request, HttpServletResponse response) {
 		log.debug("******* Create QUERIyng USERS to start *******");
 		AccountModel model = new AccountModel();
-		List<User> users = model.getUserByName("mgomezortega");
+		List<User> users = model.getUsersByName("mgomezortega");
 		//List<User> users = model.getAllUsers();
 		log.debug("query for user size:["+users.size()+"]");
 		if(users.size()>0){
@@ -400,7 +400,7 @@ public class TestNewAccount extends HttpServlet {
 	public void changeDefaultAccount(HttpServletRequest request, HttpServletResponse response) {
 		log.debug("******* Change Default Account to start *******");
 		AccountModel model = new AccountModel();
-		List<Account> accounts = model.getAccountByName("imago");
+		List<Account> accounts = model.getAccountsByName("imago");
 		log.debug("query for account size:["+accounts.size()+"]");
 		if(accounts.size()==1){
 			model.changeDefaultAccount(accounts.get(0));

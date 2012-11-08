@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.CascadeType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -39,11 +39,20 @@ public class Person implements Serializable {
 	@Column(name = "NOMBRE_PERSON")
 	private String nombrePerson;
 
-	@ManyToOne(fetch=FetchType.LAZY, optional=true, cascade=CascadeType.ALL)
+	@Column(name = "DATOS_CONTACTO")
+	@OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	private List<ContactosPerson> datosContacto;
+
+	@Column(name = "LOCACIONES")
+	@OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	private List<Location> locations;
 	
 	@Column(name = "COMENT")
 	private String coment;
+	
+	@Column(name = "OWNER")
+	private long userId;
+	
 
 	public String getNombrePerson() {
 		return nombrePerson;
@@ -64,6 +73,11 @@ public class Person implements Serializable {
 	public Key getKey() {
 		return key;
 	}
+	
+	public String getId(){
+		if(key==null) return "0";
+		else return Long.toString(getKey().getId());
+	}
 
 	public List<ContactosPerson> getDatosContacto() {
 		if (datosContacto==null) datosContacto = new ArrayList<ContactosPerson>();
@@ -79,6 +93,22 @@ public class Person implements Serializable {
 	}
 	public String  toString(){
 		return getNombrePerson();
+	}
+
+	public long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(long userId) {
+		this.userId = userId;
+	}
+
+	public List<Location> getLocations() {
+		return locations;
+	}
+
+	public void setLocations(List<Location> locations) {
+		this.locations = locations;
 	}
 
 }

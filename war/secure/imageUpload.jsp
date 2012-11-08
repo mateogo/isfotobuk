@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" 
     pageEncoding="UTF-8"%>
 <%@page import="ar.kennedy.is2011.session.Session"%>
-<%@page import="ar.kennedy.is2011.db.entities.Usuario"%>
+<%@page import="ar.kennedy.is2011.db.entities.User"%>
 <%@page import="ar.kennedy.is2011.db.entities.PictureEy"%>
 <%@page import="ar.kennedy.is2011.utils.WebUtils"%>
 <%@page import="ar.kennedy.is2011.views.ImageUploadView"%>
@@ -9,7 +9,7 @@
 
 <%
 	ImageUploadView imageUpload = new ImageUploadView(request);
-	Usuario user = imageUpload.getUser();
+	User user = imageUpload.getUser();
 	Session userSession = imageUpload.getUserSession();
 	String pictureId = WebUtils.getParameter(request, "pictureid");
 	PictureEy picture = imageUpload.getPictureToEdit();

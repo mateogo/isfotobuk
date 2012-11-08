@@ -8,9 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
-
-import ar.kennedy.is2011.db.entities.Usuario;
-
+import ar.kennedy.is2011.models.AccountModel;
+import ar.kennedy.is2011.db.entities.User;
 
 
 /**
@@ -19,6 +18,7 @@ import ar.kennedy.is2011.db.entities.Usuario;
 public class UserHomePageController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	protected final Logger log = Logger.getLogger(getClass());
+	private User user;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -36,13 +36,20 @@ public class UserHomePageController extends HttpServlet {
 		log.debug("Start UserHomePage - doPost");
 
 		HttpSession session = request.getSession();
-		Usuario usr = (Usuario)session.getAttribute("usuarioLogeado");	
+		this.user = (User)session.getAttribute("usuarioLogeado");
 		
-		if(usr != null){
+		if(this.user != null){
 			log.debug("UserHomePage - usuario-sesion: ok");
 			if (urlGetRESTParameters(request,response)){
 				log.debug("UserHomePage - url procesada: ok");
-				request.getRequestDispatcher("/publicProfile.jsp").forward(request, response);				
+				if(VerifyUser(request))
+				{
+					request.getRequestDispatcher("/publicProfile.jsp").forward(request, response);
+				}
+				else
+				{
+					request.getRequestDispatcher("/errorUsuarioInexistente.jsp").forward(request, response);
+				}
 				//request.getRequestDispatcher("/secure/main.jsp").forward(request, response);
 				//vease, como alternativa, usar reponse.sendRedirect
 				//response.sendRedirect("/secure/main.jsp");
@@ -56,8 +63,17 @@ public class UserHomePageController extends HttpServlet {
 			log.debug("UserHomePage - usuario-sesion: no hay sesion");
 			
 			if (urlGetRESTParameters(request,response)){
-				log.debug("UserHomePage: requestDispatcher a publicProfile");
-				request.getRequestDispatcher("/publicProfile.jsp").forward(request, response);				
+				//Verificación si usuario existe.
+				if(VerifyUser(request))
+				{
+					log.debug("UserHomePage: requestDispatcher a publicProfile");
+					request.getRequestDispatcher("/publicProfile.jsp").forward(request, response);
+				}
+				else
+				{
+					request.getRequestDispatcher("/errorUsuarioInexistente.jsp").forward(request, response);
+				}
+								
 			}
 			else
 			{
@@ -118,5 +134,14 @@ public class UserHomePageController extends HttpServlet {
 		{
 			return false;
 		}	
+	}
+
+	public boolean VerifyUser(HttpServletRequest request)
+	{
+		/* La siguiente función verifica la existencia del usuario pasado como parámetro en el URI.
+		 * Si el usuario no existe, se dredis */
+
+		AccountModel model = new AccountModel();
+		return model.ifExistUserByName(request.getAttribute("usuario").toString());
 	}
 }

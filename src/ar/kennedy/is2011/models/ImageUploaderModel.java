@@ -12,8 +12,8 @@ import ar.kennedy.is2011.constants.Constants;
 import ar.kennedy.is2011.db.dao.AbstractDao;
 import ar.kennedy.is2011.db.entities.AlbumEy;
 import ar.kennedy.is2011.db.entities.PictureEy;
-import ar.kennedy.is2011.db.entities.Usuario;
-import ar.kennedy.is2011.db.exception.EntityNotFoundException;
+import ar.kennedy.is2011.db.entities.User;
+//import ar.kennedy.is2011.db.exception.EntityNotFoundException;
 import ar.kennedy.is2011.exception.ValidateMandatoryParameterException;
 import ar.kennedy.is2011.picture.MultiPartRequest;
 import ar.kennedy.is2011.picture.UploadedFile;
@@ -38,6 +38,7 @@ public class ImageUploaderModel extends AbstractModel {
 	private PictureEy picture;
 	private MultiPartRequest multiPartRequest;
 	private AlbumModel albumModel;
+	private User user;
 	
 	
 	public ImageUploaderModel(HttpServletRequest request, Session userSession, String action) {
@@ -49,6 +50,7 @@ public class ImageUploaderModel extends AbstractModel {
 		this.action = action;
 		this.formErrors = new HashMap<String, Object>();
 		this.albumModel = new AlbumModel();
+		this.user = SessionManager.getCurrentUser(request);
 	}
 	/**
 	 * Puede ser una imagen nueva o una pre-existente.
@@ -101,7 +103,7 @@ public class ImageUploaderModel extends AbstractModel {
 			SessionManager.save(request, userSession);
 			return false;
 		}else{
-			userSession.setElement("picture", picture);
+			userSession.setElement("picture", this.picture);
 			SessionManager.save(request, userSession);			
 			return true;
 		}
@@ -125,11 +127,14 @@ public class ImageUploaderModel extends AbstractModel {
 	}
 	private void uploadContentPicture(){
 		if(this.multiPartRequest.getFiles().hasMoreElements()) {
+			log.debug("Upload ContentPicture: begin");
 			UploadedFile uploadPicture = (UploadedFile) multiPartRequest.getFiles().nextElement();
 			if(uploadPicture.getContent().size() < Constants.ENTITY_WEIGHT) {
+				log.debug("Upload ContentPicture: begin-1");
 				this.picture.setContentType(uploadPicture.getContentType());
 				this.picture.setContent(new Blob(((UploadedFile) multiPartRequest.getFiles().nextElement()).getContent().toByteArray()));
 			} else {
+				log.debug("Upload ContentPicture: begin-2");
 				this.picture.setContentType(uploadPicture.getContentType());
 				this.picture.setContent(new Blob(WebUtils.resize(((UploadedFile) multiPartRequest.getFiles().nextElement()).getContent().toByteArray(), 800, 600)));
 			}
@@ -140,14 +145,18 @@ public class ImageUploaderModel extends AbstractModel {
 	
 	
 	private void updateAlbum(String albumId) throws Exception{
-		log.debug("updateAlbum:begin albumId:["+albumId+"]");
+		log.debug("**********  updateAlbum:begin albumId:["+albumId+"]");
+		
 		if("Elegir".equals(albumId)) {
 			this.formErrors.put("album_id", "Debe asociar seleccionar un album");
 			return;
 		}
+		
 		String albumName=albumId;
-		String user =((Usuario) userSession.getElement("user")).getNombreUsr();
+		String user =this.user.getUserName();
+
 		AlbumEy elAlbum = albumModel.getAlbumByID(albumName,user);
+		
 		if(elAlbum==null){
 			//Album-no-existe
 			log.debug("updateAlbum: album-no-existe, se dar‡ de alta");
@@ -159,31 +168,42 @@ public class ImageUploaderModel extends AbstractModel {
 	}
 	
 	private void createAlbum(String albumId, String user) throws Exception {
+		
 		AlbumEy nuevoAlbum = new AlbumEy();
+		
 		nuevoAlbum.setAlbumId(albumId);
 		nuevoAlbum.setOwner(user);
 		nuevoAlbum.setAlbumName(WebUtils.getParameter(this.multiPartRequest, "newalbumname"));
-		log.debug("Create Album: scope:["+ WebUtils.getParameter(this.multiPartRequest, "newalbumscope")+"]");
 		nuevoAlbum.setVisibility(WebUtils.getParameter(this.multiPartRequest, "newalbumscope"));
+
+		log.debug("Ready to persist new album:["+nuevoAlbum.getAlbumId()+"] ["+nuevoAlbum.getAlbumName()+"] ["+nuevoAlbum.getOwner()+"] ["+nuevoAlbum.getVisibility()+"]");
+
 		this.albumDao.persist(nuevoAlbum);
 		this.picture.setAlbumId(albumId);
 	}
 	
 	public void save() throws Exception {
-		PictureEy picture = (PictureEy) userSession.getElement("picture");
-		picture.setPictureId(Aleatory.getAleatoryString(15));
-		picture.setUsername(((Usuario) userSession.getElement("user")).getNombreUsr());
-		picture.setDateCreated(new Date());
-		picture.setDateUpdated(picture.getDateCreated());
+		log.debug("IMAGE UPLOADER: ready to SAVE");
+
+		//PictureEy picture = (PictureEy) userSession.getElement("picture");
 		
-		pictureDao.persist(picture);
+		this.picture.setPictureId(Aleatory.getAleatoryString(15));
+		this.picture.setUsername(this.user.getUserName());
+		this.picture.setDateCreated(new Date());
+		this.picture.setDateUpdated(this.picture.getDateCreated());
+		
+		log.debug("SAVE data:["+this.picture.getAlbumId()+"]  ["+this.picture.getPictureId()+"]  ["+this.picture.getTags()+"]  ["+this.picture.getUsername()+"]  ["+this.picture.getPictureName()+"]");
+		
+		pictureDao.persist(this.picture);
+		
+		log.debug("SAVE OK");
 	}
 	
 	public void update() throws Exception {
-		PictureEy picture = (PictureEy) userSession.getElement("picture");
-		picture.setDateUpdated(new Date());
+		//PictureEy picture = (PictureEy) userSession.getElement("picture");
+		this.picture.setDateUpdated(new Date());
 		
-		pictureDao.persist(picture);
+		pictureDao.persist(this.picture);
 	}
 	
 	public void delete() throws Exception {
@@ -191,42 +211,5 @@ public class ImageUploaderModel extends AbstractModel {
 		
 		pictureDao.remove(PictureEy.class, WebUtils.getParameter(request, "pictureid"));
 	}
-	
-	/*
-	private Blob getImageFromRequest() throws CanNotGetFileFromRequestException {
-		BlobstoreService blobstoreService = null;
-		FileService fileService = null;
-		ImageObject imageObject = null;
-		
-		try {
-			blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
-			fileService = FileServiceFactory.getFileService();
-			Map<String, BlobKey> images = blobstoreService.getUploadedBlobs(request);
-		
-			if(images.get("picture_file") != null) {
-				imageObject = new ImageObject();
-				BlobKey blobKey = images.get("picture_file");
-				AppEngineFile imageFile = fileService.getBlobFile(blobKey);
-				FileReadChannel readChannel = fileService.openReadChannel(imageFile, false);
-		        ByteBuffer byteBuffer = ByteBuffer.allocate(Constants.MAX_READ_BUFFER_SIZE);
-		        
-		        Integer numberOfBytes = 0;
-	            while ((numberOfBytes = readChannel.read(byteBuffer)) != -1) {
-	            	imageObject.appendData(byteBuffer.array(), numberOfBytes);
-	                byteBuffer = ByteBuffer.allocate(Constants.MAX_READ_BUFFER_SIZE);
-	            }
-	
-		         readChannel.close();
-			}
-		         
-        } catch(Exception e) {
-        	log.error(e);
-        	
-        	throw new CanNotGetFileFromRequestException("Can't get file from request", e);
-        }
-	        
-	    return new Blob(imageObject.getData());
-	}
-	*/
 	
 }

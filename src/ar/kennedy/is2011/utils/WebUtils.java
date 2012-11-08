@@ -5,8 +5,13 @@ import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
+
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +29,8 @@ import ar.kennedy.is2011.exception.CharsetConvertException;
 import ar.kennedy.is2011.exception.ValidateMandatoryParameterException;
 import ar.kennedy.is2011.picture.MultiPartRequest;
 import ar.kennedy.is2011.session.Session;
+import ar.kennedy.is2011.session.SessionManager;
+import ar.kennedy.is2011.models.AccountModel;
 
 /**
  * @author mlabarinas
@@ -48,6 +55,23 @@ public class WebUtils {
 		}
 		
 		return true;
+	}
+	
+	public static String getFormatedDate(Date date){
+		if(date==null) date = new Date();
+		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+		return df.format(date);
+	}
+
+	public static Date getDateFromString(String date){
+		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+		if(date.contains("-")) df = new SimpleDateFormat("dd-MM-yyyy");
+		try {
+			return df.parse(date);
+	    } catch (ParseException e) {
+	        e.printStackTrace();
+	        return null;
+	    }
 	}
 	
 	public static Boolean validateMandatoryParameters(MultiPartRequest request, String[] parameters) throws ValidateMandatoryParameterException {
@@ -204,5 +228,23 @@ public class WebUtils {
     private static String stripXss(String input) {
     	return input.replace("&", "&amp;").replace("#", "&#35;").replace("<", "&lt;").replace(">", "&gt;").replace("(", "&#40;").replace(")", "&#41;");
     }
+
+    public static Boolean isNotNull(String text) {
+    	return (StringUtils.isNotBlank(text) && StringUtils.isNotEmpty(text));
+    }
+    
+	public static Boolean updateUserSession(HttpServletRequest request, Session userSession, AccountModel model){
+		
+		userSession = SessionManager.get(request, WebUtils.getSessionIdentificator(request));
+
+		userSession.setElement("user", model.getUser());
+
+		SessionManager.save(request, userSession);
+		
+		/** For compatibility with old login */
+		request.getSession().setAttribute("usuarioLogeado", model.getUser());
+
+		return true;
+	}   
     
 }

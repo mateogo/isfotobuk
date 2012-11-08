@@ -7,7 +7,7 @@ import ar.kennedy.is2011.constants.Constants;
 import ar.kennedy.is2011.db.dao.AbstractDao;
 import ar.kennedy.is2011.db.entities.AlbumEy;
 import ar.kennedy.is2011.db.entities.PictureEy;
-import ar.kennedy.is2011.db.entities.Usuario;
+import ar.kennedy.is2011.db.entities.User;
 import ar.kennedy.is2011.exception.PermissionDeniedException;
 import ar.kennedy.is2011.exception.PictureNotFoundException;
 import ar.kennedy.is2011.models.AlbumModel;
@@ -75,7 +75,7 @@ public class ImageProxyModel extends AbstractModel {
 	private Boolean validate(PictureEy picture) throws Exception {
 		AlbumEy album = albumModel.getAlbumByID(picture.getAlbumId(), picture.getUsername());
 		
-		return Constants.PUBLIC_VISIBILITY.equals(album.getVisibility()) ? true : ((Usuario) userSession.getElement("user")).getNombreUsr().equals(picture.getUsername());
+		return Constants.PUBLIC_VISIBILITY.equals(album.getVisibility()) ? true : ((User) userSession.getElement("user")).getUserName().equals(picture.getUsername());
 	}
 	
 	private Integer getVersionWidth(String version) {

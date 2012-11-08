@@ -1,7 +1,7 @@
 package ar.kennedy.is2011.views;
 
 import javax.servlet.http.HttpServletRequest;
-import ar.kennedy.is2011.db.entities.Usuario;
+import ar.kennedy.is2011.db.entities.User;
 import ar.kennedy.is2011.session.SessionManager;
 import ar.kennedy.is2011.utils.WebUtils;
 import ar.kennedy.is2011.models.SearchPicturesModel;
@@ -17,8 +17,9 @@ public class UserHomeView {
 	private static final Integer PICS_PER_PAGE = 4;
 	private static final Integer BUTTONS_PER_SECTION = 4;
 	private HttpServletRequest request;
-	private Usuario user;
+	private User user;
 	private PictureEy lastImageUpload;
+	private PictureEy profileImage;
 	private SearchPicturesModel searchPicturesModel = new SearchPicturesModel();
 	protected final Logger log = Logger.getLogger(getClass());
 	private List<PictureEy> pictures;
@@ -32,9 +33,11 @@ public class UserHomeView {
 	}
 	public UserHomeView(HttpServletRequest rq){
 		setRequest(rq);
-		setUser( (Usuario) SessionManager.get(request, WebUtils.getSessionIdentificator(request)).getElement("user"));
-		setLastImageUpload(searchPicturesModel.getLastPictureUploadByUser(user.getNombreUsr()));
+		setUser( (User) SessionManager.getCurrentUser(request));
+		setLastImageUpload(searchPicturesModel.getLastPictureUploadByUser(user.getUserName()));
+		setProfileImage(searchPicturesModel.getUserProfilePicture(user));
 		log.debug("UserHomeView Instanciated");
+		
 	}	
 	public HttpServletRequest getRequest() {
 		return request;
@@ -42,16 +45,16 @@ public class UserHomeView {
 	public void setRequest(HttpServletRequest request) {
 		this.request = request;
 	}
-	public Usuario getUser() {
+	public User getUser() {
 		return user;
 	}
 	public String getUserName() {
-		return getUser().getNombre();
+		return getUser().getUserName();
 	}
 	public String getUserDisplayName() {
 		return getUser().getDisplayName();
 	}
-	public void setUser(Usuario user) {
+	public void setUser(User user) {
 		this.user = user;
 	}
 	public PictureEy getLastImageUpload() {
@@ -118,7 +121,7 @@ public class UserHomeView {
 		return last;
 	}
 	public List<PictureEy> getPictures() {
-		if(pictures==null) pictures = searchPicturesModel.getPicturesToBeDisplayedByUser(user.getNombreUsr());
+		if(pictures==null) pictures = searchPicturesModel.getPicturesToBeDisplayedByUser(user.getUserName());
 		return pictures;
 	}
 	public void setPictures(List<PictureEy> pictures) {
@@ -163,6 +166,13 @@ public class UserHomeView {
 	}
 	public void setToButton(int toButton) {
 		this.toButton = toButton;
+	}
+	public String getProfileImage() {
+		if(profileImage==null) return getLastImageId();
+		else return profileImage.getPictureId();
+	}
+	public void setProfileImage(PictureEy profileImage) {
+		this.profileImage = profileImage;
 	}	
 
 }

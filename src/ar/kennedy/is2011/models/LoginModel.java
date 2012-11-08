@@ -4,10 +4,10 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import ar.kennedy.is2011.db.dao.AbstractDao;
-import ar.kennedy.is2011.db.entities.Usuario;
-import ar.kennedy.is2011.db.exception.EntityNotFoundException;
-import ar.kennedy.is2011.exception.UserNotExistException;
+import ar.kennedy.is2011.db.entities.User;
+import ar.kennedy.is2011.models.AccountModel;
+//import ar.kennedy.is2011.db.exception.EntityNotFoundException;
+//import ar.kennedy.is2011.exception.UserNotExistException;
 import ar.kennedy.is2011.exception.ValidateMandatoryParameterException;
 import ar.kennedy.is2011.session.Session;
 import ar.kennedy.is2011.session.SessionManager;
@@ -19,7 +19,8 @@ import ar.kennedy.is2011.utils.WebUtils;
  */
 public class LoginModel extends AbstractModel {
 
-	AbstractDao<Usuario> userDao = new AbstractDao<Usuario>();
+	AccountModel model= new AccountModel();
+	User user;
 	
 	public LoginModel() {
 		super();
@@ -31,63 +32,56 @@ public class LoginModel extends AbstractModel {
 			String username = WebUtils.getParameter(request, "username");
 			String password = WebUtils.getParameter(request, "password");
 		
-			return validateLogin(request, response, username, password);
-			
-		} catch(ValidateMandatoryParameterException e) {
-			errors.put("login_fail", "Faltan parametros obligatorios");
-			return false;
-		}
-		
-	}
-
-	public Boolean validateLogin(HttpServletRequest request, HttpServletResponse response, String userId, String password) throws Exception {
-		Session userSession = null;
-		
-		log.debug("Validating login for user: " + userId);		
-		try {
-			Usuario userEy = userDao.findById(Usuario.class, userId);
-			//userDao.select(Usuario.class);
-			if(validate(userEy, password)) {
-				userSession = createLoginSession(request, response);
-				userSession.setElement("user", userEy);
-				SessionManager.save(request, userSession);
-				
-				/** For compatibility with old login */
-				request.getSession().setAttribute("usuarioLogeado", userEy);
-
-				log.debug("Login user OK");
-				
-				return true;
-				
-			} else {
-				log.debug("Login user fail");
-				
-				errors.put("login_fail", "Fallo en la autenticacion");
+			if (validateLogin(request, response, username, password)){
+				if(publishNewSession(request, response)){
+					return true;					
+				}else{
+					log.debug("Login user fail");			
+					errors.put("login_fail", "Fallo en la autenticacion");
+					return false;
+				}
+			}else{
+				log.debug("Login user fail");				
+				errors.put("login_fail", "El usuario no existe");
 				return false;
 			}
-			
-		} catch(EntityNotFoundException e) {
-			log.debug("Login user fail");
-			
-			errors.put("login_fail", "El usuario no existe");
-			return false;
-		
 		} catch(ValidateMandatoryParameterException e) {
-			log.debug("Login user fail");
-			
 			errors.put("login_fail", "Faltan parametros obligatorios");
 			return false;
 		}
 	}
-	
-	private Boolean validate(Usuario userEy, String password) throws Exception {
-		if(userEy != null) {
-			return WebUtils.decrypt(userEy.getClave()).equals(password);
-			
-		} else {
-			throw new UserNotExistException("User not exist");
+
+		
+	public Boolean publishNewSession(HttpServletRequest request, HttpServletResponse response){
+		Session userSession = createLoginSession(request, response);
+		userSession.setElement("user", model.getUser());
+		SessionManager.save(request, userSession);
+		
+		/** For compatibility with old login */
+		request.getSession().setAttribute("usuarioLogeado", model.getUser());
+
+		log.debug("Login user OK");		
+		return true;
+	}
+
+	private Boolean validateLogin(HttpServletRequest request, HttpServletResponse response, String accountId, String password) throws Exception {
+		log.debug("Validating login: Search user for account: " + accountId);		
+		if(model.getUserForAccount(accountId)==null){
+			log.debug("Validating login: warn: USER-NOT-EXIST" + accountId);		
+			return false;
+		}
+		log.debug("Validating login: user found!! [" + model.getUser().getUserName()+"]");		
+		if(validateAccountPassword(model.getPassword(),password)){
+			return true;
+		}else{
+			return false;
 		}
 	}
+
+	private Boolean validateAccountPassword(String accPassword, String password) throws Exception{
+		return WebUtils.decrypt(accPassword).equals(password);
+	}
+
 	
 	protected Session createLoginSession(HttpServletRequest request, HttpServletResponse response) {
 		Session userSession = null;

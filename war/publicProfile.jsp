@@ -63,19 +63,18 @@
 			}
 		</style>
 	</head>
+	
 	<body>
 		<!-- Barra principal -->
-	<div class="navbar navbar-inverse navbar-fixed-top">
-	    <div class="navbar-inner">
-	      <div class="container">	
-	        <a class="brand" href="/index.jsp">Fotobuk</a>
-	            
-	            <%
-	            	out.print(miVista.getHTMLContent_TopBarFormat());
-	            %>
-	      </div>   <!-- end container -->
-	    </div>	 <!--end topbar-inner -->
-  </div> <!--end topbar -->
+		<div class="navbar navbar-inverse navbar-fixed-top">
+		    <div class="navbar-inner">
+		      <div class="container">	
+		            <%
+		            	out.print(miVista.getHTMLContent_TopBarFormat());
+		            %>
+		      </div>   <!-- end container -->
+		    </div>	 <!--end topbar-inner -->
+	  	</div> <!--end topbar -->
 		
 		<!-- Contenedor -->
 		<div class="container">

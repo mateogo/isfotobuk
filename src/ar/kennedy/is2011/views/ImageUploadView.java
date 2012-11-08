@@ -1,7 +1,7 @@
 package ar.kennedy.is2011.views;
 
 import javax.servlet.http.HttpServletRequest;
-import ar.kennedy.is2011.db.entities.Usuario;
+import ar.kennedy.is2011.db.entities.User;
 import ar.kennedy.is2011.session.SessionManager;
 import ar.kennedy.is2011.session.Session;
 
@@ -30,7 +30,7 @@ public class ImageUploadView {
 	private static final Integer PICS_PER_PAGE = 4;
 	private static final Integer BUTTONS_PER_SECTION = 4;
 	private HttpServletRequest request;
-	private Usuario user;
+	private User user;
 	private Session userSession ;
 	private PictureEy lastImageUpload;
 	private PictureEy pictureToEdit;
@@ -59,8 +59,8 @@ public class ImageUploadView {
 						(Map<String, Object>) ((Map<String, Object>) userSession.getElement("errors")).get("form_errors") : 
 						new HashMap<String, Object>() : 
 				new HashMap<String, Object>();
-		setUser( (Usuario) userSession.getElement("user"));
-		setLastImageUpload(searchPicturesModel.getLastPictureUploadByUser(user.getNombreUsr()));
+		setUser( (User) userSession.getElement("user"));
+		setLastImageUpload(searchPicturesModel.getLastPictureUploadByUser(user.getUserName()));
 		log.debug("UserHomeView Instanciated");
 		albumModel= new AlbumModel();
 		setPictureToEdit();
@@ -71,16 +71,16 @@ public class ImageUploadView {
 	public void setRequest(HttpServletRequest request) {
 		this.request = request;
 	}
-	public Usuario getUser() {
+	public User getUser() {
 		return user;
 	}
 	public String getUserName() {
-		return getUser().getNombre();
+		return getUser().getUserName();
 	}
 	public String getUserDisplayName() {
 		return getUser().getDisplayName();
 	}
-	public void setUser(Usuario user) {
+	public void setUser(User user) {
 		this.user = user;
 	}
 	public PictureEy getLastImageUpload() {
@@ -147,7 +147,7 @@ public class ImageUploadView {
 		return last;
 	}
 	public List<PictureEy> getPictures() {
-		if(pictures==null) pictures = searchPicturesModel.getPicturesToBeDisplayedByUser(user.getNombreUsr());
+		if(pictures==null) pictures = searchPicturesModel.getPicturesToBeDisplayedByUser(user.getUserName());
 		return pictures;
 	}
 	public void setPictures(List<PictureEy> pictures) {
@@ -240,7 +240,7 @@ public class ImageUploadView {
 		
 		try {
 			albumsByVisibility = getAlbumModel().getAlbumesByVisibility("public");
-			albumsByOwner = getAlbumModel().getAlbumesByOwner(user.getNombreUsr());
+			albumsByOwner = getAlbumModel().getAlbumesByOwner(user.getUserName());
 			
 			albums.addAll(albumsByVisibility);
 			albums.addAll(albumsByOwner);

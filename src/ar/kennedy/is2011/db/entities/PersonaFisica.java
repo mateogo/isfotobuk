@@ -10,6 +10,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.FetchType;
 import javax.persistence.CascadeType;
 
+import ar.kennedy.is2011.utils.WebUtils;
+
 import java.util.Date;
 
 /**
@@ -48,6 +50,9 @@ public class PersonaFisica extends Person {
 		return nombre;
 	}
 
+	public String getFeNacimAsText() {
+			return WebUtils.getFormatedDate(getFechaNacimiento());				
+	}
 
 	public void setNombre(String nombre) {
 		if(nombre==null) nombre = getNombrePerson();

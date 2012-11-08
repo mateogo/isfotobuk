@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@page import="ar.kennedy.is2011.db.entities.Usuario"%>
+<%@page import="ar.kennedy.is2011.db.entities.User"%>
 <%@page import="ar.kennedy.is2011.session.SessionManager"%>
 <%@page import="ar.kennedy.is2011.utils.WebUtils"%>
 <%@page import="ar.kennedy.is2011.models.SearchPicturesModel"%>
@@ -14,7 +14,7 @@
 
 	UserHomeView userView = new UserHomeView();
 	SearchPicturesModel searchPicturesModel = new SearchPicturesModel();
-	Usuario user = new Usuario();
+	User user = new User();
 
 	//paginas donde el usuario segun nuestro mapa de nevagacion se encuentra logueado
 	if(request.getParameter("bar").equals("main") ||
@@ -24,7 +24,7 @@
 	{
 		userView = new UserHomeView(request);
 		searchPicturesModel = new SearchPicturesModel();
-		user = (Usuario) SessionManager.get(request, WebUtils.getSessionIdentificator(request)).getElement("user");
+		user = (User) SessionManager.getCurrentUser(request);
 	}
 %>
 
@@ -94,7 +94,7 @@
 %>
 			<div class="pull-right">
 				<ul class="nav">
-					<li class="active"><a href="/secure/editarCuentaUsuario.jsp">Sesion ${usuarioLogeado.nombreUsr} </a></li>
+					<li class="active"><a href="/userprofile">Sesion ${usuarioLogeado.nombreUsr} </a></li>
 					<li class="active"><a href="/logout"> Cerrar sesion </a></li>
 				</ul>
 			</div> 	

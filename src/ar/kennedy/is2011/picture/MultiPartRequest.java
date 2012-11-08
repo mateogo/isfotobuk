@@ -73,8 +73,6 @@ public class MultiPartRequest {
 	public String getParameter(String s) {
         try {
             Vector<Object> vector = (Vector<Object>) parameters.get(s);
-            log.debug("**********multipart**********************");
-            log.debug("**********multipart vector size ["+vector.size()+"]");
             
             if(vector == null || vector.size() == 0) {
                 return null;

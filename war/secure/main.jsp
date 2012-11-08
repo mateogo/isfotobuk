@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@page import="ar.kennedy.is2011.db.entities.Usuario"%>
+<%@page import="ar.kennedy.is2011.db.entities.User"%>
 <%@page import="ar.kennedy.is2011.db.entities.PictureEy"%>
 <%@page import="ar.kennedy.is2011.session.SessionManager"%>
 <%@page import="ar.kennedy.is2011.utils.WebUtils"%>
@@ -10,7 +10,7 @@
 <%
 	UserHomeView userView = new UserHomeView(request);
 	SearchPicturesModel searchPicturesModel = new SearchPicturesModel();
-	Usuario user = (Usuario) SessionManager.get(request, WebUtils.getSessionIdentificator(request)).getElement("user");
+	User user = (User) SessionManager.getCurrentUser(request);
 %>
 
 <!DOCTYPE html>
@@ -68,9 +68,10 @@
           <div class="pull-right">
             <ul class="nav">
                <li class="dropdown" >
-                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">${usuarioLogeado.nombreUsr}<b class="caret"></b></a>
+                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">${usuarioLogeado.userName}<b class="caret"></b></a>
                  <ul class="dropdown-menu" >
-                   <li><a href="/secure/editarCuentaUsuario.jsp"><i class="icon-user"></i>Editar perfil</a></li>
+                   <li><a href="/userprofile"><i class="icon-user"></i>Editar perfil</a></li>
+                   <li><a href="/editPerson?action=newFPerson"><i class="icon-user"></i>Personas</a></li>
                    <li class="divider"></li>
                    <li><a href="/logout"><i class="icon-remove"></i>Cerrar sesión</a></li>
                  </ul>
@@ -89,9 +90,9 @@
 			<%
 				if(userView.userHaveImages()) {
 			%>
-				<a href="/secure/pictureView.jsp?pictureid=<%= userView.getLastImageId() %>">
+				<a href="/secure/pictureView.jsp?pictureid=<%= userView.getProfileImage() %>">
 				<img
-					src="/image?pictureid=<%= userView.getLastImageId() %> &version=I"
+					src="/image?pictureid=<%= userView.getProfileImage() %>&version=I"
 					height="280" alt="Ultima foto"></a>
 			<%
 				} else {
@@ -106,6 +107,7 @@
 			<div class="span9">
 				<h1>
 			<%
+					//out.print(userView.getProfileImage());
 					out.print(userView.getUserDisplayName());
 			%>
 				</h1>

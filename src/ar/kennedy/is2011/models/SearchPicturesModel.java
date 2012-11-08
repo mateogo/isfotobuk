@@ -11,6 +11,7 @@ import org.apache.commons.lang.StringUtils;
 
 import ar.kennedy.is2011.db.dao.AbstractDao;
 import ar.kennedy.is2011.db.entities.AlbumEy;
+import ar.kennedy.is2011.db.entities.User;
 import ar.kennedy.is2011.db.entities.PictureEy;
 import ar.kennedy.is2011.db.exception.EntityNotFoundException;
 
@@ -48,6 +49,14 @@ public class SearchPicturesModel extends AbstractModel {
 			return new ArrayList<PictureEy>();
 		}
 	}
+
+	public PictureEy getUserProfilePicture(User user) {
+		String picId= user.getProfileImageId();
+		if(picId==null) return null;
+		return getPicture(picId);
+	}
+
+
 	
 	public PictureEy getLastPictureUploadByUser(String username) {
 		List<PictureEy> pictures = null;

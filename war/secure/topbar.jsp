@@ -27,9 +27,9 @@
           <div class="pull-right">
             <ul class="nav">
                <li class="dropdown" >
-                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">${usuarioLogeado.nombreUsr}<b class="caret"></b></a>
+                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">${usuarioLogeado.userName}<b class="caret"></b></a>
                  <ul class="dropdown-menu" >
-                   <li><a href="/secure/editarCuentaUsuario.jsp">Editar perfil</a></li>
+                   <li><a href="/userprofile">Editar perfil</a></li>
                    <li class="divider"></li>
                    <li><a href="/logout">Cerrar sesion</a></li>
                  </ul>

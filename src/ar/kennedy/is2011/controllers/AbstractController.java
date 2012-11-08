@@ -57,10 +57,10 @@ public abstract class AbstractController extends HttpServlet implements Controll
 	private void forwardAction(HttpServletRequest request, HttpServletResponse response, Session userSession) throws ServletException,IOException {
 		try {
 			if(!isJspPage()) {
-				log.debug("isJSP: action request");
+				log.debug("=========== SERVLET: action request=====================");
 				action(request, response, userSession);
 			} else {
-				log.debug("notJSP: return");
+				log.debug("============= JSP: return ===============================");
 				_jspService(request, response);
 			}
 		} catch(Exception e) {

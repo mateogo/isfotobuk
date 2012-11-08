@@ -5,7 +5,7 @@
 <%@page import="ar.kennedy.is2011.utils.WebUtils"%>
 <%@page import="java.util.Map"%>
 <%@page import="java.util.HashMap"%>
-<%@page import="ar.kennedy.is2011.db.entities.Usuario"%>
+<%@page import="ar.kennedy.is2011.db.entities.User"%>
 <%@page import="ar.kennedy.is2011.models.SearchPicturesModel"%>
 <%@page import="ar.kennedy.is2011.db.entities.AlbumEy"%>
 <%@page import="java.util.Set"%>
@@ -17,7 +17,7 @@
 	WebUtils.validateMandatoryParameters(request, new String[] { "pictureid" });
 	Session userSession = SessionManager.get(request,
 			WebUtils.getSessionIdentificator(request));
-	Usuario user = (Usuario) userSession.getElement("user");
+	User user = (User) SessionManager.getCurrentUser(request);	
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -51,7 +51,7 @@ body {
       <div class="container">	
         <a class="brand" href="#">Fotobuk</a>
           <ul class="nav">
-            <li class="active"><a href="#">Inicio</a></li>
+            <li class="active"><a href="/secure/main.jsp">Inicio</a></li>
             
             <li class="dropdown" >
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Acciones<b class="caret"></b></a>
@@ -67,9 +67,9 @@ body {
           <div class="pull-right">
             <ul class="nav">
                <li class="dropdown" >
-                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">${usuarioLogeado.nombreUsr}<b class="caret"></b></a>
+                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">${usuarioLogeado.userName}<b class="caret"></b></a>
                  <ul class="dropdown-menu" >
-                   <li><a href="/secure/editarCuentaUsuario.jsp"><i class="icon-user"></i>Editar perfil</a></li>
+                   <li><a href="/userprofile"><i class="icon-user"></i>Editar perfil</a></li>
                    <li class="divider"></li>
                    <li><a href="/logout"><i class="icon-remove"></i>Cerrar sesión</a></li>
                  </ul>
@@ -86,6 +86,9 @@ body {
 					<img class="span16" src="/image?pictureid=<%=WebUtils.getParameter(request, "pictureid")%>&version=O">
 				</li>
 				<li><%=Social.addLinks(WebUtils.getCompleteUrlForPicture(request,WebUtils.getParameter(request, "pictureid")), "Picture")%></li>
+				<li>
+					<button type="button" class="btn btn-link btn-primary" onclick="location.href='/setProfileImage?pictureid=<%=WebUtils.getParameter(request, "pictureid")%>'">establecer como foto del perfil</button>
+				</li>
 			</ul>
 		</div>
 	</div>

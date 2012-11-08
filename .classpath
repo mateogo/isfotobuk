@@ -15,17 +15,5 @@
 	<classpathentry kind="lib" path="war/WEB-INF/lib/cos.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/commons-logging-api-1.1.1.jar"/>
 	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER/v2"/>
-	<classpathentry kind="lib" path="/Applications/dev/eclipse/plugins/com.google.gwt.eclipse.sdkbundle_2.4.0.v201208080121-rel-r42/gwt-2.4.0/gwt-user.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/Applications/dev/eclipse/plugins/com.google.gwt.eclipse.sdkbundle_2.4.0.v201208080121-rel-r42/gwt-2.4.0/doc/javadoc/"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="/Applications/dev/eclipse/plugins/com.google.gwt.eclipse.sdkbundle_2.4.0.v201208080121-rel-r42/gwt-2.4.0/gwt-dev.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/Applications/dev/eclipse/plugins/com.google.gwt.eclipse.sdkbundle_2.4.0.v201208080121-rel-r42/gwt-2.4.0/doc/javadoc/"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="/Applications/dev/eclipse/plugins/com.google.gwt.eclipse.sdkbundle_2.4.0.v201208080121-rel-r42/gwt-2.4.0/validation-api-1.0.0.GA-sources.jar"/>
-	<classpathentry kind="lib" path="/Applications/dev/eclipse/plugins/com.google.gwt.eclipse.sdkbundle_2.4.0.v201208080121-rel-r42/gwt-2.4.0/validation-api-1.0.0.GA.jar" sourcepath="/Applications/dev/eclipse/plugins/com.google.gwt.eclipse.sdkbundle_2.4.0.v201208080121-rel-r42/gwt-2.4.0/validation-api-1.0.0.GA-sources.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

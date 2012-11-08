@@ -6,8 +6,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Registrarse</title>
-<meta name="GUI para aplicación is2011" content="">
-<meta name="Grupo 4 - ¿nombre?" content="">
+<meta name="GUI para aplicaciï¿½n is2011" content="">
+<meta name="Grupo 4 - ï¿½nombre?" content="">
 <!--[if lt IE 9]>
 		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
@@ -127,7 +127,7 @@ form .input {
 							<label for="mediumSelect">Nick-Name*:</label>
 							<div class="input">
 								<input type="text" name="nombreUsuario" id="usr"
-									value="${usuarioNoRegistrado.nombreUsr }"> <span
+									value="${usuarioNoRegistrado.userName }"> <span
 									class="alert-message error">${errors}</span>
 							</div>
 						</div>
@@ -168,7 +168,7 @@ form .input {
 									<option value="4">Cu&aacute;l es tu comida favorita?</option>
 									<option value="5">Fecha de casamiento?</option>
 									<option value="6">Nombre del primer colegio?</option>
-								</select> <span class="help-block">(Nombre de mascota, película
+								</select> <span class="help-block">(Nombre de mascota, pelï¿½cula
 									favorita, deporte favorito, etc)</span> <input type="text"
 									name="respuestaSecreta" id="psec" value="${usuarioNoRegistrado.respuestaPregunta}">
 							</div>
@@ -177,7 +177,7 @@ form .input {
 				</div>
 				<span class="help-block">*Campos obligatorios.</span> <br /> <span
 					class="label notice">Nota</span> Hacer clic en ENVIAR implica
-				aceptar el Contrato de Servicios de Kennedy y la declaración de
+				aceptar el Contrato de Servicios de Kennedy y la declaraciï¿½n de
 				privacidad.
 				<div class="actions">
 					<input class="btn primary" type="button" name="registar"

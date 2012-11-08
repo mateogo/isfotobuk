@@ -51,8 +51,15 @@ public class Account implements Serializable {
 	/**
 	 * 
 	 */
-	public Account() {
-		// TODO Auto-generated constructor stub
+	public Account(String cuenta, String mail, String passwd,User usuario) {
+		this.accountName = cuenta;
+		this.mail = mail;
+		this.passwd = passwd;
+		this.user=usuario;
+	}
+	
+	public Account(){
+
 	}
 
 	public String getAccountName() {
@@ -100,6 +107,14 @@ public class Account implements Serializable {
 	}
 	public String toString(){
 		return getAccountName()+" - "+getMail();
+	}
+
+	public Key getKey() {
+		return key;
+	}
+
+	public void setKey(Key key) {
+		this.key = key;
 	}
 
 }

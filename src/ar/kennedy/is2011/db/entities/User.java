@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import ar.kennedy.is2011.utils.WebUtils;
 import org.apache.commons.lang.StringUtils;
 import java.util.Date;
 import java.util.List;
@@ -23,23 +24,23 @@ import com.google.appengine.api.datastore.Key;
 public class User implements Serializable {
 	
 	private static final long serialVersionUID = -2548441551324306490L;
-	private final String[] sexos ={"MASCULINO","FEMENINO","S/D"};
-	private final String[] appRoles ={"EDITOR","EDITOR_RESP","PRODUCTOR","ADMINISTRADOR","ROOT","S/D"};
-	private final String[] pregSecretas ={
-			"Nombre de tu mascota",
-			"Nombre de tu abuela materna",
-			"Apellido de soltera de tu madre",
-			"Nombre de tu comida favorita",
-			"Fecha de casamiento",
-			"Nombre del primer colegio",
-	};
-	
+	/** constantes:
+		private final String[] sexos ={"MASCULINO","FEMENINO","S/D"};
+		private final String[] appRoles ={"EDITOR","EDITOR_RESP","PRODUCTOR","ADMINISTRADOR","ROOT","S/D"};
+		private final String[] pregSecretas ={
+				"Nombre de tu mascota",
+				"Nombre de tu abuela materna",
+				"Apellido de soltera de tu madre",
+				"Nombre de tu comida favorita",
+				"Fecha de casamiento",
+				"Nombre del primer colegio",
+		};
+	*/
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Key key;
 
 	@OneToMany(fetch=FetchType.LAZY,mappedBy="user", orphanRemoval=false, cascade=CascadeType.ALL)
-	//@OneToMany(fetch=FetchType.LAZY,mappedBy="user")
 	@Column(name = "ACCOUNTS")
 	private List<Account> accounts;
 
@@ -67,15 +68,29 @@ public class User implements Serializable {
 	@Column(name = "APP_ROLE")
 	private String appRole;
 
+	@Column(name = "PICTURE")
+	private String profileImageId;
+
+	@Column(name = "PERSON")
+	private long personId;
 	
 	@Column(name = "ID_PREGUNTA_SECRETA")
 	private Integer idPreguntaSecreta;
 	
 	@Column(name = "RESPUESTA_SECRETA")
 	private String respuestaPregunta;
-	
+
 	public User() {
 		super();
+	}
+
+	public User(String nomUsr,String mail,int pSecreta,String respuesta){
+	   	this();
+		
+		this.userName = nomUsr;
+	   	this.mail = mail;
+	   	this.idPreguntaSecreta = pSecreta;
+	   	this.respuestaPregunta = respuesta;
 	}
 
 	
@@ -121,7 +136,11 @@ public class User implements Serializable {
 	public Date getFechaNacimiento() {
 		return fechaNacimiento;
 	}
-
+	
+	public String getFeNacimAsText() {
+		return WebUtils.getFormatedDate(getFechaNacimiento());
+	}
+	
 
 	public void setFechaNacimiento(Date fechaNacimiento) {
 		this.fechaNacimiento = fechaNacimiento;
@@ -196,7 +215,31 @@ public class User implements Serializable {
 	public void setDefaultAccount(Account defaultAccount) {
 		this.defaultAccount = defaultAccount;
 	}
+
+	// HASTA QUE TERMINEMOS DE IMPLEMENTAR PERSONAS, LO AGREGO PARA COMPATIBILIDAD
+	public String getDisplayName() {
+		// TODO Auto-generated method stub
+		return this.userName;
+	}
+
+	public String getProfileImageId() {
+		return profileImageId;
+	}
+
+	public void setProfileImageId(String userPictureId) {
+		this.profileImageId = userPictureId;
+	}
+
+	public long getPersonId() {
+		//if(this.personId==0) personId=0;
+		return personId;
+	}
+
+	public void setPersonId(long personId) {
+		this.personId = personId;
+	}
 	
+
 
 }
 	

@@ -25,9 +25,9 @@ public class Location implements Serializable {
 
 	private static final long serialVersionUID = -2548441551324306490L;
 
-	private final String[] locTypes ={"PARTICULAR","SEDE","EVENTO"};
-	private final String[] sedeTypes ={"LEGAL","ADMINISTRACION","DEPOSITO","SALA_PUBLICA","OTRA"};
-	private final String[] eventoTypes ={"NACIMIENTO","MUERTE","ESPECTACULO","OTRO"};
+	//private final String[] locTypes ={"PARTICULAR","SEDE","EVENTO"};
+	//private final String[] sedeTypes ={"LEGAL","ADMINISTRACION","DEPOSITO","SALA_PUBLICA","OTRA"};
+	//private final String[] eventoTypes ={"NACIMIENTO","MUERTE","ESPECTACULO","OTRO"};
 
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -63,6 +63,9 @@ public class Location implements Serializable {
 
 	@Column(name = "FECHA_LOCACION")
 	private Date fechaLocacion;
+
+	@Column(name = "PERSON")
+	private long personId ;
 
 	
 	/**
@@ -141,6 +144,7 @@ public class Location implements Serializable {
 
 
 	public String getDescr() {
+		if (descr==null) setDescr("");
 		return descr;
 	}
 
@@ -190,21 +194,29 @@ public class Location implements Serializable {
 	}
 
 
-	public String[] getLocTypes() {
-		return locTypes;
-	}
-
-
-	public String[] getSedeTypes() {
-		return sedeTypes;
-	}
-
-
-	public String[] getEventoTypes() {
-		return eventoTypes;
-	}
 	public String toString(){
-		return "Locacion: ["+getDescr()+"]  pais:["+getPais()+"]";
+		return "["+getDescr()+"]: [" + getProvincia() + "] - ["+getPais()+"]";
+	}
+
+	public long getPersonId() {
+		return personId;
+	}
+
+	public void setPersonId(long personId) {
+		this.personId = personId;
+	}
+
+	public String getId(){
+		if(key==null) return "0";
+		else return Long.toString(key.getId());
+	}
+
+	public Key getKey() {
+		return key;
+	}
+
+	public void setKey(Key key) {
+		this.key = key;
 	}
 
 }

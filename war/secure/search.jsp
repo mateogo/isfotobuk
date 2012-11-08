@@ -5,7 +5,7 @@
 <%@page import="ar.kennedy.is2011.utils.WebUtils"%>
 <%@page import="java.util.Map"%>
 <%@page import="java.util.HashMap"%>
-<%@page import="ar.kennedy.is2011.db.entities.Usuario"%>
+<%@page import="ar.kennedy.is2011.db.entities.User"%>
 <%@page import="ar.kennedy.is2011.models.SearchPicturesModel"%>
 <%@page import="ar.kennedy.is2011.db.entities.AlbumEy"%>
 <%@page import="java.util.Set"%>
@@ -31,7 +31,7 @@
 			: new HashMap<String, Object>()
 			: new HashMap<String, Object>();
 	SearchPicturesModel searchPicturesModel = new SearchPicturesModel();
-	Usuario user = (Usuario) userSession.getElement("user");
+	User user = (User) userSession.getElement("user");
 %>
 
 <!DOCTYPE html>

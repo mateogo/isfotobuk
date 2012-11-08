@@ -25,12 +25,12 @@ public class ContactosPerson implements Serializable {
 
 	private static final long serialVersionUID = -2548441551324306490L;
 
-	private final String[] conTypes = {"MAIL","TEL","CEL","RSOC","VOIP","FAX"};
-	private final String[] useTypes = {"PARTICULAR","LABORAL","OTRA"};
-	private final String[] rsocProviders ={"FACEBOOK","TWITTER","LINKEDIN","OTRO"};
-	private final String[] celProviders ={"MOVISTAR","PERSONAL","CLARON","OTRO"};
-	private final String[] telProviders ={"TELEFONICA","TELECOM","OTRO"};
-	private final String[] voipProviders ={"SKYPE","METROTEL","IPLAN","OTRO"};
+	//private final String[] conTypes = {"EMAIL","TEL","CEL","RSOC","VOIP","FAX"};
+	//private final String[] useTypes = {"PARTICULAR","LABORAL","OTRA"};
+	//private final String[] rsocProviders ={"FACEBOOK","TWITTER","LINKEDIN","OTRO"};
+	//private final String[] celProviders ={"MOVISTAR","PERSONAL","CLARON","OTRO"};
+	//private final String[] telProviders ={"TELEFONICA","TELECOM","OTRO"};
+	//private final String[] voipProviders ={"SKYPE","METROTEL","IPLAN","OTRO"};
 
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,7 +40,7 @@ public class ContactosPerson implements Serializable {
 	private String value ;
 	
 	@Column(name = "PERSON")
-	private String person ;
+	private long personId ;
 
 	@Column(name = "DESCR")
 	private String descr ;
@@ -68,12 +68,12 @@ public class ContactosPerson implements Serializable {
 		this.value = value;
 	}
 
-	public String getPerson() {
-		return person;
+	public long getPersonId() {
+		return personId;
 	}
 
-	public void setPerson(String person) {
-		this.person = person;
+	public void setPersonId(long personId) {
+		this.personId = personId;
 	}
 
 	public String getDescr() {
@@ -93,6 +93,7 @@ public class ContactosPerson implements Serializable {
 	}
 
 	public String getUseType() {
+		if(this.useType == null) return "";
 		return useType;
 	}
 
@@ -109,14 +110,28 @@ public class ContactosPerson implements Serializable {
 	}
 
 	public String getProtocol() {
+		if(this.protocol==null) return "";
 		return protocol;
 	}
 
 	public void setProtocol(String protocol) {
 		this.protocol = protocol;
 	}
+	
 	public String toString(){
-		return getConType()+": ["+getValue()+"] ["+getUseType()+"]";
+		return getProtocol()+": "+getValue()+" "+getUseType()+" ";
+	}
+	
+	public String getId(){
+		if(key==null) return "0";
+		else return Long.toString(key.getId());
 	}
 
+	public Key getKey() {
+		return key;
+	}
+
+	public void setKey(Key key) {
+		this.key = key;
+	}
 }

@@ -34,7 +34,11 @@ public class AbstractDao<T> implements AbstractDaoInterface<T> {
 		log.debug("Find by PK over entity: " + clazz.getClass().getSimpleName());
 		
 		generic = em.find(clazz, str);
+		
+		log.debug("Entity Manager Find => Class: " + clazz.getClass().getSimpleName() + " Key: "+ str);
 			
+		log.debug("Returns: "+ generic);
+		
 		if(generic == null) { 
 			throw new EntityNotFoundException("The entity not exist");
 		}
@@ -162,7 +166,7 @@ public class AbstractDao<T> implements AbstractDaoInterface<T> {
 			throw new EntityNotFoundException("The entity not exist");
 		}
 		
-		log.debug("Query executed");
+		log.debug("Query executed: ["+result.size()+"]");
 		
 		return result;
 	}
@@ -173,7 +177,7 @@ public class AbstractDao<T> implements AbstractDaoInterface<T> {
 		for(Object obj : parameters) {
 			
 			query.setParameter(i+1,obj);
-			log.debug("Parameter " + (i+1) + ": " + obj.toString());
+			log.debug("Parameter " + (i+1) + ": [" + obj.toString()+"]");
 			
 			i++;
 		}

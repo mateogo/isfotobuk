@@ -7,7 +7,6 @@
 		<class>ar.kennedy.is2011.db.entities.AlbumEy</class>
 		<class>ar.kennedy.is2011.db.entities.PictureEy</class>
 		<class>ar.kennedy.is2011.db.entities.SessionEy</class>
-		<class>ar.kennedy.is2011.db.entities.Usuario</class>
 		<class>ar.kennedy.is2011.db.entities.User</class>
 		<class>ar.kennedy.is2011.db.entities.Account</class>
 		<class>ar.kennedy.is2011.db.entities.Person</class>
