@@ -4,6 +4,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import ar.kennedy.is2011.utils.WebUtils;
+
 import java.util.Date;
 
 @Entity
@@ -22,13 +24,17 @@ public class PersonaIdeal extends Person {
 	public Date getFechaCreacion() {
 		return fechaCreacion;
 	}
+	
+	public String getFechaCreacionAsText() {
+		return WebUtils.getFormatedDate(getFechaCreacion());				
+	}
 
 	public void setFechaCreacion(Date fechaCreacion) {
 		if(fechaCreacion==null) fechaCreacion=new Date();
 		this.fechaCreacion = fechaCreacion;
 	}
 	public String toString(){
-		return "PI: ["+getNombrePerson()+"]";
+		return "PI: ["+getNombrePerson()+"] ["+getId()+"]";
 	}
 
 }

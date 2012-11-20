@@ -44,7 +44,8 @@
 		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
 
-<link href="/css/bootstrap.css" rel="stylesheet">
+
+<link href="/css/bootstrap-2.1.1.css" rel="stylesheet">
 <link href="/images/favicon.gif" rel="icon" type="image/gif">
 
 <style type="text/css">
@@ -58,21 +59,10 @@ body {
 </style>
 </head>
 <body>
-	<div class="topbar">
-		<div class="topbar-inner">
-			<div class="container">
-				<a class="brand" href="/secure/albums.jsp">Albums</a>
-				<ul class="nav">
-					<li class="active"><a href="/secure/main.jsp">Inicio</a></li>
-					<li><a href="/secure/search.jsp">Buscar</a></li>
-				</ul>
-				<p class="pull-right">
-					Logueado como <a href="/userprofile"><%=user.getUserName()%></a>
-					<q href="/logout"> Cerrar sesion</a>
-				</p>
-			</div>
-		</div>
-	</div>
+
+	<!-- jpd / 15-10-2012 / llamada al jsp que resuelve la barra de navegacion -->
+	<jsp:include page="topbar.jsp" flush="true" />
+
 	<div class="container">
 		<div class="content">
 			<div class="row">
@@ -111,12 +101,12 @@ body {
 				%>
 				<tr>
 					<td>
-						<ul class="media-grid">
-							<li><a
-								href="/secure/pictureView.jsp?pictureid=<%=picture.getPictureId()%>"><img
-									class="thumbnail"
-									src="/image?pictureid=<%=picture.getPictureId()%>&version=H" alt=""
-									width="90" height="90"> </a></li>
+						<ul class="thumbnails">
+							<li class="span6 thumbnail">
+							<a href="/secure/pictureView.jsp?pictureid=<%=picture.getPictureId()%>">
+								<img src="/image?pictureid=<%=picture.getPictureId()%>&version=H" alt=""
+									width="150" height="150"></a>
+							</li>
 						</ul>
 
 					</td>

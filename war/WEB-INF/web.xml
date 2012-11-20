@@ -148,6 +148,27 @@ version="2.5" >
 		<url-pattern>/editFPerson</url-pattern>
 	</servlet-mapping>
 
+	<!-- /editIPerson -->
+	<servlet>
+		<servlet-name>EditIPerson</servlet-name>
+		<servlet-class>ar.kennedy.is2011.controllers.IPersonEditController</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>EditIPerson</servlet-name>
+		<url-pattern>/editIPerson</url-pattern>
+	</servlet-mapping>
+
+		<!-- /findperson -->
+	<servlet>
+		<servlet-name>FindPerson</servlet-name>
+		<servlet-class>ar.kennedy.is2011.controllers.PersonBrowserController</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>FindPerson</servlet-name>
+		<url-pattern>/findperson</url-pattern>
+	</servlet-mapping>
+	
+			
 		<!-- /editContact -->
 	<servlet>
 		<servlet-name>EditContact</servlet-name>
@@ -168,7 +189,58 @@ version="2.5" >
 		<url-pattern>/editLocation</url-pattern>
 	</servlet-mapping>
 
-				
+			<!-- /newerelation -->
+	<servlet>
+		<servlet-name>NewEntityRelation</servlet-name>
+		<servlet-class>ar.kennedy.is2011.controllers.PersonController</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>NewEntityRelation</servlet-name>
+		<url-pattern>/newerelation</url-pattern>
+	</servlet-mapping>
+
+	
+		<!-- /pnamelist -->
+	<servlet>
+		<servlet-name>getPersonNamesList</servlet-name>
+		<servlet-class>ar.kennedy.is2011.controllers.FindPersonsByNameController</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>getPersonNamesList</servlet-name>
+		<url-pattern>/pnamelist</url-pattern>
+	</servlet-mapping>
+	
+		<!-- /selectentity -->/addentities
+	<servlet>
+		<servlet-name>SelectEntityIntoSession</servlet-name>
+		<servlet-class>ar.kennedy.is2011.controllers.SelectEntityController</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>SelectEntityIntoSession</servlet-name>
+		<url-pattern>/selectentity</url-pattern>
+	</servlet-mapping>
+
+			<!-- /addentities -->
+	<servlet>
+		<servlet-name>AddEntitiesToRelation</servlet-name>
+		<servlet-class>ar.kennedy.is2011.controllers.AddEntitiesController</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AddEntitiesToRelation</servlet-name>
+		<url-pattern>/addentities</url-pattern>
+	</servlet-mapping>
+
+				<!-- /selectaperson -->
+	<servlet>
+		<servlet-name>SelectAPersonFromView</servlet-name>
+		<servlet-class>ar.kennedy.is2011.controllers.SelectPersonFromDialogServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>SelectAPersonFromView</servlet-name>
+		<url-pattern>/selectaperson</url-pattern>
+	</servlet-mapping>
+		
+								
 		<!-- /sendTo -->
 	<servlet>
 		<servlet-name>SendToUtil</servlet-name>
@@ -179,7 +251,17 @@ version="2.5" >
 		<url-pattern>/sendTo</url-pattern>
 	</servlet-mapping>
 				
-	
+		<!-- /ajaxvoy -->
+	<servlet>
+		<servlet-name>AjaxExample</servlet-name>
+		<servlet-class>ar.kennedy.is2011.controllers.AjaxExampleController</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AjaxExample</servlet-name>
+		<url-pattern>/ajaxvoy</url-pattern>
+	</servlet-mapping>
+
+			
 	<!-- END REST Mappings -->
 
 	<!-- SERVICE Mappings -->

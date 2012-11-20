@@ -1,6 +1,4 @@
-/**
- * 
- */
+
 package ar.kennedy.is2011.db.entities;
 
 import java.io.Serializable;
@@ -53,6 +51,9 @@ public class Person implements Serializable {
 	@Column(name = "OWNER")
 	private long userId;
 	
+	@Column(name = "PICTURE")
+	private String defaultImageId;
+
 
 	public String getNombrePerson() {
 		return nombrePerson;
@@ -109,6 +110,14 @@ public class Person implements Serializable {
 
 	public void setLocations(List<Location> locations) {
 		this.locations = locations;
+	}
+
+	public String getDefaultImageId() {
+		return defaultImageId;
+	}
+
+	public void setDefaultImageId(String defaultImageId) {
+		this.defaultImageId = defaultImageId;
 	}
 
 }

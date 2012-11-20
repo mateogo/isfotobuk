@@ -82,6 +82,7 @@ public class PersonaFisica extends Person {
 
 
 	public String getSexo() {
+		if(sexo==null) setSexo("S/D");
 		return sexo;
 	}
 

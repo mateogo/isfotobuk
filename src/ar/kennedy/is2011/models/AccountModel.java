@@ -239,7 +239,10 @@ public class AccountModel extends AbstractModel {
 	}
 	
 	public User getUserByName(String name) {
-		List<User> users = getUsersByName(name);
+		if(name==null) return null;
+		if(!WebUtils.isNotNull(name)) return null;
+ 		List<User> users = getUsersByName(name);
+ 		if(users==null) return null;
 		if(users.isEmpty()) return null;
 		return users.get(0);
 	}

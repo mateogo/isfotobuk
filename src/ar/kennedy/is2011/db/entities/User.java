@@ -40,12 +40,12 @@ public class User implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Key key;
 
-	@OneToMany(fetch=FetchType.LAZY,mappedBy="user", orphanRemoval=false, cascade=CascadeType.ALL)
 	@Column(name = "ACCOUNTS")
+	@OneToMany(fetch=FetchType.LAZY,mappedBy="user", orphanRemoval=false, cascade=CascadeType.ALL)
 	private List<Account> accounts;
 
-	@OneToOne(fetch=FetchType.LAZY, optional=true, cascade=CascadeType.ALL)
 	@Column(name = "DEFAULT_ACCOUNT")
+	@OneToOne(fetch=FetchType.LAZY, optional=true, cascade=CascadeType.ALL)
 	private Account defaultAccount;
 
 	
@@ -61,8 +61,8 @@ public class User implements Serializable {
 	@Column(name = "SEXO")
 	private String sexo;
 	
-	@OneToOne(fetch=FetchType.LAZY, optional=true, cascade=CascadeType.ALL)
 	@Column(name = "LOCACION")
+	@OneToOne(fetch=FetchType.LAZY, optional=true, cascade=CascadeType.ALL)
 	private Location locacion;
 	
 	@Column(name = "APP_ROLE")

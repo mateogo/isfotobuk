@@ -38,7 +38,7 @@ public class FPersonEditController extends AbstractController{
 		String action = request.getParameter("action");
 		log.debug("FPerson.action: begin. action:["+action+"] fpersonID:["+fpersonId+"]");
 
-		if(action.equals("update")){
+		if(action.equals("updateFPerson")){
 			errorsDetected = updateFPERSON(request,response,userSession);
 		
 		}else if (action.equals("newFPerson")){

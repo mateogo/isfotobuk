@@ -35,6 +35,7 @@ public class UserPersonView {
 			PersonModel personModel=new PersonModel(user);
 			userprofile.setPerson(personModel.getPersonFromUser());
 			userprofile.setFpersons(personModel.getFpersonsOwnedByUser());
+			userprofile.setIpersons(personModel.getIpersonsOwnedByUser());
 		}
 		
 		return userprofile;

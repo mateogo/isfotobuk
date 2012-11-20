@@ -19,6 +19,8 @@ public class UserHomePageController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	protected final Logger log = Logger.getLogger(getClass());
 	private User user;
+	private String elUsuario="userxjxjx";
+	private Boolean usuarioLogueado=false;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -36,9 +38,16 @@ public class UserHomePageController extends HttpServlet {
 		log.debug("Start UserHomePage - doPost");
 
 		HttpSession session = request.getSession();
+		
 		this.user = (User)session.getAttribute("usuarioLogeado");
 		
-		if(this.user != null){
+		if (this.user==null){
+			this.usuarioLogueado=false;
+		}else{
+			this.usuarioLogueado=true;
+		}
+		
+		if(usuarioLogueado){
 			log.debug("UserHomePage - usuario-sesion: ok");
 			if (urlGetRESTParameters(request,response)){
 				log.debug("UserHomePage - url procesada: ok");
@@ -111,6 +120,7 @@ public class UserHomePageController extends HttpServlet {
 				if(urls.length>2){
 					if(urls.length>=3) {
 						request.setAttribute("usuario", urls[2]);
+						this.elUsuario=urls[2];
 						log.debug("Agrego al request el atributo: usuario ["+urls[2]+"]");
 					}
 					if(urls.length>=4) {
@@ -142,6 +152,8 @@ public class UserHomePageController extends HttpServlet {
 		 * Si el usuario no existe, se dredis */
 
 		AccountModel model = new AccountModel();
-		return model.ifExistUserByName(request.getAttribute("usuario").toString());
+		if(elUsuario==null) return false;
+		if(elUsuario.equals("userxjxjx")) return false;
+		return model.ifExistUserByName(elUsuario);
 	}
 }

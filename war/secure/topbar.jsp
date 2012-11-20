@@ -29,9 +29,10 @@
                <li class="dropdown" >
                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">${usuarioLogeado.userName}<b class="caret"></b></a>
                  <ul class="dropdown-menu" >
-                   <li><a href="/userprofile">Editar perfil</a></li>
+                   <li><a href="/userprofile"><i class="icon-user"></i>Editar perfil</a></li>
+                   <li><a href="/editPerson?action=browsePerson"><i class="icon-user"></i>Personas</a></li>
                    <li class="divider"></li>
-                   <li><a href="/logout">Cerrar sesion</a></li>
+                   <li><a href="/logout"><i class="icon-remove"></i>Cerrar sesión</a></li>
                  </ul>
                </li>
             </ul>

@@ -5,6 +5,7 @@ import ar.kennedy.is2011.db.entities.PersonaIdeal;
 import ar.kennedy.is2011.db.entities.ContactosPerson;
 import ar.kennedy.is2011.db.entities.User;
 import ar.kennedy.is2011.db.entities.Location;
+import ar.kennedy.is2011.db.entities.EntityRelationHeader;
 
 import java.util.List;
 
@@ -13,10 +14,15 @@ public class PersonBean {
 
 	private User user;
 	private PersonaFisica fperson;
+	private PersonaIdeal iperson;
+	private EntityRelationHeader erelation;
+	
 	private List<PersonaFisica> fpersons;
 	private List<PersonaIdeal> ipersons;
 	private List<ContactosPerson> contactos;
 	private List<Location> locations;
+	private List<EntityRelationHeader> erelations;
+
 	private String action;
 	private String personToEditId;
 
@@ -100,6 +106,30 @@ public class PersonBean {
 
 	public void setLocations(List<Location> locations) {
 		this.locations = locations;
+	}
+
+	public PersonaIdeal getIperson() {
+		return iperson;
+	}
+
+	public void setIperson(PersonaIdeal iperson) {
+		this.iperson = iperson;
+	}
+
+	public EntityRelationHeader getErelation() {
+		return erelation;
+	}
+
+	public void setErelation(EntityRelationHeader erelation) {
+		this.erelation = erelation;
+	}
+
+	public List<EntityRelationHeader> getErelations() {
+		return erelations;
+	}
+
+	public void setErelations(List<EntityRelationHeader> erelations) {
+		this.erelations = erelations;
 	}
 
 }

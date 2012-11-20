@@ -1,10 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@page import="ar.kennedy.is2011.session.SessionManager"%>
-<%@page import="ar.kennedy.is2011.utils.WebUtils"%>
-<%@page import="ar.kennedy.is2011.models.PersonModel"%>
 <%@page import="ar.kennedy.is2011.db.dao.PersonBean"%>
-<%@page import="ar.kennedy.is2011.db.entities.PersonaFisica"%>
 <%@page import="ar.kennedy.is2011.db.entities.ContactosPerson"%>
 <%@page import="ar.kennedy.is2011.db.entities.Location"%>
 
@@ -17,8 +13,8 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Cuenta::Usuario::Persona</title>
-	<meta name="edicion de cuenta - usuario - persona" content="">
+	<title>Edicion de Persona Ideal</title>
+	<meta name="edicion de cuenta - usuario - persona ideal" content="">
 	<meta name="fotobuk uk" content="">
 	<meta name="description" content="">
 	<meta name="author" content="">
@@ -42,7 +38,7 @@
   <div class="navbar navbar-inverse navbar-fixed-top">
     <div class="navbar-inner">
       <div class="container">	
-        <a class="brand" href="#">Person</a>
+        <a class="brand" href="#">Persona Ideal</a>
           <ul class="nav">
             <li class="active"><a href="/secure/main.jsp">Inicio</a></li>
             
@@ -62,9 +58,9 @@
                <li class="dropdown" >
                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">${usuarioLogeado.userName}<b class="caret"></b></a>
                  <ul class="dropdown-menu" >
-                   <li><a href="/userprofile">Editar perfil</a></li>
+  	               <li><a href="/userprofile">Editar perfil</a></li>
    	               <li><a href="/editPerson?action=browsePerson">Personas</a></li>
-                    <li class="divider"></li>
+                   <li class="divider"></li>
                    <li><a href="/logout">Cerrar sesion</a></li>
                  </ul>
                </li>
@@ -78,51 +74,31 @@
 <div class="container">
 		
 <!-- ************** EDIT PERSON FISICA ************************* -->
-	<h3>${pbean.fperson.nombrePerson}</h3>
-	<form name="editFPerson" class="form-inline" action="/editFPerson?action=${pbean.action}" method="post">
+	<h3>${pbean.iperson.nombrePerson}</h3>
+	<form name="editIPerson" class="form-inline" action="/editIPerson?action=${pbean.action}" method="post">
 	<fieldset>
 					<div class="control-group">
 						<label class="control-label" for="pDenom" >Denominación y comentario que caracterizan esta persona:</label>
 						<div class="controls" >
 
-							<input type="hidden" id="fpersonId" name="fpersonId" 
-									value="${pbean.fperson.id}" />
+							<input type="hidden" id="ipersonId" name="ipersonId" 
+									value="${pbean.iperson.id}" />
 
 							<input type="text" id="pDenom" class="span4" name="pDenom" placeholder="Denominacion"
-								value="${pbean.fperson.nombrePerson}" />
+								value="${pbean.iperson.nombrePerson}" />
 							<input type="text" id="pComent" class="span6" name="pComent" placeholder="Comentario"
-								value="${pbean.fperson.coment}" />
+								value="${pbean.iperson.coment}" />
 						</div>
 					</div>
 	
 	
-					<div class="control-group">
-						<label class="control-label" for="pDenom" >Nombre y Apellido:</label>
-							<div class="controls" >
-							<div class="input-prepend" >
-								<span class="add-on"><i class="icon-plus"></i></span>
-								<input type="text" id="pName" class="span4" name="pName" placeholder="nombre"
-									value="${pbean.fperson.nombre}" />
-							</div>
-							<div class="input-prepend" >
-								<span class="add-on"><i class="icon-plus"></i></span>
-								<input type="text" id="pMail" class="span5" name="pApellido" placeholder="apellido"
-									value="${pbean.fperson.apellido}" />
-							</div>
-						</div>
-					</div>
 					
 					<div class="control-group">
-						<label class="control-label" for="pFechaNacim" >Fecha nacimiento:</label>
+						<label class="control-label" for="pFechaCreacion" >Fecha creación:</label>
 						<div class="controls controls-row" >
-							<input type="date" id="pFechaNacim" class="span3" name="pFechaNacim" placeholder="fecha de nacimiento (mm/dd/aaaa)"
-								value="${pbean.fperson.feNacimAsText}" />
-							<select id="pGender" name="pGender" class="span3">
-								<option value="S/D">Seleccione genero</option>
-								<option value="MASCULINO">masculino</option>
-								<option value="FEMENINO">femenino</option>
-							</select>
-						</div>
+							<input type="date" id="pFechaCreacion" class="span3" name="pFechaCreacion" placeholder="fecha de creación (mm/dd/aaaa)"
+								value="${pbean.iperson.fechaCreacionAsText}" />
+							</div>
 					</div>
 			
 			<div class="form-actions">
@@ -218,7 +194,7 @@
 			<div id="ctInput" class="modal-body">
 
 					<input type="hidden" id="ctPersonId" name="ctPersonId" 
-						value="${pbean.fperson.id}" />
+						value="${pbean.iperson.id}" />
 					<input type="hidden" id="ctContactId" name="ctContactId" 
 						value="" />
 									
@@ -304,7 +280,7 @@
 			</div>
 			<div id="locInput" class="modal-body">
 				<input type="hidden" id="locPersonId" name="locPersonId" 
-						value="${pbean.fperson.id}" />
+						value="${pbean.iperson.id}" />
 				<input type="hidden" id="locLocationId" name="locLocationId" 
 						value="" />
 									
@@ -345,8 +321,8 @@
 					<label class="control-label" for="locType" >Evento :</label>
 					<select id="locEvento" name="locEvento" class="span6">
 						<option  value="S/D"         >No representa un evento</option>
-						<option  value="NACIMIENTO"  >Lugar de nacimiento</option>
-						<option  value="MUERTE"      >Lugar de muerte</option>
+						<option  value="NACIMIENTO"  >Lugar de creacion</option>
+						<option  value="MUERTE"      >Lugar de disolución</option>
 						<option  value="EXHIBICION"  >Sala de exhibición</option>
 						<option  value="PRODUCCION"  >Sala de producción</option>
 					</select>
@@ -379,7 +355,7 @@
     <script src="/js/bootstrap-2.1.1.js"></script>
 
 	<script>
-     $('#editFPerson').on('show', function () {
+     $('#editIPerson').on('show', function () {
 	});
      </script>
 
@@ -511,7 +487,6 @@
  	}
 	var contactIndex=0;
 	var locationIndex=0;
-    $('#pGender option[value="${pbean.fperson.sexo}"]').get(0).selected =  true;
 	</script>	
 </body>
 </html>

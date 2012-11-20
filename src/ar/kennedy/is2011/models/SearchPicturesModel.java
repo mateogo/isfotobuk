@@ -30,6 +30,8 @@ public class SearchPicturesModel extends AbstractModel {
 	private static final String PICTURE_BY_ALBUM_QUERY = "SELECT e FROM PictureEy e WHERE e.albumId = :1";
 	private static final String ALL_ALBUMS = "SELECT a FROM AlbumEy a ";
 	
+	private PictureEy picture;
+	
 	public SearchPicturesModel() {
 		super();
 		
@@ -177,6 +179,14 @@ public class SearchPicturesModel extends AbstractModel {
 		}
 		
 		return splitAlbums.toString();
+	}
+
+	public PictureEy getPicture() {
+		return picture;
+	}
+
+	public void setPicture(PictureEy picture) {
+		this.picture = picture;
 	}
 	
 }

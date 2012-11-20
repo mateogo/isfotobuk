@@ -8,20 +8,77 @@ import org.apache.log4j.Logger;
 
 import ar.kennedy.is2011.db.entities.*;
 import ar.kennedy.is2011.models.SearchPicturesModel;
+import ar.kennedy.is2011.models.AccountModel;
+
 import ar.kennedy.is2011.session.SessionManager;
+import ar.kennedy.is2011.utils.WebUtils;
 
 public class PublicProfileView {	
 
 	private HttpServletRequest request;
 	private User user;
+	
+	private Boolean album=false;
+	private String albumName;
+	
 	protected final Logger log = Logger.getLogger(getClass());
 		
+
+	public PublicProfileView(){
+	}
+	
+	public PublicProfileView(HttpServletRequest request){
+		this.request = request;
+		initUser();
+		initAlbum();
+	}
+	
+	private void initUser(){
+		Boolean userNotFound=false;
+		String userName = (String) request.getAttribute("usuario");
+		this.user = new AccountModel().getUserByName(userName);
+		
+		if(this.user==null) userNotFound=true;
+
+		if (userNotFound){
+			initDummyUser();
+		}
+	}
+	private void initAlbum(){
+		if(fetchDataFromRq("album","ALBUM").equals("ALBUM")){
+			this.album = false;
+			this.albumName = "Album";
+		}else {
+			this.album = true;		
+			this.albumName = fetchDataFromRq("album","ALBUM");
+		}
+	}
+	
+	private String fetchDataFromRq(String attr, String dummy){
+		String fetch = (String) this.request.getAttribute(attr);
+		if(fetch==null) return dummy;
+		if(!WebUtils.isNotNull(fetch)) return dummy;
+		return fetch;
+	}
+
+	private String getDisplayData(String fetch, String dummy){
+		if(fetch==null) return dummy;
+		if(!WebUtils.isNotNull(fetch)) return dummy;
+		return fetch;
+	}
+	
+	private void initDummyUser(){
+		this.user=new User();
+		this.user.setMail("mail@su-organizacion.com.ar");
+		this.user.setUserName("usuario no definido");
+	}
+
 	public void setRequest(HttpServletRequest request) {
 		this.request = request;
 	}
 	
 	public List<PictureEy> getAllPicturesListByAlbumId(String albumId) {
-				
+		if (albumId==null) return null;
 		SearchPicturesModel searchPicturesModel = new SearchPicturesModel();
 		return searchPicturesModel.getPictureByAlbum(albumId);
 	}
@@ -29,22 +86,17 @@ public class PublicProfileView {
 	public String getHTMLContent_Encabezado(){
 		
 		StringBuilder sb = new StringBuilder();
-		user = ( (User) SessionManager.getCurrentUser(request));
 
-		sb.append("<div class='header-generales' align=Center>");
-		sb.append("<h1>");
 		
-		if (request.getAttribute("album") != null)
-		{
-			sb.append("Album " + request.getAttribute("album").toString() + " de " + user.getUserName());
-		}
-		else
-		{
-			sb.append("Perfil publico de " + user.getUserName());
-		}
-		
-		sb.append("<h1/>");
-		sb.append("</div>");
+		if (this.album){
+			sb.append("<h2>");
+			sb.append(albumName + " de " + getDisplayData(user.getUserName(),"anonimo"));
+			sb.append("<h2/>");
+		}else{
+			sb.append("<h1>");
+			sb.append(getDisplayData(user.getUserName(),"anonimo"));
+			sb.append("<h1/>");
+		}		
 		return sb.toString();
 	}
 	
@@ -53,16 +105,7 @@ public class PublicProfileView {
 		
 		sb.append("<div class='page-header'>");
 		sb.append("<h1>");
-		
-		if (request.getAttribute("album") != null)
-		{
-			sb.append("Fotos");
-		}
-		else
-		{ 		
-			sb.append("Generales");									
-		} 	
-		
+		//sb.append(albumName);
 		sb.append("</h1>");
 		sb.append("</div>");
 		return sb.toString();
@@ -73,39 +116,35 @@ public class PublicProfileView {
 		log.debug("*********************************************");
 		StringBuilder sb = new StringBuilder();
 		
-		if (request.getAttribute("album") != null){
+		if (album){
 			log.debug("Request has ALBUM...");
 		 	List<PictureEy> pictures = this.getAllPicturesListByAlbumId(request.getAttribute("album").toString());
 		 	
+			sb.append("<ul class='thumbnails'>");
 		 	for (PictureEy picture : pictures) {	
-		 		sb.append("<div class='well'>");
-		 		sb.append("<ul class='media-grid'>");
-		 		sb.append("<li>");
-		 		sb.append("<div class='row'>");
-		 		sb.append("<div class='span3'>");
-	
+		 		sb.append("<li class='span4'>");
+
 				log.debug("            Found! pictureid:["+picture.getPictureId()+"]");
-				
-				sb.append("<a href='/secure/pictureView.jsp?pictureid=");
+
+				sb.append("<a class='thumbnail' href='/secure/pictureView.jsp?pictureid=");
 				sb.append(picture.getPictureId());sb.append("'>");
 				
-				sb.append("<img class='thumbnail' src='/image?pictureid=");
-				sb.append(picture.getPictureId());sb.append("&version=H' alt='' width='90' height='90'> </a>");
-
-				sb.append("</div>");
-				sb.append("</div>");
+				sb.append("<img src='/image?pictureid=");
+				sb.append(picture.getPictureId());sb.append("&version=I' width='300' height='180' alt=''> </a>");
 				sb.append("</li>");
-				sb.append("</ul>");
-				sb.append("</div>");
 		 	}
-		}else{ 		
+			sb.append("</ul>");
+		}else{
+			sb.append("<h3>Perfil</h3>");
 			sb.append("<div class='user-data-container'>");
+			sb.append("<ul>");
 			log.debug("Request has NOT ALBUM...");
 			//sb.append("<li>Nombre: " +  user.getNombre() + "</li>"); 
 			//sb.append("<li>Apellido: " +  user.getApellido() + "</li>");
 			sb.append("<li>Fecha de nacimiento: " +  user.getFechaNacimiento() + "</li>");
 			sb.append("<li>Email: " +  user.getMail() + "</li>");
 			//Separador HTML
+			sb.append("</ul>");
 			sb.append("<hr size=10 />");
 			sb.append("</div>");
 		}	
@@ -116,25 +155,18 @@ public class PublicProfileView {
 	public String getHTMLContent_FotoDePerfil(){
 		SearchPicturesModel searchPicturesModel = new SearchPicturesModel();
 		StringBuilder sb = new StringBuilder();
-		
-		
-		
-		if (request.getAttribute("album") == null)
-		{
-			sb.append("<div class='profile-photo'>");
-			sb.append("<h2>Foto De Perfil</h2>");
-			PictureEy lastImageUpload = searchPicturesModel.getLastPictureUploadByUser(user.getUserName());						
+
+		if (true){
+			PictureEy lastImageUpload = searchPicturesModel.getUserProfilePicture(user);
 			if (lastImageUpload!=null){
 				sb.append("<a href='/secure/pictureView.jsp?pictureid=" + lastImageUpload.getPictureId() + "'>");
-				sb.append("<img class='thumbnail' src='/image?pictureid="+ lastImageUpload.getPictureId() + "&version=I'");
+				sb.append("<img class='thumbnail' src='/image?pictureid="+ lastImageUpload.getPictureId() + "&version=H'");
 				sb.append(" width='150' height='150' alt=''></a>");
 			}else{
 				sb.append("<a href='/secure/imageUpload.jsp'>");
 				sb.append("Subi tu primer foto</a>");
 			}
 			//Separador HTML
-			sb.append("<hr size=10 />");
-			sb.append("</div>");
 		}					
 		return sb.toString();
 	}
@@ -143,21 +175,12 @@ public class PublicProfileView {
 		StringBuilder sb = new StringBuilder();
 		String UsrSexo = "No especificado";
 		
-		if (request.getAttribute("album") == null)
-		{
-			if (user.getSexo().equals("M"))
-			{
-				UsrSexo = "Masculino";
-			}
-			else if(user.getSexo().equals("F"))
-			{
-				UsrSexo = "Femenino";
-			}
+		if (!album){
 			
 			sb.append("<div class='datos-user'>");
 			sb.append("<h3>Otra informacion</h3>");
 			sb.append("<ul>");
-			sb.append("<li>Sexo: " + UsrSexo + "</li>");
+			sb.append("<li>Sexo: " + getDisplayData(user.getSexo(), "S/D") + "</li>");
 			//sb.append("<li>Pais: " + getPaisById(user.getPais()) + "</li>");
 			//sb.append("<li>Provincia: " + getProvinciaById(user.getIdProvicia()) + "</li>");
 			sb.append("</ul>");
@@ -174,13 +197,13 @@ public class PublicProfileView {
 		
 		sb.append("<div class='Albums-user'>");
 		
-		if (request.getAttribute("album") == null)
+		if (!album)
 		{
 			sb.append("<h3>Albums</h3>");
 			sb.append("<ul>");
 		
 			Set<AlbumEy> albums = searchPicturesModel.getAlbumsToBeDisplayedByUser(user.getUserName());
-
+				if(!albums.isEmpty()){
 				for (AlbumEy album : albums) {								
 					sb.append("<li>");							
 					sb.append("<a href=");							
@@ -189,7 +212,8 @@ public class PublicProfileView {
 					sb.append(album.getAlbumId());
 					sb.append("</a>");
 					sb.append("</li>");
-					}		
+				}
+				}
 		}
 		
 		sb.append("</div>");

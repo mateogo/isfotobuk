@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@page import="ar.kennedy.is2011.db.entities.Account"%>
 <%@page import="ar.kennedy.is2011.db.entities.PersonaFisica"%>
+<%@page import="ar.kennedy.is2011.db.entities.PersonaIdeal"%>
 <%@page import="ar.kennedy.is2011.session.SessionManager"%>
 <%@page import="ar.kennedy.is2011.utils.WebUtils"%>
 <%@page import="ar.kennedy.is2011.models.SearchPicturesModel"%>
@@ -66,6 +67,7 @@
                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">${usuarioLogeado.userName}<b class="caret"></b></a>
                  <ul class="dropdown-menu" >
                    <li><a href="#">Editar perfil</a></li>
+   	               <li><a href="/editPerson?action=browsePerson">Personas</a></li>
                    <li class="divider"></li>
                    <li><a href="/logout">Cerrar sesion</a></li>
                  </ul>
@@ -350,7 +352,8 @@
 	<div class="tab-pane" id="persona">
 		<h2>Personas</h2>
 		<div class="btn-group">
-			<button type="button" class="btn btn-info btn-mini" name="newPersonBtn" onclick="location.href='/editPerson?action=newFPerson'" >nueva persona</button>
+			<button type="button" class="btn btn-info btn-mini" name="newFPersonBtn" onclick="location.href='/editPerson?action=newFPerson'" >nueva persona fisica</button>
+			<button type="button" class="btn btn-info btn-mini" name="newIPersonBtn" onclick="location.href='/editPerson?action=newIPerson'" >nueva persona ideal</button>
 		</div>
 		<table class="table table-striped">
 			<thead>
@@ -358,13 +361,12 @@
 					<th>#</th>
 					<th>Denominación</th>
 					<th>Nombre</th>
-					<th>Apellido</th>
-					<th></th>
+					<th>Comentario</th>
 				</tr>
 			</thead>
 			<tbody>
 			<%
-				int itemPerson=0;
+				int itemFPerson=0;
 				if(!useraccount.getFpersons().isEmpty()){
 				for(PersonaFisica person:useraccount.getFpersons()){
 			%>
@@ -374,17 +376,41 @@
 					</td>
 					<td><%= person.getId() %></td>
 					<td><%= person.getNombrePerson() %></td>
-					<td><%= person.getNombre() %></td>
-					<td><%= person.getApellido() %></td>
+					<td><%= person.getNombre() %>  <%= person.getApellido() %></td>
 					<td>
 						<div class="btn-group">
-							<button type="button" class="btn btn-info btn-mini" name="editPersonBtn" onclick="location.href='/editPerson?action=update&personid=<%=person.getId() %>'" >editar</button>
+							<button type="button" class="btn btn-info btn-mini" name="editPersonBtn" onclick="location.href='/editPerson?action=updateFPerson&personid=<%=person.getId() %>'" >editar</button>
 						</div>
 					</td>
 				</tr>
 
 			<%
-				itemPerson++;					
+				itemFPerson++;					
+				}
+				}
+			%>
+
+			<%
+				int itemIPerson=0;
+				if(!useraccount.getIpersons().isEmpty()){
+				for(PersonaIdeal person:useraccount.getIpersons()){
+			%>
+				<tr>
+					<td>
+						<input type="checkbox">
+					</td>
+					<td><%= person.getId() %></td>
+					<td><%= person.getNombrePerson() %></td>
+					<td><%= person.getComent() %></td>
+					<td>
+						<div class="btn-group">
+							<button type="button" class="btn btn-info btn-mini" name="editPersonBtn" onclick="location.href='/editPerson?action=updateIPerson&personid=<%=person.getId() %>'" >editar</button>
+						</div>
+					</td>
+				</tr>
+
+			<%
+				itemIPerson++;					
 				}
 				}
 			%>

@@ -38,7 +38,7 @@ public class SessionManager {
 			session.setId(sessionId);
 			session.setStatus(Constants.SESSION_STATUS_ACTIVE);
 			session.setDateCreated(new java.util.Date());
-			session.setDateUpdated(session.getDateUpdated());
+			session.setDateUpdated(session.getDateCreated());
 			
 			if(Constants.SESSION_MODE.equals("db")) {
 				sessionEy = new SessionEy();

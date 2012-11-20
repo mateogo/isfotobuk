@@ -3,31 +3,26 @@
 <%@page import="ar.kennedy.is2011.session.Session"%>
 <%@page import="ar.kennedy.is2011.session.SessionManager"%>
 <%@page import="ar.kennedy.is2011.utils.WebUtils"%>
-<%@page import="java.util.Map"%>
-<%@page import="java.util.HashMap"%>
 <%@page import="ar.kennedy.is2011.db.entities.User"%>
-<%@page import="ar.kennedy.is2011.models.SearchPicturesModel"%>
-<%@page import="ar.kennedy.is2011.db.entities.AlbumEy"%>
-<%@page import="java.util.Set"%>
 <%@page import="org.apache.commons.lang.StringUtils"%>
-<%@page import="java.util.List"%>
-<%@page import="ar.kennedy.is2011.db.entities.PictureEy"%>
-<%@page import="java.util.Iterator"%>
 <%
 	WebUtils.validateMandatoryParameters(request, new String[] { "pictureid" });
 	Session userSession = SessionManager.get(request,
 			WebUtils.getSessionIdentificator(request));
 	User user = (User) SessionManager.getCurrentUser(request);	
 %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 
 <%@page import="ar.kennedy.is2011.utils.WebUtils"%>
 <%@page import="ar.kennedy.is2011.social.Social"%><html>
+
 <head>
+
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Picture</title>
+<title>Visor de Imagenes</title>
 <meta name="GUI para aplicación is2011" content="">
 <meta name="Grupo 4 - ¿nombre?" content="">
+
 <!--[if lt IE 9]>
 		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
@@ -45,6 +40,7 @@ body {
 }
 </style>
 </head>
+
 <body>
   <div class="navbar navbar-inverse navbar-fixed-top">
     <div class="navbar-inner">
@@ -70,6 +66,7 @@ body {
                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">${usuarioLogeado.userName}<b class="caret"></b></a>
                  <ul class="dropdown-menu" >
                    <li><a href="/userprofile"><i class="icon-user"></i>Editar perfil</a></li>
+                   <li><a href="/editPerson?action=browsePerson"><i class="icon-user"></i>Personas</a></li>
                    <li class="divider"></li>
                    <li><a href="/logout"><i class="icon-remove"></i>Cerrar sesión</a></li>
                  </ul>
@@ -80,17 +77,28 @@ body {
     </div>	 <!--end topbar-inner -->
   </div> <!--end topbr -->
 	<div class="container">
-		<div class="row">
-			<ul class="media-grid">
-				<li>
-					<img class="span16" src="/image?pictureid=<%=WebUtils.getParameter(request, "pictureid")%>&version=O">
+			<ul class="thumbnails">
+				<li class="thumbnail span12">
+					<img src="/image?pictureid=<%=WebUtils.getParameter(request, "pictureid")%>&version=O">
 				</li>
-				<li><%=Social.addLinks(WebUtils.getCompleteUrlForPicture(request,WebUtils.getParameter(request, "pictureid")), "Picture")%></li>
-				<li>
+				<li class="thumbnail span12" ><%=Social.addLinks(WebUtils.getCompleteUrlForPicture(request,WebUtils.getParameter(request, "pictureid")), "Picture")%></li>
+				<li class="thumbnail span12" >
 					<button type="button" class="btn btn-link btn-primary" onclick="location.href='/setProfileImage?pictureid=<%=WebUtils.getParameter(request, "pictureid")%>'">establecer como foto del perfil</button>
 				</li>
+				
+				
+				<li class="thumbnail span12" ><form class="form-search" method="post" action="/selectaperson">
+						<span class=span10>Seleccionar una persona para asociar la imagen</span>
+						<input id="pDenom" name="pDenom" type="text" class="input-medium search-query ajax-typeahead" data-provide="typeahead" >
+						<button type="button" class="btn" onClick="selectPerson()">Buscar</button>
+						<input  id="pId"   name="pId"   type="text"  class="span1">
+						<input  id="pType" name="pType" type="text"  class="span1">
+						<input  id="picId" name="picId" type="text"  class="span1" value='<%=WebUtils.getParameter(request, "pictureid")%>' >
+						<input  id="pName" name="pName" type="text" >
+						<input  id="rDescr" name="rDescr" type="text" placeholder="ingrese una descripcion">
+						<button type="button" class="btn btn-primary" onclick="submitDefaultImage()">Aceptar</button>
+	 			</form></li>				
 			</ul>
-		</div>
 	</div>
 
     <!-- Le javascript
@@ -98,6 +106,71 @@ body {
     <!-- Placed at the end of the document so the pages load faster -->
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
     <script src="/js/bootstrap-2.1.1.js"></script>
+	<script src="/js/typeahead.js"></script>
+
+   <script>
+    $('#pDenom').typeahead({
+			ajax: {
+                url:"/pnamelist",
+                method: 'get',
+                triggerLength: 1,
+            }
+    });
+    </script>
+
+	<script>
+	function submitDefaultImage(){
+		var target = "/selectaperson";
+		var pId = document.getElementById("pId").value;
+		var pType = document.getElementById("pType").value;
+		var imageId = document.getElementById("picId").value;
+		
+
+		$.ajax({
+			  url: target,
+	          type: 'post',
+	            data: {
+	            	action: "setdefaultimage",
+	            	personId:   pId,
+	            	personType: pType,
+	            	imageId:    imageId
+	           	},
+              dataType: 'text',
+			  success: function(data){
+				  	//alert(data);
+			  }
+			}).done(function(data) { 
+			});	
+
+	}
+    </script>
+	
+	<script>
+	function selectPerson(){
+		var target = "/selectaperson";
+		var person = document.getElementById("pDenom").value;
+
+		$.ajax({
+			  url: target,
+	          type: 'get',
+	            data: { 
+	            	action: "fetchPerson",
+	            	qperson: person
+	            },
+              dataType: 'text',
+			  success: function(jsonString){
+				  	//alert(jsonString);
+				  	var values = jQuery.parseJSON( jsonString );
+					document.getElementById("pType").value = values['personType'];
+					document.getElementById("pName").value = values['personName'];
+					document.getElementById("pId").value   = values['personId'];
+
+			  }
+			}).done(function(data) { 
+			});	
+		
+	}
+	</script>
 
 </body>
 </html>

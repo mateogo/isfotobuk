@@ -13,6 +13,7 @@ import ar.kennedy.is2011.db.exception.EntityNotFoundException;
 import ar.kennedy.is2011.db.exception.PersistException;
 import ar.kennedy.is2011.db.manager.ManagerAccess;
 
+
 /**
  * @author mlabarinas
  */
@@ -182,5 +183,6 @@ public class AbstractDao<T> implements AbstractDaoInterface<T> {
 			i++;
 		}
 	}
+	
 	
 }

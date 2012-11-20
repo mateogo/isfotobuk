@@ -3,7 +3,9 @@
 
     <persistence-unit name="transactions-optional">
 		<provider>org.datanucleus.api.jpa.PersistenceProviderImpl</provider>
-
+		
+		<class>ar.kennedy.is2011.db.entities.EntityRelationHeader</class>
+		<class>ar.kennedy.is2011.db.entities.EntityRelations</class>
 		<class>ar.kennedy.is2011.db.entities.AlbumEy</class>
 		<class>ar.kennedy.is2011.db.entities.PictureEy</class>
 		<class>ar.kennedy.is2011.db.entities.SessionEy</class>
@@ -14,7 +16,8 @@
 		<class>ar.kennedy.is2011.db.entities.PersonaIdeal</class>
 		<class>ar.kennedy.is2011.db.entities.Location</class>
 		<class>ar.kennedy.is2011.db.entities.ContactosPerson</class>
-												
+				
+		
 		<exclude-unlisted-classes/>
 
 		<properties>
