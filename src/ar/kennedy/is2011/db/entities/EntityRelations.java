@@ -35,6 +35,9 @@ public class EntityRelations implements Serializable {
 
 	@Column(name = "EID")
 	private Long entityId;
+
+	@Column(name = "PICTUREID")
+	private String pictureId;
 	
 	@Column(name = "CARDINALITY")
 	private Integer cardinality;
@@ -162,6 +165,16 @@ public class EntityRelations implements Serializable {
 
 	public String getUDateAsText() {
 		return WebUtils.getFormatedDate(getUdate());
+	}
+
+
+	public String getPictureId() {
+		return pictureId;
+	}
+
+
+	public void setPictureId(String pictureId) {
+		this.pictureId = pictureId;
 	}
 	
 }

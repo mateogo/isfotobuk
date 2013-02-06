@@ -3,8 +3,8 @@ package ar.kennedy.is2011.models;
 import ar.kennedy.is2011.db.exception.EntityNotFoundException;
 import ar.kennedy.is2011.db.dao.AbstractDao;
 import ar.kennedy.is2011.db.dao.UserAccount;
+import ar.kennedy.is2011.db.dao.PersonDao;
 import ar.kennedy.is2011.db.entities.User;
-import ar.kennedy.is2011.db.entities.Account;
 import ar.kennedy.is2011.db.entities.PersonaFisica;
 import ar.kennedy.is2011.db.entities.PersonaIdeal;
 import ar.kennedy.is2011.db.entities.Person;
@@ -16,9 +16,9 @@ import ar.kennedy.is2011.db.entities.ContactosPerson;
 import ar.kennedy.is2011.utils.WebUtils;
 
 import com.google.appengine.api.datastore.Key;
+//import com.google.appengine.api.datastore.KeyFactory;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 import java.util.Date;
@@ -28,38 +28,24 @@ import javax.servlet.http.HttpServletRequest;
 
 public class PersonModel extends AbstractModel {
 
-	private static final String FPERSON_BY_NAME =  "SELECT e FROM PersonaFisica e WHERE e.nombrePerson = :1";
-	private static final String FPERSON_LIKE_NAME ="SELECT e FROM PersonaFisica e WHERE e.nombrePerson LIKE :1";
-	private static final String FPERSON_BY_OWNER=  "SELECT e FROM PersonaFisica e WHERE e.userId = :1";
 
-	private static final String RELATIONS_FOR_FPERSON =  "SELECT e FROM EntityRelationHeader e WHERE e.fpersonkey = :1";
-	private static final String RELATIONS_FOR_IPERSON =  "SELECT e FROM EntityRelationHeader e WHERE e.ipersonkey = :1";
-
-	private static final String ALL_FPERSONS =     "SELECT e FROM PersonaFisica e ";
-
-	private static final String IPERSON_BY_NAME   = "SELECT e FROM PersonaIdeal e WHERE e.nombrePerson = :1";
-	private static final String IPERSON_BY_OWNER  = "SELECT e FROM PersonaIdeal e WHERE e.userId = :1";
-	private static final String IPERSON_LIKE_NAME = "SELECT e FROM PersonaIdeal  e WHERE e.nombrePerson LIKE :1";
-
-	//private static final String ALL_IPERSONS =    "SELECT e FROM PersonaIdeal e ";	
-
-	//private static final String IPERSON_BY_NAME = "SELECT e FROM PersonaIdeal e WHERE e.nombrePerson = :1";
-	//private static final String ALL_IPERSONS =    "SELECT e FROM PersonaIdeal e ";	
+	private static final String RELATIONS_FOR_PERSON  =  "SELECT e FROM EntityRelationHeader e WHERE e.entityType = :1 AND e.entityId = :2 ";
+	private static final String RELATIONS_FOR_PICTURE =  "SELECT e FROM EntityRelationHeader e WHERE e.ownerId = :1 and e.pictureId = :2";
 
 	
-	AbstractDao<Account> accountDAO = new AbstractDao<Account>();
-	AbstractDao<User> userDAO = new AbstractDao<User>();
-	AbstractDao<Location> locDAO = new AbstractDao<Location>();
-	AbstractDao<PersonaFisica> fpersonDAO = new AbstractDao<PersonaFisica>();
-	AbstractDao<PersonaIdeal> ipersonDAO = new AbstractDao<PersonaIdeal>();
-	AbstractDao<EntityRelationHeader> erelationDAO = new AbstractDao<EntityRelationHeader>();
-	
+	private AbstractDao<User> userDAO = new AbstractDao<User>();
+	private AbstractDao<Location> locDAO = new AbstractDao<Location>();
+	private AbstractDao<EntityRelationHeader> erelationDAO = new AbstractDao<EntityRelationHeader>();
+
+	private PersonDao persondao = new PersonDao();
 	
 	private User user;
 	private AccountModel accountModel;
 
 	private PersonaFisica fperson;
 	private PersonaIdeal  iperson;
+	private String        personType;
+
 	private List<PersonaFisica> fpersons;
 	private List<PersonaIdeal> ipersons;
 	
@@ -78,21 +64,6 @@ public class PersonModel extends AbstractModel {
 		// TODO Auto-generated constructor stub
 	}
 
-	public void updateFPerson(){
-		try{
-			log.debug("=== trying update this.fperson");
-			fpersonDAO.persist(getFperson());
-			log.debug("****** updatefperson:OK ********");
-
-		} catch (Exception e) {
-			fpersonDAO.rollBackTx();
-			log.error(e.getMessage());
-			//throw new PersistException("Fail to delete entity in database");
-
-		}finally{
-		}
-
-	}
 
 	public void updateERelation(){
 		getErelation().setUdate(new Date());
@@ -109,22 +80,6 @@ public class PersonModel extends AbstractModel {
 
 	}
 
-	
-	public void updateIPerson(){
-		try{
-			log.debug("=== trying update this.iperson");
-			ipersonDAO.persist(getIperson());
-			log.debug("****** updatefperson:OK ********");
-
-		} catch (Exception e) {
-			ipersonDAO.rollBackTx();
-			log.error(e.getMessage());
-			//throw new PersistException("Fail to delete entity in database");
-
-		}finally{
-		}
-
-	}
 	public void updateUser(User us){
 		try{
 			log.debug("=== trying updateUser");
@@ -140,6 +95,7 @@ public class PersonModel extends AbstractModel {
 		}
 
 	}
+
 	public void updateLocation(Location loc){
 		try{
 			log.debug("=== trying updateLocation");
@@ -156,18 +112,29 @@ public class PersonModel extends AbstractModel {
 
 	}
 
-	public PersonaFisica getFperson(Key key){
-		if(key==null) return null;
-		this.fperson=null;
-		try {
-			setFperson(fpersonDAO.findById(PersonaFisica.class, key.getId()));
-			return getFperson();
-			
-		} catch(EntityNotFoundException e) {
-			return null;
-		}
+	public PersonaFisica getFpersonById(Long id){
+		setFperson(persondao.fetchFpersonById(id));
+		return getFperson();
+	}
+
+	public PersonaIdeal getIpersonById(Long id){
+		setIperson(persondao.fetchIpersonById(id));
+		return getIperson();
 	}
 	
+	public void updateFPerson(){
+		persondao.updateFPerson(getFperson());		
+	}
+
+	public void updateIPerson(){
+		persondao.updateIPerson(getIperson());		
+	}
+
+	public void updatePerson(){
+		if(getPersonType().equals("PF")) persondao.updateFPerson(getFperson());		
+		if(getPersonType().equals("PI")) persondao.updateIPerson(getIperson());		
+	}
+
 	public void searchPersonById(String personId){
 		if(personId==null) return;
 		if(WebUtils.isNotNull(personId)){
@@ -175,86 +142,20 @@ public class PersonModel extends AbstractModel {
 			this.fperson=null;
 			long pId = Long.parseLong(personId);
 			if (pId<=0) return;
-			getFpersonById(pId);
-			getIpersonById(pId);
-		}	
+			setFperson(persondao.fetchFpersonById(pId));
+			setIperson(persondao.fetchIpersonById(pId));
+		}
 	}
 	
-	public PersonaFisica getFpersonById(Long id){
-		if(id<=0) return null;
-		this.fperson=null;
-		try {
-			setFperson(fpersonDAO.findById(PersonaFisica.class, id));
-			return getFperson();
-			
-		} catch(EntityNotFoundException e) {
-			return null;
-		}
-	}
-	public PersonaFisica fetchFpersonById(Long id){
-		if(id<=0) return null;
 	
-		try {
-			return fpersonDAO.findById(PersonaFisica.class, id);
-
-		} catch(EntityNotFoundException e) {
-			return null;
-		}
-	}
-
-	public PersonaIdeal getIpersonById(Long id){
-		if(id==0) return null;
-		this.iperson=null;
-		try {
-			setIperson(ipersonDAO.findById(PersonaIdeal.class, id));
-			return getIperson();
-			
-		} catch(EntityNotFoundException e) {
-			return null;
-		}
-	}
-	public PersonaIdeal fetchIpersonById(Long id){
-		if(id==0) return null;
-
-		try {
-			return ipersonDAO.findById(PersonaIdeal.class, id);
-	
-		} catch(EntityNotFoundException e) {
-			return null;
-		}
-	}
-
-	public PersonaIdeal getIperson(Key key){
-		if(key==null) return null;
-		this.iperson=null;
-		try {
-			setIperson(ipersonDAO.findById(PersonaIdeal.class, key.getId()));
-			return getIperson();
-			
-		} catch(EntityNotFoundException e) {
-			return null;
-		}
-	}
-
-	
-	public List<PersonaFisica> getAllFPersons() {
-		this.fpersons = null;
-		
-		try {
-			fpersons = fpersonDAO.createCollectionQuery(ALL_FPERSONS, null);
-			return fpersons;
-
-		} catch(EntityNotFoundException e) {
-			return new ArrayList<PersonaFisica>();
-		}
-	}
-
 	public PersonaFisica getPersonFromUser(){
 		if(accountModel.getUser()==null) return null;
-		long personId=accountModel.getUser().getPersonId();
 
-		if(personId==0) return initDefaultPersonForUser();
-		if(getFpersonById(personId)==null) return initDefaultPersonForUser();
+		long personId=accountModel.getUser().getPersonId();
+		if(personId<=0) return initDefaultPersonForUser();
+	
+		setFperson(persondao.fetchFpersonById(personId));
+		if(getFperson()==null) return initDefaultPersonForUser();
 		return getFperson();
 	}
 	
@@ -289,7 +190,6 @@ public class PersonModel extends AbstractModel {
 	private EntityRelationHeader initNewEntityRelation(){
 		setErelation( new EntityRelationHeader(getUser()));
 		getErelation().setCdate(new Date());
-		getErelation().setUdate(getErelation().getCdate());
 		getErelation().setPredicate("CONOCE_A");
 				
 		return getErelation();
@@ -298,6 +198,9 @@ public class PersonModel extends AbstractModel {
 	public void initNewEntityRelationItems(){
 		//getErelation().setErelations(new ArrayList<EntityRelations>());
 		//setErelitems(getErelation().getErelations());
+	}
+	public void initNewRelationList(){
+		getErelation().setErelations(new ArrayList<EntityRelations>());
 	}
 
 	public EntityRelationHeader getERelation(Key key){
@@ -368,15 +271,16 @@ public class PersonModel extends AbstractModel {
 
 		if(ct==null)return false;
 
-		if(getFperson()==null) return false;
+		if(getPerson()==null) return false;
 		
-		List<ContactosPerson> contactos= getFperson().getDatosContacto();
+		List<ContactosPerson> contactos= getPerson().getDatosContacto();
 		if(contactos==null) contactos = new ArrayList<ContactosPerson>();
 		contactos.add(ct);
-		getFperson().setDatosContacto(contactos);
+		getPerson().setDatosContacto(contactos);
 		log.debug("MODEL ADD CONTACT: end");
 		return true;
 	}
+	
 	public Boolean addRelationItem(EntityRelations ritem){
 		log.debug("MODEL ADD ENTITY RELATION ITEM TO HEADER");
 		//List<EntityRelations> erlist;
@@ -399,20 +303,20 @@ public class PersonModel extends AbstractModel {
 
 		if(loc==null)return false;
 
-		if(getFperson()==null) return false;
+		if(getPerson()==null) return false;
 		
-		List<Location> locations= getFperson().getLocations();
+		List<Location> locations= getPerson().getLocations();
 		if(locations==null) locations = new ArrayList<Location>();
 		locations.add(loc);
-		getFperson().setLocations(locations);
+		getPerson().setLocations(locations);
 		log.debug("MODEL ADD LOCATIONS: end");
 		return true;
 	}
 	
-	public Location getLocationFromFPersonById(Long locId){
+	public Location getLocationFromPersonById(Long locId){
 		if(locId<=0) return null;
 		
-		List<Location> locations = getFperson().getLocations();
+		List<Location> locations = getPerson().getLocations();
 		if(locations==null) return null;
 		if(locations.isEmpty()) return null;
 		for(Location loc:locations){
@@ -423,10 +327,10 @@ public class PersonModel extends AbstractModel {
 
 	
 	
-	public ContactosPerson getContactFromFPersonById(Long ctId){
+	public ContactosPerson getContactFromPersonById(Long ctId){
 		if(ctId<=0) return null;
 		
-		List<ContactosPerson> contactos = getFperson().getDatosContacto();
+		List<ContactosPerson> contactos = getPerson().getDatosContacto();
 		if(contactos==null) return null;
 		if(contactos.isEmpty()) return null;
 		for(ContactosPerson ct:contactos){
@@ -437,48 +341,83 @@ public class PersonModel extends AbstractModel {
 	
 	public PersonaFisica getFPersonByName(String name) {
 		this.fperson = null;
+
+		List<PersonaFisica> persons = persondao.fetchFPersonsByName(name);
+
+		if(persons==null || persons.isEmpty()) return null;
+		else setFperson(persons.get(0));
 		
-		if( !getFPersonsByName(name).isEmpty()){
-			setFperson(getFpersons().get(0));
-			return getFperson();
-		}else{
+		return getFperson();
+	}
+
+	public EntityRelationHeader fetchRelationForPicture(User user, String pictureId) {
+		this.erelation=null;
+		getErelationsForPicture(user,pictureId);
+		if(getErelations()==null|| getErelations().isEmpty()) return null;
+		setErelation(getErelations().get(0));
+		return getErelation();
+	}
+
+	public List<EntityRelationHeader> getErelationsForPicture(User user, String pictureId) {
+		this.erelations = null;
+		Vector<Object> fvec = new Vector<Object>();
+		fvec.add(user.getKey().getId());
+		fvec.add(pictureId);
+		try {
+			setErelations(erelationDAO.createCollectionQuery(RELATIONS_FOR_PICTURE, fvec));
+			return getErelations();
+			
+		} catch(EntityNotFoundException e) {
 			return null;
 		}
 	}
 	
-	public List<PersonaFisica> getFPersonsByName(String name) {
-		this.fpersons = null;
-		
-		try {
-			setFpersons(fpersonDAO.createCollectionQuery(FPERSON_BY_NAME, new Vector<Object>(Arrays.asList(new String[] {name}))));
-		
-			return getFpersons();
-			
-		} catch(EntityNotFoundException e) {
-			return new ArrayList<PersonaFisica>();
-		}
-	}
-
 	public Person fetchPersonFromRelationItem(EntityRelations eritem){
 		if(eritem==null)return null;
 		if(eritem.getEntityType().equals("PF")){
-			return fetchFpersonById(eritem.getEntityId());
+			return persondao.fetchFpersonById(eritem.getEntityId());
 		}
 		if(eritem.getEntityType().equals("PI")){
-			return fetchIpersonById(eritem.getEntityId());
+			return persondao.fetchIpersonById(eritem.getEntityId());
+		}
+		return null;		
+	}
+
+	public String fetchPersonNameFromRelation(EntityRelationHeader relation){
+		Person person = fetchPersonFromRelation(relation);
+		if(person==null) return null;
+		else return person.getNombrePerson();
+	}
+
+	public Person fetchPersonFromRelation(EntityRelationHeader relation){
+		if(relation==null)return null;
+		if(relation.getEntityType()==null) return null;
+		
+		if(relation.getEntityType().equals("PF")){
+			return persondao.fetchFpersonById(relation.getEntityId());
+		}
+		if(relation.getEntityType().equals("PI")){
+			return persondao.fetchIpersonById(relation.getEntityId());
 		}
 		return null;		
 	}
 	
-	public PersonaFisica fetchFpersonFromRelationm(){
+	public PersonaFisica fetchFpersonFromRelation(){
 		if(getErelation()==null)return null;
-		if(getErelation().getFpersonkey()==null) return null;
-		return fetchFpersonById(getErelation().getFpersonkey().getId());
+		if(getErelation().getEntityId()==null) return null;
+		if(getErelation().getEntityType()==null) return null;
+		if(!getErelation().getEntityType().equals("PF")) return null;
+
+		return persondao.fetchFpersonById(getErelation().getEntityId());
 	}
-	public PersonaIdeal fetchIpersonFromRelationm(){
-		if(getErelation()==null) return null;
-		if(getErelation().getIpersonkey()==null) return null;
-		return fetchIpersonById(getErelation().getIpersonkey().getId());
+
+	public PersonaIdeal fetchIpersonFromRelation(){
+		if(getErelation()==null)return null;
+		if(getErelation().getEntityId()==null) return null;
+		if(getErelation().getEntityType()==null) return null;
+		if(!getErelation().getEntityType().equals("PI")) return null;
+
+		return persondao.fetchIpersonById(getErelation().getEntityId());
 	}
 
 	
@@ -507,17 +446,19 @@ public class PersonModel extends AbstractModel {
 			if(getFpersons()!=null && !getFpersons().isEmpty()){
 				for(PersonaFisica pf: getFpersons()){
 					Vector<Object> fvector = new Vector<Object>();
-					fvector.add(pf.getKey());
+					fvector.add("PF");
+					fvector.add(pf.getKey().getId());
 					log.debug("VECTOR: Fpersons:[" + fvector + "]");
-					erelations.addAll(erelationDAO.createCollectionQuery(RELATIONS_FOR_FPERSON,fvector ));
+					erelations.addAll(erelationDAO.createCollectionQuery(RELATIONS_FOR_PERSON,fvector ));
 				}
 			}
 			if(getIpersons()!=null  && !getIpersons().isEmpty()) {
 				for(PersonaIdeal pi: getIpersons()){
 					Vector<Object> ivector = new Vector<Object>();
-					ivector.add(pi.getKey());
+					ivector.add("PI");
+					ivector.add(pi.getKey().getId());
 					log.debug("VECTOR: Ipersons:[" + ivector + "]");
-					erelations.addAll(erelationDAO.createCollectionQuery(RELATIONS_FOR_IPERSON, ivector));
+					erelations.addAll(erelationDAO.createCollectionQuery(RELATIONS_FOR_PERSON, ivector));
 				}
 			}
 
@@ -528,70 +469,9 @@ public class PersonModel extends AbstractModel {
 	}
 
 	
-	public void findPersonsLikeName(String name) {
-		name = name + "%";
-		try {
-			setIpersons(ipersonDAO.createCollectionQuery(IPERSON_LIKE_NAME, new Vector<Object>(Arrays.asList(new String[] {name}))));
-			setFpersons(fpersonDAO.createCollectionQuery(FPERSON_LIKE_NAME, new Vector<Object>(Arrays.asList(new String[] {name}))));
-			
-		} catch(EntityNotFoundException e) {
-
-		}
-	}
-
-	public PersonaIdeal getIPersonByName(String name) {
-		this.iperson = null;
-		
-		if( !getIPersonsByName(name).isEmpty()){
-			setIperson(getIpersons().get(0));
-			return getIperson();
-		}else{
-			return null;
-		}
-	}
-	
-	public List<PersonaIdeal> getIPersonsByName(String name) {
-		this.ipersons = null;
-		
-		try {
-			setIpersons(ipersonDAO.createCollectionQuery(IPERSON_BY_NAME, new Vector<Object>(Arrays.asList(new String[] {name}))));
-		
-			return getIpersons();
-			
-		} catch(EntityNotFoundException e) {
-			return new ArrayList<PersonaIdeal>();
-		}
-	}
-
-	
-	public List<PersonaFisica> getFPersonsByOwner(Long userId) {
-		this.fpersons = null;
-		
-		try {
-			setFpersons(fpersonDAO.createCollectionQuery(FPERSON_BY_OWNER, new Vector<Object>(Arrays.asList(new Long[] {userId}))));
-	
-			return getFpersons();
-			
-		} catch(EntityNotFoundException e) {
-			return new ArrayList<PersonaFisica>();
-		}
-	}
-	
-	public List<PersonaIdeal> getIPersonsByOwner(Long userId) {
-		this.ipersons = null;
-		
-		try {
-			setIpersons(ipersonDAO.createCollectionQuery(IPERSON_BY_OWNER, new Vector<Object>(Arrays.asList(new Long[] {userId}))));
-	
-			return getIpersons();
-			
-		} catch(EntityNotFoundException e) {
-			return new ArrayList<PersonaIdeal>();
-		}
-	}
 	
 	public Boolean ifExistFPersonByName(String name) {
-		if(getFPersonsByName(name).isEmpty()) return false;
+		if(persondao.fetchFPersonsByName(name).isEmpty()) return false;
 		else return true;
 	}
 
@@ -611,9 +491,9 @@ public class PersonModel extends AbstractModel {
 	}
 	
 	public List<ContactosPerson> getContactList(){
-		if(getFperson()==null) return initContactList();
+		if(getPerson()==null) return initContactList();
 
-		List<ContactosPerson> contactos= getFperson().getDatosContacto();
+		List<ContactosPerson> contactos= getPerson().getDatosContacto();
 		if(contactos==null) return initContactList();
 		if(contactos.isEmpty()) return initContactList();
 		
@@ -621,9 +501,9 @@ public class PersonModel extends AbstractModel {
 	}
 
 	public List<Location> getLocationList(){
-		if(getFperson()==null) return initLocationList();
+		if(getPerson()==null) return initLocationList();
 
-		List<Location> locations= getFperson().getLocations();
+		List<Location> locations= getPerson().getLocations();
 		
 		if(locations==null)     return initLocationList();
 		if(locations.isEmpty()) return initLocationList();
@@ -644,6 +524,24 @@ public class PersonModel extends AbstractModel {
 		
 		return location;
 	}
+	
+	public void findPersonsLikeName(String name) {
+		name = name + "%";
+		setIpersons(persondao.fetchIPersonsLikeName(name));
+		setFpersons(persondao.fetchFPersonsLikeName(name));
+
+	}
+
+	public PersonaIdeal getIPersonByName(String name) {
+		this.iperson = null;
+		List<PersonaIdeal> persons = persondao.fetchIPersonsByName(name);
+		
+		if(persons==null || persons.isEmpty()) return null;
+		else setIperson(persons.get(0));
+		
+		return getIperson();
+	}
+
 
 	
 	private List<ContactosPerson> initContactList(){
@@ -651,7 +549,6 @@ public class PersonModel extends AbstractModel {
 		ContactosPerson ct = new ContactosPerson();
 		ct.setConType("MAIL");
 		ct.setDescr("nuevo dato de contacto");
-		//ct.setPersonId(getFperson().getKey().getId());
 		ct.setValue("sunombre@suproveedor.com");
 		contactos.add(ct);
 		return contactos;
@@ -660,8 +557,10 @@ public class PersonModel extends AbstractModel {
 	
 	public List<PersonaFisica> getFpersonsOwnedByUser(){
 		if(getUser()==null) return null;
+
 		List<PersonaFisica> persons = new ArrayList<PersonaFisica>();
-		persons.addAll(getFPersonsByOwner(getUser().getKey().getId()));
+		persons.addAll(persondao.fetchFPersonsByOwner(getUser().getKey().getId()));
+		
 		if(persons.isEmpty()){
 			persons.add(getPersonFromUser());
 		}
@@ -670,11 +569,24 @@ public class PersonModel extends AbstractModel {
 
 	public List<PersonaIdeal> getIpersonsOwnedByUser(){
 		if(getUser()==null) return null;
+
 		List<PersonaIdeal> persons = new ArrayList<PersonaIdeal>();
-		persons.addAll(getIPersonsByOwner(getUser().getKey().getId()));
+		persons.addAll(persondao.fetchIPersonsByOwner(getUser().getKey().getId()));
+
 		return persons;
 	}
 
+	public Person getPerson(){
+		if(getFperson()==null && getIperson()==null) return null;
+		if(getPersonType()==null){
+			if(getFperson()!=null) return getFperson();
+			if(getIperson()!=null) return getIperson();
+		}else{
+			if(getPersonType().equals("PF")) return getFperson();
+			if(getPersonType().equals("PI")) return getIperson();
+		}	
+		return null;
+	}
 	
 	public User getUser() {
 		return user;
@@ -688,12 +600,14 @@ public class PersonModel extends AbstractModel {
 		return fperson;
 	}
 	public void setFperson(PersonaFisica fperson) {
+		if(fperson!=null) setPersonType("PF");
 		this.fperson = fperson;
 	}
 	public PersonaIdeal getIperson() {
 		return iperson;
 	}
 	public void setIperson(PersonaIdeal iperson) {
+		if(iperson!=null) setPersonType("PI");
 		this.iperson = iperson;
 	}
 	public List<PersonaFisica> getFpersons() {
@@ -725,6 +639,12 @@ public class PersonModel extends AbstractModel {
 	}
 	public void setErelitems(List<EntityRelations> erelitems) {
 		this.erelitems = erelitems;
+	}
+	public String getPersonType() {
+		return personType;
+	}
+	private void setPersonType(String personType) {
+		this.personType = personType;
 	}
 
 }

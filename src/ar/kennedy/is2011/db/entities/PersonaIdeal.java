@@ -17,9 +17,14 @@ public class PersonaIdeal extends Person {
 	@Column(name = "FECHA_CREACION")
 	private Date fechaCreacion;
 
+	@Column(name = "DENOMINACION")
+	private String denominacion;
+
+
 	public PersonaIdeal() {
 		// TODO Auto-generated constructor stub
 	}
+
 
 	public Date getFechaCreacion() {
 		return fechaCreacion;
@@ -33,8 +38,22 @@ public class PersonaIdeal extends Person {
 		if(fechaCreacion==null) fechaCreacion=new Date();
 		this.fechaCreacion = fechaCreacion;
 	}
+
 	public String toString(){
+		return getDenominacion();
+	}
+
+	public String debugTtoString(){
 		return "PI: ["+getNombrePerson()+"] ["+getId()+"]";
 	}
+
+	public String getDenominacion() {
+		return denominacion;
+	}
+
+	public void setDenominacion(String denominacion) {
+		this.denominacion = denominacion;
+	}
+
 
 }

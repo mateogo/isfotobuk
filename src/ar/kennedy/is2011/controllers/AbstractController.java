@@ -54,6 +54,7 @@ public abstract class AbstractController extends HttpServlet implements Controll
 			forwardAction(request, response, userSession);
 		}
 	}
+	
 	private void forwardAction(HttpServletRequest request, HttpServletResponse response, Session userSession) throws ServletException,IOException {
 		try {
 			if(!isJspPage()) {

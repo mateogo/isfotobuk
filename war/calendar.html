@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	
+	<title>Calendario de eventos</title>
+
+	<script src="/dhtmlx/dhtmlxscheduler.js" ></script>
+	<link href="/dhtmlx/dhtmlxscheduler.css" rel="stylesheet" type="text/css">
+
+	<style type="text/css" media="screen">
+		html, body{
+			margin:0px;
+			padding:0px;
+			height:100%;
+			overflow:hidden;
+		}	
+	</style>
+
+	<script>
+		var options_list = [
+		                   {key:"MILESTONE", label:"hito"},
+		                   {key:"TASK", label:"tarea"},
+		                   {key:"PROJECT", label:"proyecto"},
+			];
+		function init() {
+			scheduler.config.multi_day = true;
+			scheduler.config.prevent_cache = true;
+			scheduler.config.xml_date="%Y-%m-%d %H:%i";
+			scheduler.init('scheduler_here',new Date(2013,2,0),"month");
+			
+			
+			scheduler.locale.labels.section_type = "Type";
+			scheduler.locale.labels.section_location = "Locacion";
+			
+			
+			scheduler.form_blocks["my_editor"]={
+					render:function(sns){
+						return "<div class='dhx_cal_ltext' style='height:60px;'>Text&nbsp;<input type='text'><br/>Details&nbsp;<input type='text'><br/>Responsable:&nbsp;<input type='text'></div>";
+					},
+					set_value:function(node,value,ev){
+						node.childNodes[1].value=value||"";
+						node.childNodes[4].value=ev.details||"";
+						node.childNodes[7].value=ev.start_date||"";
+					},
+					get_value:function(node,ev){
+						ev.details = node.childNodes[4].value;
+						return node.childNodes[1].value;
+					},
+					focus:function(node){
+						var a=node.childNodes[1]; a.select(); a.focus(); 
+					}
+				}
+			
+			
+			scheduler.config.lightbox.sections = [	
+				{name:"description", height:150, map_to:"text",     type:"my_editor" , focus:true},
+				{name:"location",    height:50,  map_to:"location", type:"textarea"},
+				{name:"type",        height:21,  map_to:"rec_type", type:"select", options:scheduler.serverList("toptions")},
+				{name:"time",        height:72,  map_to:"auto",     type:"time"}
+			];
+			scheduler.load("arraycalendar");
+			var dp = new dataProcessor("arraycalendar");
+			dp.init(scheduler);
+
+		}
+	</script>
+</head>
+
+<body onload="init();">
+	<div id="scheduler_here" class="dhx_cal_container" style='width:100%; height:100%;'>
+		<div class="dhx_cal_navline">
+			<div class="dhx_cal_prev_button">&nbsp;</div>
+			<div class="dhx_cal_next_button">&nbsp;</div>
+			<div class="dhx_cal_today_button"></div>
+			<div class="dhx_cal_date"></div>
+			<div class="dhx_cal_tab" name="day_tab" style="right:204px;"></div>
+			<div class="dhx_cal_tab" name="week_tab" style="right:140px;"></div>
+			<div class="dhx_cal_tab" name="month_tab" style="right:76px;"></div>
+		</div>
+		<div class="dhx_cal_header">
+		</div>
+		<div class="dhx_cal_data">
+		</div>
+	</div>
+</body>
+</html>

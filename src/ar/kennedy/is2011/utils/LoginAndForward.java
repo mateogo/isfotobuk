@@ -37,10 +37,14 @@ public class LoginAndForward extends AbstractController {
 			String username = WebUtils.getParameter(request, "username");
 			String password = WebUtils.getParameter(request, "password");
 			String action = WebUtils.getParameter(request, "action");
+			String articleid = WebUtils.getParameter(request, "articleid");
 			String actionURL = WebUtils.getParameter(request, "url");
 			String forward = actionURL;
 			if(WebUtils.isNotNull(action)){
 				forward=forward+"?action="+action;
+			}
+			if(WebUtils.isNotNull(articleid)){
+				forward=forward+"&articleid="+articleid;
 			}
     		LoginModel model = new LoginModel();
     		log.debug("LoginAndForward.action: validate login for: ["+username+"]:["+password+"] action:["+forward+"]");

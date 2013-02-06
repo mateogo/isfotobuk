@@ -82,6 +82,8 @@ public class FindPersonsByNameController extends HttpServlet{
 		}
 		
 	}
+	
+	@SuppressWarnings("unchecked")
 	public void stringList(List lista){
 		if(lista==null)return;
 		if(lista.isEmpty())return;
@@ -94,4 +96,17 @@ public class FindPersonsByNameController extends HttpServlet{
 		}
 		this.personList=this.personList+st.toString();
 	}
+	
+	public String buildJasonResponse(String list) {
+		//return "{\n \"options\": [ \n" + list + " \"teresita\"\n]\n}";
+		return "{\n \"options\": [ \n" + list + " \n]\n}";
+	}
+
+	public String buildPlainResponse(String list) {
+		//return "{\n \"options\": [ \n" + list + " \"teresita\"\n]\n}";
+		//list= "[" + list + " \"teresita\"]";
+		return "[ \n" + list + " \n]";
+	}
+
+	
 }

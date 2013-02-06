@@ -54,6 +54,7 @@
                 <li class="nav-header">Visualizar por...</li>
                 <li><a href="/secure/albums.jsp">Album</a></li>
                 <li><a href="/secure/search.jsp">Buscar</a></li>
+                <li><a href="/article?action=browseArticle">Articulos</a></li>
               </ul>
             </li>
           </ul>
@@ -91,7 +92,7 @@
               <li>
 	          </li>
               <li>
-					<button type="button" class="btn btn-link btn-mini" id="addEntitysBtn" name="addEntitysBtn" onclick="addEntities()" >${eselected} ${etype}</button>
+					<button type="button" class="btn btn-link btn-mini" id="addEntitysBtn" name="addEntitysBtn" onclick="addEntities()" >${relselected} ${etype}</button>
               </li>
 
               <li>
@@ -209,22 +210,17 @@
 						int itemRelation=0;
 						if(!(pbean.getErelations()==null)){
 						if(!pbean.getErelations().isEmpty()){
-							String personHeader="";
 						for(EntityRelationHeader relation:pbean.getErelations()){
-							personHeader="";
-							if(relation.getFpersonkey()!=null) personHeader=personHeader+relation.getFpersonkey()+" ";
-							if(relation.getIpersonkey()!=null) personHeader=personHeader+relation.getIpersonkey()+" ";
 					%>
 						<tr>
 							<td><input type="checkbox" value="true"></td>
 							<td><%= relation.getId() %></td>
 							<td>REL</td>
 							<td><%= relation.getSubject() %></td>
-							<td><%= personHeader %></td>
+							<td><%= pbean.fetchPersonName(relation) %></td>
 							<td>
 							</td>
 						</tr>
-		
 					<%
 						itemRelation++;					
 						}

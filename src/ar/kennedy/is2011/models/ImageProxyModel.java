@@ -84,6 +84,9 @@ public class ImageProxyModel extends AbstractModel {
 		
 		} else if("I".equals(version)) {
 			return 150;
+
+		} else if("F".equals(version)) {
+			return 1500;
 		
 		} else {
 			return 100;
@@ -97,6 +100,9 @@ public class ImageProxyModel extends AbstractModel {
 		} else if("I".equals(version)) {
 			return 150;
 		
+		} else if("F".equals(version)) {
+			return 550;
+
 		} else {
 			return 100;
 		}

@@ -132,7 +132,7 @@ public class AccountModel extends AbstractModel {
 			return null;
 		}
 	}
-
+	
 	public User getUserForAccount(String accName){
 		if(getAccountByName(accName)==null) return null;
 		return getUserForAccount(getAccount());

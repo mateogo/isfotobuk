@@ -45,6 +45,9 @@ public class PersonaFisica extends Person {
 		// TODO Auto-generated constructor stub
 	}
 
+	public String toString(){
+		return getNombre()+" "+getApellido();
+	}
 
 	public String getNombre() {
 		return nombre;

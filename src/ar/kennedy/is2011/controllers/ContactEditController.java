@@ -5,7 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import ar.kennedy.is2011.db.entities.ContactosPerson;
 import ar.kennedy.is2011.db.entities.User;
-import ar.kennedy.is2011.db.entities.PersonaFisica;
+import ar.kennedy.is2011.db.entities.Person;
 import ar.kennedy.is2011.session.Session;
 import ar.kennedy.is2011.models.PersonModel;
 import ar.kennedy.is2011.session.SessionManager;
@@ -20,7 +20,7 @@ public class ContactEditController extends AbstractController{
 	private HttpServletRequest request;
 
 	private User user; //el usuario duenio de la sesion
-	private PersonaFisica fperson; // la person fisica sobre la que se actualizan datos
+	private Person person; // la person fisica sobre la que se actualizan datos
 	private ContactosPerson contacto; // el contacto a dar de alta o actualizar
 
 	private PersonModel model= new PersonModel();
@@ -71,13 +71,21 @@ public class ContactEditController extends AbstractController{
 		 */
 		this.user= getUserFromSession(request);
 		String personId = request.getParameter("ctPersonId");
-		log.debug("********************* INIT MODEL: begin ["+personId+"]");
+		String personType = request.getParameter("ctPersonType");
+		log.debug("********************* INIT MODEL:  ["+personType+"]:["+personId+"]");
 		
 		model = new PersonModel(this.user);
-		model.setFperson(model.getFpersonById(Long.parseLong(personId)));
-		
-		this.fperson = model.getFperson();
-		if (this.fperson==null) errorsDetected=true;
+		if(personType.equals("PF")){
+			model.setFperson(model.getFpersonById(Long.parseLong(personId)));
+			this.person = model.getFperson();
+		}else if(personType.equals("PI")){
+			model.setIperson(model.getIpersonById(Long.parseLong(personId)));			
+			this.person = model.getIperson();
+		}
+		if (this.person==null) errorsDetected=true;			
+
+	
+	
 	}
 	
 	private void initContact(){
@@ -90,7 +98,7 @@ public class ContactEditController extends AbstractController{
 			this.isNewContact = true;
 		}else{
 			this.isNewContact = false;
-			this.contacto = model.getContactFromFPersonById(contactId);
+			this.contacto = model.getContactFromPersonById(contactId);
 			
 			if (this.contacto == null){
 				errorsDetected=true;
@@ -101,7 +109,7 @@ public class ContactEditController extends AbstractController{
 
 	private void contactFactory(){
 		String ctDescr = request.getParameter("ctDescr");
-		log.debug("********************* CONTACT FACTORY: begin ["+ctDescr+"] person:["+model.getFperson().getNombrePerson()+"]");
+		log.debug("********************* CONTACT FACTORY: begin ["+ctDescr+"] person:["+model.getPerson().getNombrePerson()+"]");
 		
 		String ctValue    = request.getParameter("ctValue");
 		String ctProtocol = request.getParameter("ctProtocol");
@@ -121,7 +129,7 @@ public class ContactEditController extends AbstractController{
 		if(StringUtils.isNotBlank(ctUseType))  contacto.setUseType(ctUseType);
 		if(StringUtils.isNotBlank(ctType))     contacto.setConType(ctType);
 		contacto.setDescr(ctDescr);
-		contacto.setPersonId(model.getFperson().getKey().getId());
+		contacto.setPersonId(model.getPerson().getKey().getId());
 	}
 	
 
@@ -130,7 +138,7 @@ public class ContactEditController extends AbstractController{
 			errorsDetected= !model.addContact(this.contacto);
 		}
 		if(!errorsDetected){
-			model.updateFPerson();
+			model.updatePerson();
 		}
 		return errorsDetected;
 	}

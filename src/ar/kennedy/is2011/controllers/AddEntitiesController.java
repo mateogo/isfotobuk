@@ -16,6 +16,7 @@ import ar.kennedy.is2011.db.entities.EntityRelationHeader;
 import ar.kennedy.is2011.db.entities.EntityRelations;
 
 import ar.kennedy.is2011.models.PersonModel;
+import ar.kennedy.is2011.db.dao.PersonDao;
 
 import ar.kennedy.is2011.session.Session;
 
@@ -24,13 +25,13 @@ public class AddEntitiesController extends AbstractController{
 
 	private static final long serialVersionUID = 1L;
 	
-	String responseData = "failed";
-	PersonModel model;
-	Boolean errorsDetected = false;
-	EntityRelationHeader erelation;
+	private String responseData = "failed";
+	private PersonModel model;
+	private PersonDao  pdao;
+	private Boolean errorsDetected = false;
 	
-	HttpServletRequest request;
-	String entityListString;
+	private HttpServletRequest request;
+	private String entityListString;
 	
 	public AddEntitiesController() {
         super();
@@ -38,7 +39,12 @@ public class AddEntitiesController extends AbstractController{
     }
 
 	public void action(HttpServletRequest request, HttpServletResponse response, Session userSession) throws  ServletException, IOException, Exception {
-		//URL: /addentities
+		//URL: /addentities        ATENCION: ToDo: este controller solo sirve para asociar PERSONs a una relacion. 
+		//objeto: agregar personas a la entidad seleccionadas
+		//modo: la lista de PERSONs, de la tabla principal generan una lista de id's
+		//      Se iteran los ids, agregando-los a la relaci—n que pre-existe en la sesion.
+		//required params: listids; 
+		//required session: etype/pselected: el objeto en la sesion TIENE que ser de tipo REL, de lo contrario aborta.
 		this.request = request;
 
         this.errorsDetected= !addEntitiesToRelation();
@@ -60,6 +66,7 @@ public class AddEntitiesController extends AbstractController{
 	}
 
 	public Boolean addEntitiesToRelation(){
+		//
 		this.entityListString = this.request.getParameter("listids");
 		log.debug("ADD ENTITIES TO RELATION: begin: ["+entityListString+"]");
 		if(this.entityListString==null || !this.entityListString.endsWith(",")) return false;
@@ -84,7 +91,7 @@ public class AddEntitiesController extends AbstractController{
 		if(relType==null) return false;
 		if(!relType.equals("REL")) return false;
 		
-		EntityRelationHeader erh = (EntityRelationHeader) this.request.getSession().getAttribute("eselected");
+		EntityRelationHeader erh = (EntityRelationHeader) this.request.getSession().getAttribute("relselected");
 		log.debug("From Session: ["+erh+"] : ["+relType+"]");
 
 		if(erh==null) return false;
@@ -114,11 +121,11 @@ public class AddEntitiesController extends AbstractController{
 			log.debug("id: ["+id+"]  long personid:["+personid+"]");
 		
 			if(person.startsWith("PF") && personid>0){
-				fpersons.add(model.getFpersonById(personid));
+				fpersons.add(pdao.fetchFpersonById(personid));
 				log.debug("Success:PF id: ["+personid+"]  long personid:["+person+"]");
 			
 			}else if(person.startsWith("PI") && personid>0){
-				ipersons.add(model.getIpersonById(personid));
+				ipersons.add(pdao.fetchIpersonById(personid));
 				log.debug("Success:PI id: ["+personid+"]  long personid:["+person+"]");
 							
 			}

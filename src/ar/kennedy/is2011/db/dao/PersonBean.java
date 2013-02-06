@@ -2,10 +2,12 @@ package ar.kennedy.is2011.db.dao;
 
 import ar.kennedy.is2011.db.entities.PersonaFisica;
 import ar.kennedy.is2011.db.entities.PersonaIdeal;
+import ar.kennedy.is2011.db.entities.Person;
 import ar.kennedy.is2011.db.entities.ContactosPerson;
 import ar.kennedy.is2011.db.entities.User;
 import ar.kennedy.is2011.db.entities.Location;
 import ar.kennedy.is2011.db.entities.EntityRelationHeader;
+import ar.kennedy.is2011.models.PersonModel;
 
 import java.util.List;
 
@@ -36,6 +38,11 @@ public class PersonBean {
 		setAction(ac);
 	}
 
+	public String fetchPersonName(EntityRelationHeader relation){
+		PersonModel pmodel = new PersonModel();
+		return  pmodel.fetchPersonNameFromRelation(relation);
+	}
+	
 	public User getUser() {
 		return user;
 	}

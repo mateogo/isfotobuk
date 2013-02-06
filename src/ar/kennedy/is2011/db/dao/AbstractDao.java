@@ -177,8 +177,8 @@ public class AbstractDao<T> implements AbstractDaoInterface<T> {
 		
 		for(Object obj : parameters) {
 			
-			query.setParameter(i+1,obj);
 			log.debug("Parameter " + (i+1) + ": [" + obj.toString()+"]");
+			query.setParameter(i+1,obj);
 			
 			i++;
 		}

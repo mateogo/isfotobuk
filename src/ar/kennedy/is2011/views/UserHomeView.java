@@ -9,6 +9,8 @@ import ar.kennedy.is2011.db.entities.PictureEy;
 import org.apache.log4j.Logger;
 import java.util.Iterator;
 import java.util.List;
+import ar.kennedy.is2011.db.dao.PictureDao;
+
 
 
 public class UserHomeView {
@@ -27,6 +29,7 @@ public class UserHomeView {
 	private int actualPage=1;
 	private int fromButton=1;
 	private int toButton=3;
+	private PictureDao pictureDao= new PictureDao();
 	
 	public UserHomeView(){
 		
@@ -120,10 +123,18 @@ public class UserHomeView {
 		else last=listSize;
 		return last;
 	}
+
 	public List<PictureEy> getPictures() {
 		if(pictures==null) pictures = searchPicturesModel.getPicturesToBeDisplayedByUser(user.getUserName());
 		return pictures;
 	}
+
+	public List<PictureEy> fetchAlbumPictures(String albumName) {
+		pictures = pictureDao.fetchPicturesByAlbum(albumName);
+		return pictures;
+	}
+
+	
 	public void setPictures(List<PictureEy> pictures) {
 		this.pictures = pictures;
 	}

@@ -85,9 +85,7 @@
 	if(!pm.getErelations().isEmpty()){
 		String personHeader="";
 		for(EntityRelationHeader relation:pm.getErelations()){
-			personHeader="";
-			if(relation.getFpersonkey()!=null) personHeader=personHeader+relation.getFpersonkey()+" ";
-			if(relation.getIpersonkey()!=null) personHeader=personHeader+relation.getIpersonkey()+" ";
+			personHeader = Long.toString(relation.getEntityId());
 	%>	
 			<div class="row">
 			<div class="span6"> <h4><%=relation.getPredicate()%>:<%=relation.getSubject()%></h4></div>

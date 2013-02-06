@@ -31,9 +31,13 @@ public class MultiPartRequest {
 
 	@SuppressWarnings("unchecked")
 	public MultiPartRequest(HttpServletRequest req, int maxSize) throws IOException{
+		
 		MultipartParser mPartParser = new MultipartParser(req, maxSize);
+
 		parameters = new Hashtable<String, Object>();
+	
 		files = new Hashtable<String, UploadedFile>();
+		
 		BufferedOutputStream buffer = null;
 		UploadedFile uploadedFile = null;
 		Part part = null;

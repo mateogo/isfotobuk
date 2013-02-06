@@ -54,6 +54,7 @@
                 <li class="nav-header">Visualizar por...</li>
                 <li><a href="/secure/albums.jsp">Album</a></li>
                 <li><a href="/secure/search.jsp">Buscar</a></li>
+                <li><a href="/article?action=browseArticle">Articulos</a></li>
               </ul>
             </li>
           </ul>
@@ -88,16 +89,18 @@
 							<input type="hidden" id="fpersonId" name="fpersonId" 
 									value="${pbean.fperson.id}" />
 
-							<input type="text" id="pDenom" class="span4" name="pDenom" placeholder="Denominacion"
+							<input type="text" id="pDenom" class="span4" name="pDenom" placeholder="Identificacion"
 								value="${pbean.fperson.nombrePerson}" />
 							<input type="text" id="pComent" class="span6" name="pComent" placeholder="Comentario"
 								value="${pbean.fperson.coment}" />
+							<input type="text" id="pUrl" class="span10" name="pUrl" placeholder="Direccion web: url"
+								value="${pbean.fperson.defaultUrl}" />
 						</div>
 					</div>
 	
 	
 					<div class="control-group">
-						<label class="control-label" for="pDenom" >Nombre y Apellido:</label>
+						<label class="control-label" for="pName" >Nombre y Apellido:</label>
 							<div class="controls" >
 							<div class="input-prepend" >
 								<span class="add-on"><i class="icon-plus"></i></span>
@@ -219,6 +222,8 @@
 
 					<input type="hidden" id="ctPersonId" name="ctPersonId" 
 						value="${pbean.fperson.id}" />
+					<input type="hidden" id="ctPersonType" name="ctPersonType" 
+							value="PF" />
 					<input type="hidden" id="ctContactId" name="ctContactId" 
 						value="" />
 									
@@ -252,6 +257,7 @@
 								<option  value="FAX"   >fax</option>
 								<option  value="VOIP"  >voip skype</option>
 								<option  value="RSOC"  >red social</option>
+								<option  value="URL"   >direccion web</option>
 								<option  value="OTRO"  >otro</option>
 							</select>
 						</div>
@@ -297,7 +303,7 @@
 <!-- ************** EDIT LOCATIONS  ************************* -->
 		<!-- Modal viewer -->
 		<div class="modal hide fade in" id="newLocation"  data-keyboard=false data-backdrop=false tabindex="-1" role="dialog" aria-labelledby="newLocationLabel" aria-hidden="true">
-			<form id="newLocatioForm" name="newLocationForm" class="form-inline" action="/editLocation" method="post">
+			<form id="newLocationForm" name="newLocationForm" class="form-inline" action="/editLocation" method="post">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
 				<h3>locacion</h3>
@@ -305,6 +311,8 @@
 			<div id="locInput" class="modal-body">
 				<input type="hidden" id="locPersonId" name="locPersonId" 
 						value="${pbean.fperson.id}" />
+				<input type="hidden" id="locPersonType" name="locPersonType" 
+						value="PF" />
 				<input type="hidden" id="locLocationId" name="locLocationId" 
 						value="" />
 									

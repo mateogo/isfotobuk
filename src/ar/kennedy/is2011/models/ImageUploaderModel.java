@@ -67,25 +67,31 @@ public class ImageUploaderModel extends AbstractModel {
 		
 		try {
 			//(i): Contamos con los parametros picture_name y album_id
+			log.debug("VALIDATE UPLOAD. TRY i");
 			WebUtils.validateMandatoryParameters(multiPartRequest, new String[] {"picture_name", "album_id"});
 			validatePictureValidName();
 			
-			//(iii): valido el album
+			//(ii): valido el album
+			log.debug("VALIDATE UPLOAD. TRY ii");
 			String albumId = WebUtils.getParameter(multiPartRequest, "album_id");
 			log.debug("validate ImageUploader: album:["+albumId+"]");
 			updateAlbum(albumId);
 
-			//(iv): valido URL
+			//(iii): valido URL
+			log.debug("VALIDATE UPLOAD. TRY iii");
 			String url = WebUtils.getParameter(multiPartRequest, "url");
 			validatePictureValidURL(url);
 
 			//(iv): Upload de la imagen, si viene de cuerpo presente
+			log.debug("VALIDATE UPLOAD. Upload content TRY IV");
 			uploadContentPicture();
 
 			//(v): incorporo los tags que se pudieran haber cargado en el form
+			log.debug("VALIDATE UPLOAD. TRY V");
 			this.picture.setTags(WebUtils.getParameter(multiPartRequest, "tags"));
 			
 			//(vi): Picture content o URL
+			log.debug("VALIDATE UPLOAD. TRY vi");
 			if(this.picture.getContent() == null && StringUtils.isBlank(this.picture.getUrl())) {
 				formErrors.put("add_url_or_file", "Debes cargar una imagen o asociar una URL que contenga una");
 			}
@@ -95,6 +101,7 @@ public class ImageUploaderModel extends AbstractModel {
 		}
 		
 		if(!formErrors.isEmpty()) {
+			log.debug("ERRORS FOUND: ["+formErrors+"]");
 			errors.put("form_errors", formErrors);			
 			if(!formErrors.containsKey("mandatory_parameters")) {
 				userSession.setElement("picture", this.picture);
@@ -103,6 +110,7 @@ public class ImageUploaderModel extends AbstractModel {
 			SessionManager.save(request, userSession);
 			return false;
 		}else{
+			log.debug("image upload SUCCESS!");
 			userSession.setElement("picture", this.picture);
 			SessionManager.save(request, userSession);			
 			return true;
@@ -128,15 +136,21 @@ public class ImageUploaderModel extends AbstractModel {
 	private void uploadContentPicture(){
 		if(this.multiPartRequest.getFiles().hasMoreElements()) {
 			log.debug("Upload ContentPicture: begin");
+			
 			UploadedFile uploadPicture = (UploadedFile) multiPartRequest.getFiles().nextElement();
+			
 			if(uploadPicture.getContent().size() < Constants.ENTITY_WEIGHT) {
 				log.debug("Upload ContentPicture: begin-1");
 				this.picture.setContentType(uploadPicture.getContentType());
+				log.debug("Upload ContentPicture: begin-1.1");
 				this.picture.setContent(new Blob(((UploadedFile) multiPartRequest.getFiles().nextElement()).getContent().toByteArray()));
+				log.debug("Upload ContentPicture: begin-1.2");
 			} else {
 				log.debug("Upload ContentPicture: begin-2");
 				this.picture.setContentType(uploadPicture.getContentType());
+				log.debug("Upload ContentPicture: begin-2.1");
 				this.picture.setContent(new Blob(WebUtils.resize(((UploadedFile) multiPartRequest.getFiles().nextElement()).getContent().toByteArray(), 800, 600)));
+				log.debug("Upload ContentPicture: begin-2.2");
 			}
 		}
 	}

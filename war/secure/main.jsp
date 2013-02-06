@@ -62,6 +62,7 @@
                 <li class="nav-header">Visualizar por...</li>
                 <li><a href="/secure/albums.jsp"><i class="icon-search"></i>Album</a></li>
                 <li><a href="/secure/search.jsp"><i class="icon-search"></i>Buscar</a></li>
+                <li><a href="/article?action=browseArticle">Articulos</a></li>
               </ul>
             </li>
           </ul>

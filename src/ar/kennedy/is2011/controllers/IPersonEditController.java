@@ -30,7 +30,6 @@ public class IPersonEditController extends AbstractController{
 
 	public void action(HttpServletRequest request, HttpServletResponse response, Session userSession) throws Exception {
 		log.debug("****************************************************");
-		log.debug("****************************************************");
 
 		this.ipersonId = request.getParameter("ipersonId");
 		if (this.ipersonId==null) this.ipersonId="0";
@@ -59,19 +58,23 @@ public class IPersonEditController extends AbstractController{
 	private Boolean newIPERSON(HttpServletRequest request, HttpServletResponse response, Session userSession){
 
 		model.initNewIperson();
-		String personName = request.getParameter("pDenom");
+		String personName = request.getParameter("pName");
 
 		log.debug("********************* NEWIPERSON person: begin ["+personName+"]");
 
 		if(!errorsDetected){
 			log.debug("NEW F PERSON: ready to update");
 			String denom       = request.getParameter("pDenom");
+			String name        = request.getParameter("pName");
 			String coment      = request.getParameter("pComent");
 			String fcreacion   = request.getParameter("pFechaCreacion");
+			String url         = request.getParameter("pUrl");
 			
-			if(StringUtils.isNotBlank(denom)) model.getIperson().setNombrePerson(denom);
+			if(StringUtils.isNotBlank(denom)) model.getIperson().setDenominacion(denom);
+			if(StringUtils.isNotBlank(name))  model.getIperson().setNombrePerson(name);
 			if(StringUtils.isNotBlank(coment)) model.getIperson().setComent(coment);
 			if(StringUtils.isNotBlank(fcreacion)) model.getIperson().setFechaCreacion(WebUtils.getDateFromString(fcreacion));
+			if(StringUtils.isNotBlank(url)) model.getIperson().setDefaultUrl(url);
 
 			model.getIperson().setUserId(this.user.getKey().getId());
 
@@ -83,7 +86,7 @@ public class IPersonEditController extends AbstractController{
 
 	private Boolean updateIPERSON(HttpServletRequest request, HttpServletResponse response, Session userSession){
 		
-		String personName = request.getParameter("pDenom");
+		String personName = request.getParameter("pName");
 		log.debug("********************* UPDATE person: begin ["+personName+"]");
 
 		if (getPersonToEdit(user, personName)==null) errorsDetected=true;
@@ -91,12 +94,16 @@ public class IPersonEditController extends AbstractController{
 		if(!errorsDetected){
 			log.debug("Update Person:Person to edit: found! ready to update");
 			String denom       = request.getParameter("pDenom");
+			String name        = request.getParameter("pName");
 			String coment      = request.getParameter("pComent");
 			String fcreacion   = request.getParameter("pFechaCreacion");
+			String url         = request.getParameter("pUrl");
 			
-			if(StringUtils.isNotBlank(denom)) model.getIperson().setNombrePerson(denom);
+			if(StringUtils.isNotBlank(denom)) model.getIperson().setDenominacion(denom);
+			if(StringUtils.isNotBlank(name))  model.getIperson().setNombrePerson(name);
 			if(StringUtils.isNotBlank(coment)) model.getIperson().setComent(coment);
 			if(StringUtils.isNotBlank(fcreacion)) model.getIperson().setFechaCreacion(WebUtils.getDateFromString(fcreacion));
+			if(StringUtils.isNotBlank(url)) model.getIperson().setDefaultUrl(url);
 
 			model.getIperson().setUserId(this.user.getKey().getId());
 

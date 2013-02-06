@@ -58,6 +58,7 @@
                 <li class="nav-header">Visualizar por...</li>
                 <li><a href="/secure/albums.jsp">Album</a></li>
                 <li><a href="/secure/search.jsp">Buscar</a></li>
+                <li><a href="/article?action=browseArticle">Articulos</a></li>
               </ul>
             </li>
           </ul>

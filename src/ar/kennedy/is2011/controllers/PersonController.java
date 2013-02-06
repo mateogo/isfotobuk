@@ -41,6 +41,7 @@ public class PersonController extends AbstractController {
 	private String action;
 	private String personId;
 	private String personName;
+	private String personType;
 	
 	public PersonController() {
 		// TODO Auto-generated constructor stub
@@ -207,7 +208,6 @@ public class PersonController extends AbstractController {
 
 		gaelog.warning("PersonController.action: NEW RELATION: Creating relation:["+action+"] personId: ["+personId+"] relationId["+relationId+"]");
 	
-		
 		if(!findPerson(personId,personType)){
 			gaelog.warning("Find Person: FAILED");
 			errorsDetected=true;
@@ -233,8 +233,13 @@ public class PersonController extends AbstractController {
 			model.getErelation().setDescription(descr);
 			model.getErelation().setPredicate(predicate);
 			
-			model.getErelation().setFperson(model.getFperson());
-			model.getErelation().setIperson(model.getIperson());
+			model.getErelation().setEntityType(this.personType);
+			if(this.personType.equals("PF")){
+				model.getErelation().setEntityId(model.getFperson());
+			}else{
+				model.getErelation().setEntityId(model.getIperson());
+			}
+
 			model.initNewEntityRelationItems();
 			
 			model.updateERelation();
@@ -281,6 +286,10 @@ public class PersonController extends AbstractController {
 		gaelog.warning("Done:Trying to Find Person: ["+personId+"]");
 		
 		if(model.getFperson()==null && model.getIperson()==null) return false;
+
+		log.debug("FIND PERSON: PF["+model.getFperson()+"]  pi:["+model.getIperson()+"]");
+		if(model.getFperson()==null) this.personType="PI";
+		else this.personType="PF";
 		
 		return true;
 	}

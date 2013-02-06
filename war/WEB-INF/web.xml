@@ -138,7 +138,52 @@ version="2.5" >
 		<url-pattern>/editPerson</url-pattern>
 	</servlet-mapping>
 
-	<!-- /editPerson -->
+		<!-- /article -->
+	<servlet>
+		<servlet-name>ArticleController</servlet-name>
+		<servlet-class>ar.kennedy.is2011.controllers.ArticleController</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ArticleController</servlet-name>
+		<url-pattern>/article</url-pattern>
+	</servlet-mapping>
+	
+		<!-- /editArticle -->
+	<servlet>
+		<servlet-name>EditArticleController</servlet-name>
+		<servlet-class>ar.kennedy.is2011.controllers.ArticleEditController</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>EditArticleController</servlet-name>
+		<url-pattern>/editArticle</url-pattern>
+	</servlet-mapping>
+		
+
+	
+	
+			<!-- /task -->
+	<servlet>
+		<servlet-name>TaskController</servlet-name>
+		<servlet-class>ar.kennedy.is2011.controllers.TaskController</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>TaskController</servlet-name>
+		<url-pattern>/task</url-pattern>
+	</servlet-mapping>
+	
+		<!-- /editTask -->
+	<servlet>
+		<servlet-name>EditTaskController</servlet-name>
+		<servlet-class>ar.kennedy.is2011.controllers.TaskEditController</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>EditTaskController</servlet-name>
+		<url-pattern>/editTask</url-pattern>
+	</servlet-mapping>
+	
+	
+		
+	<!-- /editFPerson -->
 	<servlet>
 		<servlet-name>EditFPerson</servlet-name>
 		<servlet-class>ar.kennedy.is2011.controllers.FPersonEditController</servlet-class>
@@ -210,7 +255,27 @@ version="2.5" >
 		<url-pattern>/pnamelist</url-pattern>
 	</servlet-mapping>
 	
-		<!-- /selectentity -->/addentities
+		<!-- /articlelist -->
+	<servlet>
+		<servlet-name>fetchArticleNameList</servlet-name>
+		<servlet-class>ar.kennedy.is2011.controllers.FindArticlesByNameController</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>fetchArticleNameList</servlet-name>
+		<url-pattern>/articlelist</url-pattern>
+	</servlet-mapping>
+
+			<!-- /tasklist -->
+	<servlet>
+		<servlet-name>fetchTaskNameList</servlet-name>
+		<servlet-class>ar.kennedy.is2011.controllers.FindArticlesByNameController</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>fetchTaskNameList</servlet-name>
+		<url-pattern>/tasklist</url-pattern>
+	</servlet-mapping>
+		
+			<!-- /selectentity -->
 	<servlet>
 		<servlet-name>SelectEntityIntoSession</servlet-name>
 		<servlet-class>ar.kennedy.is2011.controllers.SelectEntityController</servlet-class>
@@ -240,7 +305,16 @@ version="2.5" >
 		<url-pattern>/selectaperson</url-pattern>
 	</servlet-mapping>
 		
-								
+				<!-- /home -->
+	<servlet>
+		<servlet-name>RenderHomePage</servlet-name>
+		<servlet-class>ar.kennedy.is2011.controllers.HomeArticlesController</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>RenderHomePage</servlet-name>
+		<url-pattern>/home</url-pattern>
+	</servlet-mapping>
+									
 		<!-- /sendTo -->
 	<servlet>
 		<servlet-name>SendToUtil</servlet-name>
@@ -278,6 +352,57 @@ version="2.5" >
   	  <url-pattern>/_ah/spi/*</url-pattern>
   	</servlet-mapping>
 
+	<!-- freemarker example -->  		
+	<servlet>
+	  <servlet-name>zample.freemarker</servlet-name>
+	  <servlet-class>ar.kennedy.zample.freemarker.GuestbookServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+	  <servlet-name>zample.freemarker</servlet-name>
+	  <url-pattern>*.a</url-pattern>
+	</servlet-mapping>
+
+		<!-- freemarker default example -->  		
+	<servlet>
+	  <servlet-name>zample.default.freemarker</servlet-name>
+	  <servlet-class>ar.kennedy.is2011.templates.DefaultTemplateController</servlet-class>
+	</servlet>
+	<servlet-mapping>
+	  <servlet-name>zample.default.freemarker</servlet-name>
+	  <url-pattern>/default/*</url-pattern>
+	</servlet-mapping>
+		  	
+		<!-- freemarker ajax example -->  		
+	<servlet>
+	  <servlet-name>zample.ajax.freemarker</servlet-name>
+	  <servlet-class>ar.kennedy.is2011.templates.ExampleAjaxTemplate</servlet-class>
+	</servlet>
+	<servlet-mapping>
+	  <servlet-name>zample.ajax.freemarker</servlet-name>
+	  <url-pattern>/render/*</url-pattern>
+	</servlet-mapping>
+		  	
+		<!-- roleplaying -->  		
+	<servlet>
+	  <servlet-name>roleplaying</servlet-name>
+	  <servlet-class>ar.kennedy.is2011.controllers.RolePlayingController</servlet-class>
+	</servlet>
+	<servlet-mapping>
+	  <servlet-name>roleplaying</servlet-name>
+	  <url-pattern>/roleplaying</url-pattern>
+	</servlet-mapping>
+		  	
+	<!-- Calendar -->
+						  	
+	<servlet>
+		<servlet-name>scheduler_array</servlet-name>
+		<servlet-class>ar.kennedy.is2011.scheduler.SchedulerArray</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>scheduler_array</servlet-name>
+		<url-pattern>/arraycalendar</url-pattern>
+	</servlet-mapping>
+  	
 	<!-- FILTROS -->
 	<filter>
         <filter-name>SecureFilter</filter-name>

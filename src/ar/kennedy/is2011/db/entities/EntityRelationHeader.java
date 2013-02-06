@@ -54,16 +54,16 @@ public class EntityRelationHeader implements Serializable{
 	//ManyToOne(fetch=FetchType.LAZY)
 
 	@Column(name = "OWNER")
-	@Basic()
-	private Key ownerkey;
-	
-	@Column(name = "FPERSON")
-	@Basic()
-	private Key fpersonkey;
-	
-	@Column(name = "IPERSON")
-	@Basic()
-	private Key ipersonkey;
+	private Long ownerId;
+
+	@Column(name = "ETYPE")
+	private String entityType;
+
+	@Column(name = "EID")
+	private Long entityId;
+
+	@Column(name = "PICTURE_ID")
+	private String pictureId;
 	
 	@Column(name = "ERITEMS")
 	@OneToMany(fetch=FetchType.LAZY,mappedBy="erelation", orphanRemoval=false, cascade=CascadeType.ALL)
@@ -79,6 +79,31 @@ public class EntityRelationHeader implements Serializable{
 		setOwner(user);
 	}
 
+	public String toString(){
+		return "REL: "+getSubject();
+	}
+
+	public String getId(){
+		if(this.key==null) return "0";
+		else return Long.toString(key.getId());
+	}
+
+	public String getCDateAsText() {
+		return WebUtils.getFormatedDate(getCdate());
+	}
+
+	public String getUDateAsText() {
+		return WebUtils.getFormatedDate(getUdate());
+	}
+
+	public void setOwner(User owner) {
+		if(owner==null) setOwnerId(null);
+		else setOwnerId(owner.getKey().getId());
+	}
+
+
+
+	/** ===== properties-getters and setters =========== */
 	public Key getKey() {
 		return key;
 	}
@@ -117,6 +142,7 @@ public class EntityRelationHeader implements Serializable{
 
 	public void setCdate(Date cdate) {
 		this.cdate = cdate;
+		setUdate(this.cdate);
 	}
 
 	public Date getUdate() {
@@ -127,40 +153,6 @@ public class EntityRelationHeader implements Serializable{
 		this.udate = udate;
 	}
 
-	public String toString(){
-		return "REL: "+getSubject();
-	}
-	
-	public String getId(){
-		if(this.key==null) return "0";
-		else return Long.toString(key.getId());
-	}
-
-	public String getCDateAsText() {
-		return WebUtils.getFormatedDate(getCdate());
-	}
-
-	public String getUDateAsText() {
-		return WebUtils.getFormatedDate(getUdate());
-	}
-
-	public void setOwner(User owner) {
-		if(owner==null) setOwnerkey(null);
-		else setOwnerkey(owner.getKey());
-	}
-
-
-	public void setFperson(PersonaFisica fperson) {
-		if(fperson==null) setFpersonkey(null);
-		else setFpersonkey(fperson.getKey());
-	}
-
-
-	public void setIperson(PersonaIdeal iperson) {
-		if(iperson==null) setIpersonkey(null);
-		else setIpersonkey(iperson.getKey());
-	}
-
 	public List<EntityRelations> getErelations() {
 		return erelations;
 	}
@@ -169,29 +161,48 @@ public class EntityRelationHeader implements Serializable{
 		this.erelations = erelations;
 	}
 
-	public Key getOwnerkey() {
-		return ownerkey;
+
+	public String getEntityType() {
+		return entityType;
 	}
 
-	public void setOwnerkey(Key ownerkey) {
-		this.ownerkey = ownerkey;
+	public void setEntityType(String entityType) {
+		this.entityType = entityType;
 	}
 
-	public Key getFpersonkey() {
-		return fpersonkey;
+	public void setEntityId(PersonaFisica fperson) {
+		if(fperson==null) this.entityId = null;
+		else setEntityId(fperson.getKey().getId());
+	}
+	public void setEntityId(PersonaIdeal iperson) {
+		if(iperson==null) this.entityId = null;
+		else setEntityId(iperson.getKey().getId());
 	}
 
-	public void setFpersonkey(Key fpersonkey) {
-		this.fpersonkey = fpersonkey;
+	
+	
+	public Long getOwnerId() {
+		return ownerId;
 	}
 
-	public Key getIpersonkey() {
-		return ipersonkey;
+	public void setOwnerId(Long ownerId) {
+		this.ownerId = ownerId;
 	}
 
-	public void setIpersonkey(Key ipersonkey) {
-		this.ipersonkey = ipersonkey;
+	public Long getEntityId() {
+		return entityId;
 	}
 
+	public void setEntityId(Long entityId) {
+		this.entityId = entityId;
+	}
+
+	public String getPictureId() {
+		return pictureId;
+	}
+
+	public void setPictureId(String pictureId) {
+		this.pictureId = pictureId;
+	}
 	
 }

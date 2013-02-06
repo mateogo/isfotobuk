@@ -54,6 +54,8 @@ public class Person implements Serializable {
 	@Column(name = "PICTURE")
 	private String defaultImageId;
 
+	@Column(name = "URL")
+	private String defaultUrl;
 
 	public String getNombrePerson() {
 		return nombrePerson;
@@ -92,6 +94,7 @@ public class Person implements Serializable {
 	public void addContacto(ContactosPerson contacto){
 		getDatosContacto().add(contacto);
 	}
+
 	public String  toString(){
 		return getNombrePerson();
 	}
@@ -118,6 +121,14 @@ public class Person implements Serializable {
 
 	public void setDefaultImageId(String defaultImageId) {
 		this.defaultImageId = defaultImageId;
+	}
+
+	public String getDefaultUrl() {
+		return defaultUrl;
+	}
+
+	public void setDefaultUrl(String defaultUrl) {
+		this.defaultUrl = defaultUrl;
 	}
 
 }

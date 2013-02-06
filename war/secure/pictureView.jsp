@@ -38,6 +38,10 @@ body {
 .show-grid [class *="span"] {
 	text-align: left;
 }
+
+.thumbnails .control-group {
+    border: 1px solid #eee;
+}
 </style>
 </head>
 
@@ -79,25 +83,64 @@ body {
 	<div class="container">
 			<ul class="thumbnails">
 				<li class="thumbnail span12">
-					<img src="/image?pictureid=<%=WebUtils.getParameter(request, "pictureid")%>&version=O">
+					<img src="/image?pictureid=<%=WebUtils.getParameter(request, "pictureid")%>&version=O" width=500 height=400>
 				</li>
 				<li class="thumbnail span12" ><%=Social.addLinks(WebUtils.getCompleteUrlForPicture(request,WebUtils.getParameter(request, "pictureid")), "Picture")%></li>
-				<li class="thumbnail span12" >
-					<button type="button" class="btn btn-link btn-primary" onclick="location.href='/setProfileImage?pictureid=<%=WebUtils.getParameter(request, "pictureid")%>'">establecer como foto del perfil</button>
+				
+				<li class="thumbnail span12 accordion" id="fototag">
+					<div class="accordion-group">
+						<span class="accordion-heading">
+							<a class="accordion-toggle" data-toggle="collapse" data-parent="#fototag" href="#collapseOne">
+							Acciones sobre esta imagen
+							</a>
+						</span>
+						<div id="collapseOne" class="accordion-body collapse">
+							<div class="accordion-inner">
+								<div class="span12" >
+									<button type="button" class="btn btn-link btn-primary" onclick="location.href='/setProfileImage?pictureid=<%=WebUtils.getParameter(request, "pictureid")%>'">establecer como foto para su perfil de usuario</button>
+								</div>
+							<form class="form-search" method="post" >
+							
+								<div class="control-group">
+									<label class="control-label" for="pDenom" >Seleccione una persona y luego ejecute la acción deseada:</label>
+									<div class="controls" >
+										<input id="pDenom" name="pDenom" type="text" class="input-medium search-query ajax-typeahead" data-provide="typeahead" >
+										<button type="button" class="btn" onClick="selectPerson()">Buscar</button>
+										<input  id="pId"   name="pId"   type="hidden"  class="span1" >
+										<input  id="pType" name="pType" type="hidden"  class="span1" >
+										<input  id="picId" name="picId" type="hidden"  class="span1" value='<%=WebUtils.getParameter(request, "pictureid")%>' >
+										<span id="pName" class="input-xlarge uneditable-input"></span>
+										
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label" for="altText" >Establezca la imagen como foto-tag de la persona seleccionada:</label>
+									<div class="controls" >
+										<input  id="altText" name="altText" class="span6" type="text" placeholder="alt-text para la imagen"><button type="button" id="defaultImageBtn" name="defaultImageBtn" class="btn btn-primary" onclick="submitDefaultImage()">Foto-tag</button>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label" for="rDescr" >Relacione a la persona seleccionada con esta foto:</label>
+									<div class="controls" >
+										<input  id="rDescr" name="rDescr" class="span6" type="text" placeholder="comente la relación"><button type="button" id="addRelationBtn" name="addRelationBtn" class="btn btn-primary" onclick="setRelation()">Relacionar</button>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label" for="defaultImageBtn" >Establezca la imagen como foto-tag para su perfil de usuario:</label>
+									<div class="controls" >
+										<span id="defaultImageLabel" class="span6 input-xlarge uneditable-input">Al aceptar establecerá esta imagen como foto de su perfil</span><button type="button" id="userProfileBtn" name="userProfileBtn" class="btn btn-primary" onclick="location.href='/setProfileImage?pictureid=<%=WebUtils.getParameter(request, "pictureid")%>'" >Foto de mi perfil</button>
+									</div>
+								</div>
+							
+							
+							
+							</form>
+							</div>
+						</div>
+					</div>
 				</li>
-				
-				
-				<li class="thumbnail span12" ><form class="form-search" method="post" action="/selectaperson">
-						<span class=span10>Seleccionar una persona para asociar la imagen</span>
-						<input id="pDenom" name="pDenom" type="text" class="input-medium search-query ajax-typeahead" data-provide="typeahead" >
-						<button type="button" class="btn" onClick="selectPerson()">Buscar</button>
-						<input  id="pId"   name="pId"   type="text"  class="span1">
-						<input  id="pType" name="pType" type="text"  class="span1">
-						<input  id="picId" name="picId" type="text"  class="span1" value='<%=WebUtils.getParameter(request, "pictureid")%>' >
-						<input  id="pName" name="pName" type="text" >
-						<input  id="rDescr" name="rDescr" type="text" placeholder="ingrese una descripcion">
-						<button type="button" class="btn btn-primary" onclick="submitDefaultImage()">Aceptar</button>
-	 			</form></li>				
+
+
 			</ul>
 	</div>
 
@@ -113,7 +156,7 @@ body {
 			ajax: {
                 url:"/pnamelist",
                 method: 'get',
-                triggerLength: 1,
+                triggerLength: 2,
             }
     });
     </script>
@@ -137,9 +180,14 @@ body {
 	           	},
               dataType: 'text',
 			  success: function(data){
-				  	//alert(data);
+	            	if(data=='success') $('#defaultImageBtn').attr( 'class', "btn btn-success" );
+	            	else  $('#defaultImageBtn').attr( 'class', "btn btn-danger" );
 			  }
 			}).done(function(data) { 
+				document.getElementById("pId").value   ="";
+				document.getElementById("pDenom").value   ="";
+				document.getElementById("pType").value ="";
+				document.getElementById("pName").innerHTML = "¡foto asignada!" ;
 			});	
 
 	}
@@ -162,7 +210,7 @@ body {
 				  	//alert(jsonString);
 				  	var values = jQuery.parseJSON( jsonString );
 					document.getElementById("pType").value = values['personType'];
-					document.getElementById("pName").value = values['personName'];
+					document.getElementById("pName").innerHTML = values['personName'];
 					document.getElementById("pId").value   = values['personId'];
 
 			  }
@@ -171,6 +219,40 @@ body {
 		
 	}
 	</script>
+
+	<script>
+	function setRelation(){
+		var target = "/selectaperson";
+		var pId = document.getElementById("pId").value;
+		var pType = document.getElementById("pType").value;
+		var imageId = document.getElementById("picId").value;
+		var descr = document.getElementById("rDescr").value;
+
+		$.ajax({
+			  url: target,
+	          type: 'post',
+	            data: {
+	            	action: "addRelationToImage",
+	            	personId:   pId,
+	            	personType: pType,
+	            	imageId:    imageId,
+	            	comment:    descr
+	           	},
+              dataType: 'text',
+			  success: function(data){
+	            	if(data=='success') $('#addRelationBtn').attr( 'class', "btn btn-success" );
+	            	else  $('#addRelationBtn').attr( 'class', "btn btn-danger" );
+			  }
+			}).done(function(data) {
+				document.getElementById("pId").value   ="";
+				document.getElementById("pDenom").value   ="";
+				document.getElementById("pType").value ="";
+				document.getElementById("pName").innerHTML = "¡foto asignada!" ;
+				document.getElementById("rDescr").innerHTML = "" ;
+			});
+	}
+    </script>
+
 
 </body>
 </html>

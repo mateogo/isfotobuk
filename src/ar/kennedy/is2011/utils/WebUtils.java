@@ -63,6 +63,13 @@ public class WebUtils {
 		return df.format(date);
 	}
 
+	public static String getYMDDate(Date date){
+		if(date==null) date = new Date();
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+		return df.format(date);
+	}
+
+	
 	public static Date getDateFromString(String date){
 		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 		if(date.contains("-")) df = new SimpleDateFormat("dd-MM-yyyy");
@@ -232,6 +239,21 @@ public class WebUtils {
     public static Boolean isNotNull(String text) {
     	return (StringUtils.isNotBlank(text) && StringUtils.isNotEmpty(text));
     }
+
+    public static Boolean isNull(String text) {
+    	return !isNotNull(text);
+    }
+    public static String defaultStr(String text){
+    	return StringUtils.defaultString(text);
+    }
+    
+    public static Boolean compare (String pattern, String other){
+    	if(isNull(pattern)) return false;
+      	if(isNull(other)) return false;
+      	if(pattern.equals(other)) return true;
+    	return false;
+    }
+    
     
 	public static Boolean updateUserSession(HttpServletRequest request, Session userSession, AccountModel model){
 		

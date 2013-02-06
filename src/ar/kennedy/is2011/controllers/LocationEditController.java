@@ -5,7 +5,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import ar.kennedy.is2011.db.entities.Location;
 import ar.kennedy.is2011.db.entities.User;
-import ar.kennedy.is2011.db.entities.PersonaFisica;
+import ar.kennedy.is2011.db.entities.Person;
+
 import ar.kennedy.is2011.session.Session;
 import ar.kennedy.is2011.models.PersonModel;
 import ar.kennedy.is2011.session.SessionManager;
@@ -21,7 +22,7 @@ public class LocationEditController extends AbstractController{
 	private HttpServletRequest request;
 
 	private User user; //el usuario duenio de la sesion
-	private PersonaFisica fperson; // la person fisica sobre la que se actualizan datos
+	private Person person; // la person fisica sobre la que se actualizan datos
 	private Location location; // el location a dar de alta o actualizar
 
 	private PersonModel model= new PersonModel();
@@ -39,9 +40,10 @@ public class LocationEditController extends AbstractController{
 		String action = request.getParameter("action");
 		String personId = request.getParameter("locPersonId");
 		this.request = request;
+		this.errorsDetected= false;
 
 		log.debug("****************************************************");
-		log.debug("LOCATION EDIT CONTROLLER: begin. action:["+action+"] personId:["+personId+"]");
+		log.debug("LOCATION EDIT CONTROLLER: BEGIN. action:["+action+"] personId:["+personId+"] ["+errorsDetected+"]");
 			
 		if(!errorsDetected) initModel();
 
@@ -70,15 +72,22 @@ public class LocationEditController extends AbstractController{
 		 * e instancia la PersonaFisica sobre la que se
 		 * actualizan datos.
 		 */
+		log.debug("********************* INIT MODEL: begin");
 		this.user= getUserFromSession(request);
 		String personId = request.getParameter("locPersonId");
-		log.debug("********************* INIT MODEL: begin ["+personId+"]");
+		String personType = request.getParameter("locPersonType");
+		log.debug("********************* INIT MODEL:  ["+personType+"]:["+personId+"]");
 		
 		model = new PersonModel(this.user);
-		model.setFperson(model.getFpersonById(Long.parseLong(personId)));
-		
-		this.fperson = model.getFperson();
-		if (this.fperson==null) errorsDetected=true;
+		if(personType.equals("PF")){
+			model.setFperson(model.getFpersonById(Long.parseLong(personId)));
+			this.person = model.getFperson();
+		}else if(personType.equals("PI")){
+			model.setIperson(model.getIpersonById(Long.parseLong(personId)));			
+			this.person = model.getIperson();
+		}
+		log.debug("********************* INIT MODEL: getPerson ["+model.getPerson()+"]");
+		if (this.person==null) errorsDetected=true;			
 	}
 	
 	private void initLocation(){
@@ -91,7 +100,7 @@ public class LocationEditController extends AbstractController{
 			this.isNewLocation = true;
 		}else{
 			this.isNewLocation = false;
-			this.location = model.getLocationFromFPersonById(locationId);
+			this.location = model.getLocationFromPersonById(locationId);
 			
 			if (this.location == null){
 				errorsDetected=true;
@@ -102,7 +111,7 @@ public class LocationEditController extends AbstractController{
 
 	private void locationFactory(){
 		String locDescripcion = request.getParameter("locDescripcion");
-		log.debug("********************* LOCATION FACTORY: begin ["+locDescripcion+"] person:["+model.getFperson().getNombrePerson()+"]");
+		log.debug("********************* LOCATION FACTORY: begin ["+locDescripcion+"] person:["+model.getPerson().getNombrePerson()+"]");
 		
 		String locCalle1    = request.getParameter("locCalle1");
 		String locCalle2    = request.getParameter("locCalle2");
@@ -126,7 +135,7 @@ public class LocationEditController extends AbstractController{
 	
 		location.setFechaLocacion(new Date());
 
-		location.setPersonId(model.getFperson().getKey().getId());
+		location.setPersonId(model.getPerson().getKey().getId());
 	}
 	
 
@@ -135,7 +144,7 @@ public class LocationEditController extends AbstractController{
 			errorsDetected= !model.addLocation(this.location);
 		}
 		if(!errorsDetected){
-			model.updateFPerson();
+			model.updatePerson();
 		}
 		return errorsDetected;
 	}

@@ -11,6 +11,12 @@ public class UploadedFile {
 	private String contentType;
 	private ByteArrayOutputStream content;
 
+	public UploadedFile(String fileName, String contentType, ByteArrayOutputStream content) {
+		this.fileName = fileName;
+		this.contentType = contentType;
+		this.content = content;
+	}
+
 	public String getFileName() {
 		return fileName;
 	}
@@ -21,12 +27,6 @@ public class UploadedFile {
 
 	public ByteArrayOutputStream getContent() {
 		return content;
-	}
-
-	public UploadedFile(String fileName, String contentType, ByteArrayOutputStream content) {
-		this.fileName = fileName;
-		this.contentType = contentType;
-		this.content = content;
 	}
 
 	public String toString() {

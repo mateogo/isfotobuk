@@ -50,6 +50,7 @@
                 <li class="nav-header">Visualizar por...</li>
                 <li><a href="/secure/albums.jsp">Album</a></li>
                 <li><a href="/secure/search.jsp">Buscar</a></li>
+                <li><a href="/article?action=browseArticle">Articulos</a></li>
               </ul>
             </li>
           </ul>
@@ -73,21 +74,25 @@
 
 <div class="container">
 		
-<!-- ************** EDIT PERSON FISICA ************************* -->
+<!-- ************** EDIT PERSON IDEAL ************************* -->
 	<h3>${pbean.iperson.nombrePerson}</h3>
 	<form name="editIPerson" class="form-inline" action="/editIPerson?action=${pbean.action}" method="post">
 	<fieldset>
 					<div class="control-group">
-						<label class="control-label" for="pDenom" >Denominación y comentario que caracterizan esta persona:</label>
+						<label class="control-label" for="pName" >Denominación y comentario que caracterizan esta persona:</label>
 						<div class="controls" >
 
 							<input type="hidden" id="ipersonId" name="ipersonId" 
 									value="${pbean.iperson.id}" />
 
-							<input type="text" id="pDenom" class="span4" name="pDenom" placeholder="Denominacion"
+							<input type="text" id="pName" class="span4" name="pName" placeholder="Identificacion"
 								value="${pbean.iperson.nombrePerson}" />
 							<input type="text" id="pComent" class="span6" name="pComent" placeholder="Comentario"
 								value="${pbean.iperson.coment}" />
+							<input type="text" id="pDenom" class="span10" name="pDenom" placeholder="Denominacion completa "
+								value="${pbean.iperson.denominacion}" />
+							<input type="text" id="pUrl" class="span10" name="pUrl" placeholder="Direccion web: url"
+								value="${pbean.iperson.defaultUrl}" />
 						</div>
 					</div>
 	
@@ -195,6 +200,9 @@
 
 					<input type="hidden" id="ctPersonId" name="ctPersonId" 
 						value="${pbean.iperson.id}" />
+					<input type="hidden" id="ctPersonType" name="ctPersonType" 
+							value="PI" />
+						
 					<input type="hidden" id="ctContactId" name="ctContactId" 
 						value="" />
 									
@@ -228,6 +236,7 @@
 								<option  value="FAX"   >fax</option>
 								<option  value="VOIP"  >voip skype</option>
 								<option  value="RSOC"  >red social</option>
+								<option  value="URL"   >direccion web</option>
 								<option  value="OTRO"  >otro</option>
 							</select>
 						</div>
@@ -273,7 +282,7 @@
 <!-- ************** EDIT LOCATIONS  ************************* -->
 		<!-- Modal viewer -->
 		<div class="modal hide fade in" id="newLocation"  data-keyboard=false data-backdrop=false tabindex="-1" role="dialog" aria-labelledby="newLocationLabel" aria-hidden="true">
-			<form id="newLocatioForm" name="newLocationForm" class="form-inline" action="/editLocation" method="post">
+			<form id="newLocationForm" name="newLocationForm" class="form-inline" action="/editLocation" method="post">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
 				<h3>locacion</h3>
@@ -281,6 +290,8 @@
 			<div id="locInput" class="modal-body">
 				<input type="hidden" id="locPersonId" name="locPersonId" 
 						value="${pbean.iperson.id}" />
+				<input type="hidden" id="locPersonType" name="locPersonType" 
+						value="PI" />
 				<input type="hidden" id="locLocationId" name="locLocationId" 
 						value="" />
 									
@@ -479,6 +490,7 @@
  		else editContact="/editContact?action=update";
  		$('#newContactForm').attr('action', editContact);
  	}
+
 	function selectLocation(index){
  		locationIndex =index
  		if(index==-1) editLocation="/editLocation?action=new";

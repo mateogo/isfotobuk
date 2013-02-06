@@ -74,13 +74,15 @@ public class FPersonEditController extends AbstractController{
 			String apellido    = request.getParameter("pApellido");
 			String fnacim      = request.getParameter("pFechaNacim");
 			String genero      = request.getParameter("pGender");
-			
+			String url         = request.getParameter("pUrl");
+		
 			if(StringUtils.isNotBlank(denom)) model.getFperson().setNombrePerson(denom);
 			if(StringUtils.isNotBlank(coment)) model.getFperson().setComent(coment);
 			if(StringUtils.isNotBlank(name)) model.getFperson().setNombre(name);
 			if(StringUtils.isNotBlank(apellido)) model.getFperson().setApellido(apellido);
 			if(StringUtils.isNotBlank(genero)) model.getFperson().setSexo(genero);
 			if(StringUtils.isNotBlank(fnacim)) model.getFperson().setFechaNacimiento(WebUtils.getDateFromString(fnacim));
+			if(StringUtils.isNotBlank(url)) model.getFperson().setDefaultUrl(url);
 
 			model.getFperson().setUserId(this.user.getKey().getId());
 
@@ -109,6 +111,7 @@ public class FPersonEditController extends AbstractController{
 			String apellido    = request.getParameter("pApellido");
 			String fnacim      = request.getParameter("pFechaNacim");
 			String genero      = request.getParameter("pGender");
+			String url         = request.getParameter("pUrl");
 			
 			if(StringUtils.isNotBlank(denom)) model.getFperson().setNombrePerson(denom);
 			if(StringUtils.isNotBlank(coment)) model.getFperson().setComent(coment);
@@ -116,6 +119,7 @@ public class FPersonEditController extends AbstractController{
 			if(StringUtils.isNotBlank(apellido)) model.getFperson().setApellido(apellido);
 			if(StringUtils.isNotBlank(genero)) model.getFperson().setSexo(genero);
 			if(StringUtils.isNotBlank(fnacim)) model.getFperson().setFechaNacimiento(WebUtils.getDateFromString(fnacim));
+			if(StringUtils.isNotBlank(url)) model.getFperson().setDefaultUrl(url);
 
 			model.getFperson().setUserId(this.user.getKey().getId());
 
@@ -144,6 +148,7 @@ public class FPersonEditController extends AbstractController{
 			String apellido    = request.getParameter("pApellido");
 			String fnacim      = request.getParameter("pFechaNacim");
 			String genero      = request.getParameter("pGender");
+			String url         = request.getParameter("pUrl");
 			
 			if(StringUtils.isNotBlank(denom)) model.getFperson().setNombrePerson(denom);
 			if(StringUtils.isNotBlank(coment)) model.getFperson().setComent(coment);
@@ -151,6 +156,7 @@ public class FPersonEditController extends AbstractController{
 			if(StringUtils.isNotBlank(apellido)) model.getFperson().setApellido(apellido);
 			if(StringUtils.isNotBlank(genero)) model.getFperson().setSexo(genero);
 			if(StringUtils.isNotBlank(fnacim)) model.getFperson().setFechaNacimiento(WebUtils.getDateFromString(fnacim));
+			if(StringUtils.isNotBlank(url)) model.getFperson().setDefaultUrl(url);
 
 			model.getFperson().setUserId(this.user.getKey().getId());
 
