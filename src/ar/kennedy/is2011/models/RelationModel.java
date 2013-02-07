@@ -414,6 +414,7 @@ public class RelationModel extends AbstractModel {
 		Task task = (Task)fetchEntityFromRelationItem(eritem);
 		//tr.setAsignee(task.getAsignee());
 		tr.setDuedate(task.getDueDateAsText());
+		tr.setBegindate(task.getBeginDateAsText());
 		tr.setHeading(erDescr);
 		tr.setOwner(getTaskModel().getOwnerLabel(task));
 		tr.setRelationheading(erDescr);
@@ -694,6 +695,7 @@ public class RelationModel extends AbstractModel {
 		String locator="";
 		String text="";
 		String duedate="";
+		String begindate="";
 		String owner="";
 		String status="";
 		String asignee="";
@@ -799,6 +801,16 @@ public class RelationModel extends AbstractModel {
 
 		public void setLocator(String locator) {
 			this.locator = locator;
+		}
+
+
+		public String getBegindate() {
+			return begindate;
+		}
+
+
+		public void setBegindate(String begindate) {
+			this.begindate = begindate;
 		}
 		
 	}

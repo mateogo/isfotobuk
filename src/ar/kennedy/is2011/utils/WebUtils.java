@@ -63,13 +63,6 @@ public class WebUtils {
 		return df.format(date);
 	}
 
-	public static String getYMDDate(Date date){
-		if(date==null) date = new Date();
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm");
-		return df.format(date);
-	}
-
-	
 	public static Date getDateFromString(String date){
 		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 		if(date.contains("-")) df = new SimpleDateFormat("dd-MM-yyyy");
@@ -80,6 +73,24 @@ public class WebUtils {
 	        return null;
 	    }
 	}
+
+	public static String getYMDDate(Date date){
+		if(date==null) date = new Date();
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		return df.format(date);
+	}
+
+	public static Date getDateFromYMD(String date){
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm ZZZZ");
+		try {
+			return df.parse(date+" -0300");
+	    } catch (ParseException e) {
+	        e.printStackTrace();
+	        return null;
+	    }
+	}
+	
+	
 	
 	public static Boolean validateMandatoryParameters(MultiPartRequest request, String[] parameters) throws ValidateMandatoryParameterException {
 		List<String> parametersNotFounds = new ArrayList<String>();

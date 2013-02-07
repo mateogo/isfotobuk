@@ -5,6 +5,8 @@ import ar.kennedy.is2011.db.entities.User;
 import ar.kennedy.is2011.db.entities.Task;
 import ar.kennedy.is2011.db.dao.AccountDao;
 import ar.kennedy.is2011.scheduler.SchedulerEvent;
+
+import java.text.DateFormat;
 import java.util.ArrayList;
 
 
@@ -123,19 +125,61 @@ public class TaskModel extends AbstractModel {
 		if(t.getOwner()==null) return "";
 		return fetchOwner(t.getOwner()).getUserName();
 	}
+	
+	public boolean updateTask(SchedulerEvent schev){
+		
+		log.debug("======= process update task to begin ==========");
+		String action = schev.getStatus();
+		if(WebUtils.isNull(action)) return false;
+		if(!WebUtils.compare(schev.getRec_type(), "TASK")) return false;
+
+		if(action.equals("updated")) return updatedTask(schev);
+		
+		return false;
+	}
+	private boolean updatedTask(SchedulerEvent schev){
+		log.debug("======= update Task ==========");
+		setTask(fetchTask(schev.db_id));
+		if(getTask()==null) return false;
+		
+		Date duedate = WebUtils.getDateFromYMD(schev.getEnd_date());
+		Date begindate = WebUtils.getDateFromYMD(schev.getStart_date());
+		
+		log.debug("Update task:["+WebUtils.getYMDDate(begindate)+"] ["+WebUtils.getYMDDate(duedate)+"]");
+		log.debug("Update task:["+DateFormat.getTimeInstance(DateFormat.LONG).format(begindate)+"] ["+DateFormat.getTimeInstance(DateFormat.LONG).format(duedate)+"]");
+		
+		
+		getTask().setDuedate(duedate);
+		getTask().setBegindate(begindate);
+		
+		updateTask();
+		log.debug("======= task saved ==========");
+		
+		return true;
+	}
 
 	public ArrayList<Object> taskSchedulerList(){
 		List<Task> tasks = taskDao.fetchAllTasks();
-		if(tasks==null || tasks.isEmpty()) return null;
 		ArrayList<Object> sch = new ArrayList<Object>();
+		if(tasks==null || tasks.isEmpty()) return sch;
 		int id=0;
 		for(Task task:tasks){
-			String start = WebUtils.getYMDDate(task.getDuedate());
+			String start = WebUtils.getYMDDate(task.getBegindate());
 			String end = WebUtils.getYMDDate(task.getDuedate());
-			String text = task.getSubject()+": "+task.getTextData();
+			log.debug("taskSchedule list:["+DateFormat.getDateInstance(DateFormat.LONG).format(task.getBegindate())+"] ["+DateFormat.getDateInstance(DateFormat.LONG).format(task.getDuedate())+"]");
+			log.debug("................>:["+DateFormat.getTimeInstance(DateFormat.LONG).format(task.getBegindate())+"] ["+DateFormat.getTimeInstance(DateFormat.LONG).format(task.getDuedate())+"]");
+			log.debug("................>:["+start+"] ["+end+"]");
+		
 			String recType = "TASK";
-			String location = "calingasta";
-			SchedulerEvent s = new SchedulerEvent(++id,task.getKey().getId(),recType, start, end, text,location);
+			
+			SchedulerEvent s = new SchedulerEvent(++id,task.getKey().getId(),recType, start, end);
+
+			s.setEvent_name(task.getSubject());
+			s.setEvent_locator(task.getLocator());
+			s.setEvent_text(task.getTextData());
+			s.setLocation("futuro");
+			s.setDetails("futuro");
+			
 			sch.add(s);
 		}
 		return sch;

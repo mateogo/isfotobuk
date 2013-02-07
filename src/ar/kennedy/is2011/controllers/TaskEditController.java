@@ -109,6 +109,8 @@ public class TaskEditController extends AbstractController{
 		String isActive     = request.getParameter("taskIsActive");
 		String type         = request.getParameter("taskType");
 		String dueDate      = request.getParameter("taskDueDate");
+		//OjO  String beginDate    = request.getParameter("taskBeginDate");
+
 		
 		model.getTask().setLocator(name);
 		model.getTask().setSubject(subject);
@@ -118,6 +120,7 @@ public class TaskEditController extends AbstractController{
 		model.getTask().setIsActive(Integer.parseInt(isActive));
 		model.getTask().setType(type);
 		model.getTask().setDuedate(WebUtils.getDateFromString(dueDate));
+		//model.getTask().setBegindate(WebUtils.getDateFromString(beginDate));
 		
 		return true;
 	}

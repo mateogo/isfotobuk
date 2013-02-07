@@ -1,6 +1,5 @@
 package ar.kennedy.is2011.db.dao;
 
-import ar.kennedy.is2011.db.entities.AlbumEy;
 import ar.kennedy.is2011.db.entities.User;
 import ar.kennedy.is2011.db.entities.Task;
 import ar.kennedy.is2011.db.exception.EntityNotFoundException;

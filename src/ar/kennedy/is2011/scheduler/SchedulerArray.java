@@ -43,31 +43,35 @@ public class SchedulerArray extends ConnectorServlet {
 		log.debug("=========== schedule array config ===============");
 		SchedulerConnector c = new SchedulerConnector(null);
 
-		log.debug("attach controller");
+		log.debug("configure: attach controller");
 		c.event.attach(new SchedulerController(c));
 		
-		log.debug("now building scheduler from tasks");
+		log.debug("configure: now building scheduler from tasks");
 		ArrayList<Object> data = buildSchedulerFromTasks();
 		//ArrayList<Object> data = new ArrayList<Object>();
 		data.add(new SchedulerEvent(3,Long.valueOf(300),"MILESTONE", "2013-02-04 17:00", "2013-02-04 8:00", "Reunion en el CEPIA","Cepia"));
 		//data.add(new SchedulerEvent(4, "2013-02-05 15:00", "2013-02-05 16:00", "second part"));
 
-		log.debug("redy to render array!");
 		c.set_options("toptions",types);
-	
-		c.render_array(data, "event_id","start_date,end_date,event_name,db_id,rec_type,details,location");
 
+		log.debug("configure: redy to render array!");
+		//c.render_array(data, "event_id","start_date,end_date,event_name,db_id,rec_type,details,location");
+		c.render_array(data, "event_id","start_date,end_date,event_name,rec_type,location,details,db_id,status,event_locator,event_text");
+
+		
+		log.debug("******** CONFIGURE: render ended*********");
 	}
 
 	private ArrayList<Object>  buildSchedulerFromTasks(){
 		TaskModel taskModel = new TaskModel();
 		ArrayList<Object> data = taskModel.taskSchedulerList();
-		for(Object obj:data){
-			SchedulerEvent se = (SchedulerEvent) obj;
-			log.debug("schedule: ["+se.event_id+"] ["+se.start_date+"]:["+se.end_date+"]  ["+se.event_name+"]");
+		if (data!=null && !data.isEmpty()){
+			for(Object obj:data){
+				SchedulerEvent se = (SchedulerEvent) obj;
+				log.debug("schedule: ["+se.event_id+"] ["+se.start_date+"]:["+se.end_date+"]  ["+se.event_name+"]");
+			}
 		}
 		return data;
-	
 	}
 
 }

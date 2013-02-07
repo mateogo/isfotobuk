@@ -23,28 +23,42 @@
 		                   {key:"TASK", label:"tarea"},
 		                   {key:"PROJECT", label:"proyecto"},
 			];
+		var taskid = "helo";
+		function setTaskId(t){
+			taskid=t;
+		}
 		function init() {
 			scheduler.config.multi_day = true;
 			scheduler.config.prevent_cache = true;
 			scheduler.config.xml_date="%Y-%m-%d %H:%i";
-			scheduler.init('scheduler_here',new Date(2013,2,0),"month");
+			
+			scheduler.config.buttons_right = ["dhx_custom_btn_info", "dhx_delete_btn"];
+			scheduler.attachEvent("onLightboxButton", function(button_id, node, e){
+				//alert( taskid);
+				location.href='/task?action=updateTask&taskid='+taskid
+			});
+
 			
 			
+			scheduler.locale.labels["dhx_custom_btn_info"] = "info";
 			scheduler.locale.labels.section_type = "Type";
 			scheduler.locale.labels.section_location = "Locacion";
 			
 			
 			scheduler.form_blocks["my_editor"]={
 					render:function(sns){
-						return "<div class='dhx_cal_ltext' style='height:60px;'>Text&nbsp;<input type='text'><br/>Details&nbsp;<input type='text'><br/>Responsable:&nbsp;<input type='text'></div>";
+						return "<div class='dhx_cal_rtext' style='height:60px;'><a href='/editPerson?action=newIPerson'>T a r e a: &nbsp;</a><input type='text'  style='width:300px;'><br/>Descripcion: &nbsp;<input type='text' style='width:300px;'><br/>Localizador: &nbsp;<input type='text' style='width:300px;'></div>";
 					},
 					set_value:function(node,value,ev){
 						node.childNodes[1].value=value||"";
-						node.childNodes[4].value=ev.details||"";
-						node.childNodes[7].value=ev.start_date||"";
+						node.childNodes[4].value=ev.event_text||"";
+						node.childNodes[7].value= ev.event_locator||"";
+						node.childNodes[7].disabled = true;
+						setTaskId(ev.db_id);
 					},
 					get_value:function(node,ev){
-						ev.details = node.childNodes[4].value;
+						ev.event_text    = node.childNodes[4].value;
+						ev.event_locator = node.childNodes[7].value;
 						return node.childNodes[1].value;
 					},
 					focus:function(node){
@@ -59,9 +73,14 @@
 				{name:"type",        height:21,  map_to:"rec_type", type:"select", options:scheduler.serverList("toptions")},
 				{name:"time",        height:72,  map_to:"auto",     type:"time"}
 			];
-			scheduler.load("arraycalendar");
+
+			scheduler.init('scheduler_here',new Date(2013,2,0),"month");
+
+			
 			var dp = new dataProcessor("arraycalendar");
 			dp.init(scheduler);
+
+			scheduler.load("arraycalendar");
 
 		}
 	</script>
